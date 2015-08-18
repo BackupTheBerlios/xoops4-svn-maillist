@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r262 - XoopsCore/branches/tasks/123542-admin/htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r262%20-%20XoopsCore/branches/tasks/123542-admin/htdocs&In-Reply-To=%3C200602191925.k1JJP7vH012018%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000253.html">
+   <LINK REL="Next"  HREF="000255.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r262 - XoopsCore/branches/tasks/123542-admin/htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r262%20-%20XoopsCore/branches/tasks/123542-admin/htdocs&In-Reply-To=%3C200602191925.k1JJP7vH012018%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r262 - XoopsCore/branches/tasks/123542-admin/htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 20:25:07 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000253.html">[Xoops4-svn] r261 - in XoopsCore/branches/tasks/123542-admin/XOOPS: . ConfigPanels ConfigPanels/Http.xopanel ConfigPanels/Http.xopanel/templates ConfigPanels/Http.xopanel/www
+</A></li>
+        <LI>Next message: <A HREF="000255.html">[Xoops4-svn] r263 - XoopsCore/branches/tasks/123542-admin/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#254">[ date ]</a>
+              <a href="thread.html#254">[ thread ]</a>
+              <a href="subject.html#254">[ subject ]</a>
+              <a href="author.html#254">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 20:25:02 +0100 (Sun, 19 Feb 2006)
+New Revision: 262
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/htdocs/header.php
+Log:
+Fixed header.php to ensure the theme service is correctly instanciated (needed coz of the class renaming)
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/header.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/header.php	2006-02-19 19:23:37 UTC (rev 261)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/header.php	2006-02-19 19:25:02 UTC (rev 262)
+@@ -29,7 +29,7 @@
+ }
+ 
+ 	global $xoops;
+-	$xoops-&gt;loadService( 'theme', 'xoops_pyro_Theme', array( 'folderName' =&gt; $xoopsConfig['theme_set'] ) );
++	$xoops-&gt;loadService( 'theme', 'xoops_opal_Theme', array( 'folderName' =&gt; $xoopsConfig['theme_set'] ) );
+ 	
+ 	//var_export( $xoops-&gt;services['theme'] );
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000253.html">[Xoops4-svn] r261 - in XoopsCore/branches/tasks/123542-admin/XOOPS: . ConfigPanels ConfigPanels/Http.xopanel ConfigPanels/Http.xopanel/templates ConfigPanels/Http.xopanel/www
+</A></li>
+	<LI>Next message: <A HREF="000255.html">[Xoops4-svn] r263 - XoopsCore/branches/tasks/123542-admin/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#254">[ date ]</a>
+              <a href="thread.html#254">[ thread ]</a>
+              <a href="subject.html#254">[ subject ]</a>
+              <a href="author.html#254">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

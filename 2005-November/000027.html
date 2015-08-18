@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r34 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r34%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs&In-Reply-To=%3C200511251037.jAPAb3nH027888%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000026.html">
+   <LINK REL="Next"  HREF="000028.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r34 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r34%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs&In-Reply-To=%3C200511251037.jAPAb3nH027888%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r34 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Nov 25 11:37:03 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000026.html">[Xoops4-svn] r33 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class include
+</A></li>
+        <LI>Next message: <A HREF="000028.html">[Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-25 11:37:03 +0100 (Fri, 25 Nov 2005)
+New Revision: 34
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+Log:
+Removed XOOPS 1.3 compatibility code from header.php
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-11-25 10:37:03 UTC (rev 34)
+@@ -28,37 +28,7 @@
+     die(&quot;XOOPS root path not defined&quot;);
+ }
+ include_once XOOPS_ROOT_PATH.'/class/xoopsblock.php';
+-if ($xoopsConfig['theme_set'] != 'default' &amp;&amp; file_exists(XOOPS_THEME_PATH.'/'.$xoopsConfig['theme_set'].'/theme.php')) {
+-    // the old way..
+-    $xoopsOption['theme_use_smarty'] = 0;
+-    if (file_exists(XOOPS_THEME_PATH.'/'.$xoopsConfig['theme_set'].'/language/lang-'.$xoopsConfig['language'].'.php')) {
+-        include XOOPS_THEME_PATH.'/'.$xoopsConfig['theme_set'].'/language/lang-'.$xoopsConfig['language'].'.php';
+-    } elseif (file_exists(XOOPS_THEME_PATH.'/'.$xoopsConfig['theme_set'].'/language/lang-english.php')) {
+-        include XOOPS_THEME_PATH.'/'.$xoopsConfig['theme_set'].'/language/lang-english.php';
+-    }
+-    $config_handler =&amp; xoops_gethandler('config');
+-    $xoopsConfigMetaFooter =&amp; $config_handler-&gt;getConfigsByCat(XOOPS_CONF_METAFOOTER);
+-    xoops_header(false);
+-    include XOOPS_THEME_PATH.'/'.$xoopsConfig['theme_set'].'/theme.php';
+-    $xoopsOption['show_rblock'] = (!empty($xoopsOption['show_rblock'])) ? $xoopsOption['show_rblock'] : 0;
+-    // include Smarty template engine and initialize it
+-    require_once XOOPS_ROOT_PATH.'/class/template.php';
+-    $xoopsTpl = new XoopsTpl();
+-    if ($xoopsConfig['debug_mode'] == 3) {
+-        $xoopsTpl-&gt;xoops_setDebugging(true);
+-    }
+-    if ($xoopsUser != '') {
+-        $xoopsTpl-&gt;assign(array('xoops_isuser' =&gt; true, 'xoops_userid' =&gt; $xoopsUser-&gt;getVar('uid'), 'xoops_uname' =&gt; $xoopsUser-&gt;getVar('uname'), 'xoops_isadmin' =&gt; $xoopsUserIsAdmin));
+-    }
+-    $xoopsTpl-&gt;assign('xoops_requesturi', htmlspecialchars($GLOBALS['xoopsRequestUri'], ENT_QUOTES));
+-    include XOOPS_ROOT_PATH.'/include/old_functions.php';
+ 
+-    if ($xoopsOption['show_cblock'] || (isset($xoopsModule) &amp;&amp; preg_match(&quot;/index\.php$/i&quot;, xoops_getenv('PHP_SELF')) &amp;&amp; $xoopsConfig['startpage'] == $xoopsModule-&gt;getVar('dirname'))) {
+-        $xoopsOption['show_rblock'] = $xoopsOption['show_cblock'] = 1;
+-    }
+-    themeheader($xoopsOption['show_rblock']);
+-    if ($xoopsOption['show_cblock']) make_cblock();  //create center block
+-} else {
+     $xoopsOption['theme_use_smarty'] = 1;
+     // include Smarty template engine and initialize it
+     require_once XOOPS_ROOT_PATH.'/class/template.php';
+@@ -236,5 +206,5 @@
+         $xoopsTheme['thename'] = $xoopsConfig['theme_set'];
+         ob_start();
+     }
+-}
+-?&gt;
++
++?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000026.html">[Xoops4-svn] r33 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class include
+</A></li>
+	<LI>Next message: <A HREF="000028.html">[Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,528 @@
+From phppp at berlios.de  Wed Mar 22 11:10:59 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Wed, 22 Mar 2006 11:10:59 +0100
+Subject: [Xoops4-svn] r268 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+Message-ID: <200603221010.k2MAAxkX030063@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-22 11:10:57 +0100 (Wed, 22 Mar 2006)
+New Revision: 268
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/language/english/global.php
+Log:
+time format compatible with PHP 5.1
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/language/english/global.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/language/english/global.php	2006-03-21 10:11:44 UTC (rev 267)
++++ XoopsCore/branches/2.2.x/2.2.5/html/language/english/global.php	2006-03-22 10:10:57 UTC (rev 268)
+@@ -162,7 +162,7 @@
+ define("_SHORTDATESTRING","Y/n/j");
+ // !!IMPORTANT!! insert '\' before any char among reserved chars: "a", "A","B","c","d","D","F","g","G","h","H","i","I","j","l","L","m","M","n","O","r","s","S","t","T","U","w","W","Y","y","z","Z"	
+ // insert double '\' before 't', 'r', 'n'
+-define("_TODAY", "\To\d\a\y G:i:s");
++define("_TODAY", "\T\o\d\a\y G:i:s");
+ define("_YESTERDAY", "\Ye\s\\te\\r\d\a\y G:i:s");
+ define("_MONTHDAY", "n/j G:i:s");
+ define("_YEARMONTHDAY", "Y/n/j G:i");
+
+
+
+From phppp at berlios.de  Wed Mar 22 11:22:48 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Wed, 22 Mar 2006 11:22:48 +0100
+Subject: [Xoops4-svn] r269 - XoopsCore/branches/2.2.x/2.2.5/html/install/class
+Message-ID: <200603221022.k2MAMmxe003965@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-22 11:22:48 +0100 (Wed, 22 Mar 2006)
+New Revision: 269
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php
+Log:
+clean up plus unexpected variable conversion
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php	2006-03-22 10:10:57 UTC (rev 268)
++++ XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php	2006-03-22 10:22:48 UTC (rev 269)
+@@ -68,7 +68,6 @@
+         fclose($file);
+ 
+         foreach($this->rewrite as $key => $val){
+-            $val = str_replace('$', '\\$', $val);
+             if(is_int($val) &&
+              preg_match("/(define\()([\"'])(".$key.")\\2,\s*([0-9]+)\s*\)/",$content)){
+ 
+
+
+
+From phppp at berlios.de  Wed Mar 22 11:24:15 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Wed, 22 Mar 2006 11:24:15 +0100
+Subject: [Xoops4-svn] r270 - XoopsCore/branches/2.2.x/2.2.5/html/install/sql
+Message-ID: <200603221024.k2MAOFEX004111@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-22 11:24:14 +0100 (Wed, 22 Mar 2006)
+New Revision: 270
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql
+Log:
+MySQL 5.02+ compatible
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql	2006-03-22 10:22:48 UTC (rev 269)
++++ XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql	2006-03-22 10:24:14 UTC (rev 270)
+@@ -167,7 +167,7 @@
+   conf_modid smallint(5) unsigned NOT NULL default '0',
+   conf_catid smallint(5) unsigned NOT NULL default '0',
+   conf_name varchar(25) NOT NULL default '',
+-  conf_title varchar(30) NOT NULL default '',
++  conf_title varchar(255) NOT NULL default '',
+   conf_value text NOT NULL,
+   conf_desc varchar(50) NOT NULL default '',
+   conf_formtype varchar(15) NOT NULL default '',
+@@ -184,8 +184,8 @@
+ 
+ CREATE TABLE configcategory (
+   confcat_id smallint(5) unsigned NOT NULL,
+-  confcat_modid smallint(5) unsigned NOT NULL,
+-  confcat_name varchar(25) NOT NULL default '',
++  confcat_modid smallint(5) unsigned NOT NULL default '0',
++  confcat_name varchar(255) NOT NULL default '',
+   confcat_order smallint(5) unsigned NOT NULL default '0',
+   confcat_nameid varchar(255) NOT NULL default '',
+   confcat_description text NOT NULL,
+@@ -416,7 +416,7 @@
+   rank_min mediumint(8) unsigned NOT NULL default '0',
+   rank_max mediumint(8) unsigned NOT NULL default '0',
+   rank_special tinyint(1) unsigned NOT NULL default '0',
+-  rank_image varchar(255) default NULL,
++  rank_image varchar(255) default NULL default '',
+   PRIMARY KEY  (rank_id),
+   KEY rank_min (rank_min),
+   KEY rank_max (rank_max),
+@@ -546,7 +546,7 @@
+ 
+ CREATE TABLE `block_instance` (
+   `instanceid` int(12) unsigned NOT NULL auto_increment,
+-  `bid` int(12) unsigned NOT NULL,
++  `bid` int(12) unsigned NOT NULL default '0',
+   `options` text NOT NULL default '',
+   `title` varchar(255) NOT NULL default '',
+   `side` tinyint(1) unsigned NOT NULL default '0',
+@@ -554,5 +554,5 @@
+   `visible` tinyint(1) unsigned NOT NULL default '0',
+   `bcachetime` int(10) unsigned NOT NULL default '0',
+   PRIMARY KEY (`instanceid`),
+-  KEY `join` (`instanceid`, `visible`, `weight`)
++  KEY `joinkeys` (`instanceid`, `visible`, `weight`)
+ ) TYPE=MyISAM;
+\ No newline at end of file
+
+
+
+From phppp at berlios.de  Thu Mar 23 03:25:18 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Thu, 23 Mar 2006 03:25:18 +0100
+Subject: [Xoops4-svn] r271 - XoopsCore/branches/2.2.x/2.2.5/html/include
+Message-ID: <200603230225.k2N2PInF003794@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-23 03:24:27 +0100 (Thu, 23 Mar 2006)
+New Revision: 271
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/include/comment_post.php
+Log:
+clean up
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/include/comment_post.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/include/comment_post.php	2006-03-22 10:24:14 UTC (rev 270)
++++ XoopsCore/branches/2.2.x/2.2.5/html/include/comment_post.php	2006-03-23 02:24:27 UTC (rev 271)
+@@ -99,8 +99,6 @@
+ 	exit();
+ }
+ 
+-include_once XOOPS_ROOT_PATH."/modules/system/constants.php";
+-
+ switch ( $op ) {
+ 
+ case "delete":
+
+
+
+From phppp at berlios.de  Thu Mar 23 03:34:31 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Thu, 23 Mar 2006 03:34:31 +0100
+Subject: [Xoops4-svn] r272 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+Message-ID: <200603230234.k2N2YVWs011258@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-23 03:33:55 +0100 (Thu, 23 Mar 2006)
+New Revision: 272
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php
+Log:
+Added description plus utf8_encode cleanup
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php	2006-03-23 02:24:27 UTC (rev 271)
++++ XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php	2006-03-23 02:33:55 UTC (rev 272)
+@@ -1,11 +1,27 @@
+ <?php
+-// $Id$
++/**
++ * Xoops multi-language string and encoding handling class
++ *
++ * @copyright	 The XOOPS project http://www.xoops.org/
++ * @license      http://www.fsf.org/copyleft/gpl.html GNU public license
++ * @package      language
++ * @version      $Id$
++ * @author       D.J. (phppp)
++ * @since        2.2
++ */
++ 
++/**
++ * The class should be an abstract one using PHP embedded functions
++ * based on which, 
++ * each local language defines its own equalient methods
++ *
++ * A comprehensive handler is expected in Xoops 2.3 or 2.4
++ */
+ 
+-// Local handler for string and encoding
+ class XoopsLocal
+ {	
+ 	// localized substr
+-	function &substr($str, $start, $length, $trimmarker = '...')
++	function substr($str, $start, $length, $trimmarker = '...')
+ 	{
+ 	    if ( !XOOPS_USE_MULTIBYTES ) {
+ 	        return ( strlen($str) - $start <= $length ) ? substr( $str, $start, $length ) : substr( $str, $start, $length - strlen($trimmarker) ) . $trimmarker;
+@@ -16,13 +32,13 @@
+ 	    }
+ 	}
+ 	
+-	function &utf8_encode(&$text)
++	// Each local language should define its own equalient utf8_encode 
++	function utf8_encode($text)
+ 	{
+-		$text = XoopsLocal::convert_encoding($text, 'utf-8');
+-	        return $text;
+-	    }
++		return utf8_encode($text);
++    }
+ 	
+-	function &convert_encoding(&$text, $to='utf-8', $from='')
++	function convert_encoding($text, $to='utf-8', $from='')
+ 	{
+ 		if(empty($text)) {		
+ 			return $text;
+@@ -38,7 +54,7 @@
+ 	    return $text;
+ 	}
+ 
+-	function &trim($text)
++	function trim($text)
+ 	{
+ 	    $ret = trim($text);
+ 	    return $ret;
+@@ -107,7 +123,7 @@
+ 	// calling the function:
+ 	// Method 1: echo xoops_local("hello", "Some greeting words");
+ 	// Method 2: echo XoopsLocal::hello("Some greeting words");
+-	function &hello($text)
++	function hello($text)
+ 	{
+ 		$ret = "<div>Hello, ".$text."</div>";
+ 		return $ret;
+
+
+
+From phppp at berlios.de  Thu Mar 23 15:03:31 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Thu, 23 Mar 2006 15:03:31 +0100
+Subject: [Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class
+Message-ID: <200603231403.k2NE3Vl8006978@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-23 15:02:50 +0100 (Thu, 23 Mar 2006)
+New Revision: 273
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php
+Log:
+security update for review: 
+1 Added verification with getimagesize() for uploaded file with mime type of "image/***" 
+2 Added multiple extension sanitizing
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php	2006-03-23 02:33:55 UTC (rev 272)
++++ XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php	2006-03-23 14:02:50 UTC (rev 273)
+@@ -119,6 +119,10 @@
+     var $savedFileName;
+ 
+ 	var $extensionToMime = array();
++	
++	var $extensionsToBeSanitized = array("php", "php3", "php5");
++	var $checkImageType = true;
++	
+     /**
+      * Constructor
+      *
+@@ -189,13 +193,6 @@
+ 			}
+ 		}
+         $this->errors = array();
+-		if ( $ext && in_array( $ext, array( 'gif', 'jpg', 'jpeg', 'png', 'bmp', 'xbm' ) ) ) {
+-	   		// Prevent sending of invalid images that would crash IE
+-			if ( ! ( $info = getimagesize( $this->mediaTmpName ) ) ) {
+-				$this->setErrors( 'Invalid file content' );
+-				return false;
+-			}
+-		}
+         if (intval($this->mediaSize) < 0) {
+             $this->setErrors(_ER_UP_INVALIDFILESIZE);
+             return false;
+@@ -308,6 +305,8 @@
+         if (!is_writeable($this->uploadDir)) {
+             $this->setErrors(sprintf(_ER_UP_FAILEDOPENDIRWRITE, $this->uploadDir));
+         }
++        $this->sanitizeMultipleExtensions();
++        
+         if (!$this->checkMaxFileSize()) {
+             $this->setErrors(sprintf(_ER_UP_FILESIZETOOLARGE, $this->mediaSize));
+         }
+@@ -320,6 +319,9 @@
+         if (!$this->checkMimeType()) {
+             $this->setErrors(sprintf(_ER_UP_MIMETYPENOTALLOWED, $this->mediaType));
+         }
++        if (!$this->checkImageType()) {
++            $this->setErrors('Invalide image file');
++        }
+         if (count($this->errors) > 0) {
+             return false;
+         }
+@@ -425,6 +427,41 @@
+ 	}
+ 
+     /**
++     * Check whether or not the uploaded image type is valid
++     *
++     * @return  bool
++     **/
++    function checkImageType()
++    {
++	    if(empty($this->checkImageType)) return true;
++
++        if( ("image" == substr($this->mediaType, 0, strpos($this->mediaType, "/"))) || 
++        	(!empty($this->mediaRealType) && "image" == substr($this->mediaRealType, 0, strpos($this->mediaRealType, "/")))
++        ){
++			if ( ! ( $info = @getimagesize( $this->mediaTmpName ) ) ) {
++				return false;
++			}
++		}
++		return true;
++	}
++
++    /**
++     * Sanitize executable filename with multiple extensions
++     *
++     **/
++    function sanitizeMultipleExtensions()
++    {
++	    if(empty($this->extensionsToBeSanitized)) return;
++	    $patterns = array();
++	    $replaces = array();
++	    foreach($this->extensionsToBeSanitized as $ext){
++		    $patterns[] = "/\.".preg_quote($ext)."\./i";
++		    $replaces[] = "_".$ext.".";
++	    }
++        $this->mediaName = preg_replace($patterns, $replaces, $this->mediaName);
++	}
++
++    /**
+      * Add an error
+      * 
+      * @param   string  $error
+
+
+
+From phppp at berlios.de  Thu Mar 23 15:04:32 2006
+From: phppp at berlios.de (phppp at BerliOS)
+Date: Thu, 23 Mar 2006 15:04:32 +0100
+Subject: [Xoops4-svn] r274 - XoopsCore/branches/2.0.x/2.0.14/htdocs/class
+Message-ID: <200603231404.k2NE4WjI007406@sheep.berlios.de>
+
+Author: phppp
+Date: 2006-03-23 15:04:30 +0100 (Thu, 23 Mar 2006)
+New Revision: 274
+
+Modified:
+   XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php
+Log:
+security update for review: 
+1 Added verification with getimagesize() for uploaded file with mime type of "image/***" 
+2 Added multiple extension sanitizing
+
+Modified: XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php
+===================================================================
+--- XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php	2006-03-23 14:02:50 UTC (rev 273)
++++ XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php	2006-03-23 14:04:30 UTC (rev 274)
+@@ -115,6 +115,10 @@
+     var $savedFileName;
+ 
+ 	var $extensionToMime = array();
++	
++	var $extensionsToBeSanitized = array("php", "php3", "php5");
++	var $checkImageType = true;
++	
+     /**
+      * Constructor
+      *
+@@ -167,7 +171,7 @@
+             $this->mediaType = $_FILES[$media_name]['type'][$index];
+             $this->mediaSize = $_FILES[$media_name]['size'][$index];
+             $this->mediaTmpName = $_FILES[$media_name]['tmp_name'][$index];
+-            $this->mediaError = !empty($_FILES[$media_name]['error'][$index]) ? $_FILES[$media_name]['errir'][$index] : 0;
++            $this->mediaError = !empty($_FILES[$media_name]['error'][$index]) ? $_FILES[$media_name]['error'][$index] : 0;
+         } else {
+             $media_name =& $_FILES[$media_name];
+ 			$this->mediaName = (get_magic_quotes_gpc()) ? stripslashes($media_name['name']) : $media_name['name'];
+@@ -178,20 +182,13 @@
+             $this->mediaError = !empty($media_name['error']) ? $media_name['error'] : 0;
+         }
+ 		if ( ($ext = strrpos( $this->mediaName, '.' )) !== false ) {
+-			$ext = substr( $this->mediaName, $ext + 1 );
++			$ext = strtolower(substr( $this->mediaName, $ext + 1 ));
+ 			if ( isset( $this->extensionToMime[$ext] ) ) {
+ 				$this->mediaRealType = $this->extensionToMime[$ext];
+ 				//trigger_error( "XoopsMediaUploader: Set mediaRealType to {$this->mediaRealType} (file extension is $ext)", E_USER_NOTICE );
+ 			}
+ 		}
+         $this->errors = array();
+-		if ( $ext && in_array( $ext, array( 'gif', 'jpg', 'jpeg', 'png', 'bmp', 'xbm' ) ) ) {
+-	   		// Prevent sending of invalid images that would crash IE
+-			if ( ! ( $info = getimagesize( $this->mediaTmpName ) ) ) {
+-				$this->setErrors( 'Invalid file content' );
+-				return false;
+-			}
+-		}
+         if (intval($this->mediaSize) < 0) {
+             $this->setErrors('Invalid File Size');
+             return false;
+@@ -304,6 +301,8 @@
+         if (!is_writeable($this->uploadDir)) {
+             $this->setErrors('Failed opening directory with write permission: '.$this->uploadDir);
+         }
++        $this->sanitizeMultipleExtensions();
++        
+         if (!$this->checkMaxFileSize()) {
+             $this->setErrors('File size too large: '.$this->mediaSize);
+         }
+@@ -316,6 +315,9 @@
+         if (!$this->checkMimeType()) {
+             $this->setErrors('MIME type not allowed: '.$this->mediaType);
+         }
++        if (!$this->checkImageType()) {
++            $this->setErrors('Invalid image file');
++        }
+         if (count($this->errors) > 0) {
+             return false;
+         }
+@@ -421,6 +423,41 @@
+ 	}
+ 
+     /**
++     * Check whether or not the uploaded image type is valid
++     *
++     * @return  bool
++     **/
++    function checkImageType()
++    {
++	    if(empty($this->checkImageType)) return true;
++
++        if( ("image" == substr($this->mediaType, 0, strpos($this->mediaType, "/"))) || 
++        	(!empty($this->mediaRealType) && "image" == substr($this->mediaRealType, 0, strpos($this->mediaRealType, "/")))
++        ){
++			if ( ! ( $info = @getimagesize( $this->mediaTmpName ) ) ) {
++				return false;
++			}
++		}
++		return true;
++	}
++
++    /**
++     * Sanitize executable filename with multiple extensions
++     *
++     **/
++    function sanitizeMultipleExtensions()
++    {
++	    if(empty($this->extensionsToBeSanitized)) return;
++	    $patterns = array();
++	    $replaces = array();
++	    foreach($this->extensionsToBeSanitized as $ext){
++		    $patterns[] = "/\.".preg_quote($ext)."\./i";
++		    $replaces[] = "_".$ext.".";
++	    }
++        $this->mediaName = preg_replace($patterns, $replaces, $this->mediaName);
++	}
++
++    /**
+      * Add an error
+      * 
+      * @param   string  $error
+
+
+
+From skalpa at berlios.de  Fri Mar 31 00:22:12 2006
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 31 Mar 2006 00:22:12 +0200
+Subject: [Xoops4-svn] r275 - XoopsCore/branches/tasks/123542-admin/docs
+Message-ID: <200603302222.k2UMMCs2012861@sheep.berlios.de>
+
+Author: skalpa
+Date: 2006-03-31 00:22:11 +0200 (Fri, 31 Mar 2006)
+New Revision: 275
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/docs/changelog.txt
+Log:
+The source repository has been moved back to sourceforge, now that they offer Subversion services...
+
+It's location changed from:
+svn+ssh://yourname at svn.berlios.de/svnroot/repos/xoops4
+to
+https://yourname at svn.sourceforge.net/svnroot/xoops
+
+The new SVN service has been configured so the notifications are sent to xoops-cvs2 at lists.sourceforge.net, as it was the case when using CVS, so if it's not the case already, please subscribe to this ML to recieve them
+
+
+
+Modified: XoopsCore/branches/tasks/123542-admin/docs/changelog.txt
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/docs/changelog.txt	2006-03-23 14:04:30 UTC (rev 274)
++++ XoopsCore/branches/tasks/123542-admin/docs/changelog.txt	2006-03-30 22:22:11 UTC (rev 275)
+@@ -1,7 +1,8 @@
+ XOOPS 2 changelog
+ 
++
+ ============================
+-2006/01/xx: Version 2.3.0-alpha2
++2006/xx/xx: Version 2.3.0-alpha2
+ ============================
+ - Componentized and cleaned up the architectural services: error handler,logger,db,http,session and auth (skalpa)
+ - Fixed activation/deactivation of the error handler (skalpa)
+
+
+

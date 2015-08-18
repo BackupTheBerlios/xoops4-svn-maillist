@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r170 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r170%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class&In-Reply-To=%3C200601202003.k0KK3PJV012354%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000161.html">
+   <LINK REL="Next"  HREF="000163.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r170 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r170%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class&In-Reply-To=%3C200601202003.k0KK3PJV012354%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r170 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 21:03:25 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000161.html">[Xoops4-svn] r169 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000163.html">[Xoops4-svn] r171 - in XoopsCore/branches/tasks/123218-arch-cleanup/htdocs: class include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#162">[ date ]</a>
+              <a href="thread.html#162">[ thread ]</a>
+              <a href="subject.html#162">[ subject ]</a>
+              <a href="author.html#162">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 21:03:25 +0100 (Fri, 20 Jan 2006)
+New Revision: 170
+
+Removed:
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/errorhandler.php
+Log:
+Removed the old error handler
+
+Deleted: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/errorhandler.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/errorhandler.php	2006-01-20 19:22:52 UTC (rev 169)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/errorhandler.php	2006-01-20 20:03:25 UTC (rev 170)
+@@ -1,215 +0,0 @@
+-&lt;?php
+-// $Id$
+-//  ------------------------------------------------------------------------ //
+-//                XOOPS - PHP Content Management System                      //
+-//                    Copyright (c) 2000 XOOPS.org                           //
+-//                       &lt;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&gt;                             //
+-//  ------------------------------------------------------------------------ //
+-//  This program is free software; you can redistribute it and/or modify     //
+-//  it under the terms of the GNU General Public License as published by     //
+-//  the Free Software Foundation; either version 2 of the License, or        //
+-//  (at your option) any later version.                                      //
+-//                                                                           //
+-//  You may not change or alter any portion of this comment or credits       //
+-//  of supporting developers from this source code or any supporting         //
+-//  source code which is considered copyrighted (c) material of the          //
+-//  original comment or credit authors.                                      //
+-//                                                                           //
+-//  This program is distributed in the hope that it will be useful,          //
+-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
+-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
+-//  GNU General Public License for more details.                             //
+-//                                                                           //
+-//  You should have received a copy of the GNU General Public License        //
+-//  along with this program; if not, write to the Free Software              //
+-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+-//  ------------------------------------------------------------------------ //
+-
+-/**
+- * Error handler class
+- *
+- * @author Michael van Dam
+- */
+-class XoopsErrorHandler
+-{
+-	/**
+-	 * List of errors
+-	 * 
+-	 * @var array 
+-	 * @access private 
+-	 */
+-	var $_errors = array();
+-
+-	/**
+-	 * Show error messages?
+-	 *
+-	 * @var boolean
+-	 * @access private
+-	 */
+-	var $_showErrors = false;
+-
+-	/**
+-	 * Was there a fatal error (E_USER_ERROR)
+-	 *
+-	 * @var boolean
+-	 * @access private
+-	 */
+-	var $_isFatal = false;
+-
+-	/**
+-	 * Constructor
+-	 *
+-	 * Registers the error handler and shutdown functions.  NOTE: when
+-	 * registering an error handler, the setting or 'error_reporting' is
+-	 * ignored and *everything* is trapped.
+-	 */
+-	function XoopsErrorHandler()
+-	{
+-		set_error_handler('XoopsErrorHandler_HandleError');
+-		register_shutdown_function('XoopsErrorHandler_Shutdown'); 
+-	}
+-
+-	/**
+-	 * Get the (singleton) instance of the error handler
+-	 *
+-	 * @access public
+-	 */
+-	function &amp;getInstance()
+-	{
+-		static $instance = null;
+-		if (empty($instance)) {
+-			$instance = new XoopsErrorHandler;
+-		}
+-		return $instance;
+-	}
+-
+-	/**
+-	 * Activate the error handler
+-	 *
+-	 * @access public 
+-	 * @param boolean $showErrors True if debug mode is on
+-	 * @return void 
+-	 */
+-	function activate($showErrors=false)
+-	{ 
+-		$this-&gt;_showErrors = $showErrors;
+-	} 
+-
+-	/**
+-	 * Handle an error
+-	 * 
+-	 * @param array $error Associative array containing error info
+-	 * @access public 
+-	 * @return void 
+-	 */
+-	function handleError($error)
+-	{
+-		if (($error['errno'] &amp; error_reporting()) != $error['errno']) {
+-			return;
+-		}
+-		$this-&gt;_errors[] = $error;
+-		if ($error['errno'] == E_USER_ERROR) {
+-			$this-&gt;_isFatal = true;
+-			exit();
+-		}
+-	} 
+-
+-	/**
+-	 * Render the list of errors
+-	 *
+-	 * NOTE: Unfortunately PHP 'fatal' and 'parse' errors are not trappable.
+-	 * If the server has 'display_errors Off', then the result will be a
+-	 * blank page.  It would be nice to print a message 'This page cannot
+-	 * be displayed', but there seems to be no way to print this only when
+-	 * exiting due to a fatal error rather than normal end of page.
+-	 *
+-	 * Thus, 'trigger_error' should be used to trap problems early and
+-	 * display a meaningful message before a PHP fatal or parse error can
+-	 * occur.
+-	 * 
+-	 * @TODO Use CSS
+-	 * @TODO Use language? or allow customized message?
+-	 *
+-	 * @access public 
+-	 * @return void 
+-	 */
+-	function renderErrors()
+-	{
+-		$output = '';
+-		if ($this-&gt;_isFatal) {
+-			$output .= 'This page cannot be displayed due to an internal error.&lt;br/&gt;&lt;br/&gt;';
+-			$output .= 'If you are the administrator of this site, please visit the &lt;a href=&quot;<A HREF="http://wiki.xoops.org/wakka.php?wakka=TroubleshootingBlankPage">http://wiki.xoops.org/wakka.php?wakka=TroubleshootingBlankPage</A>&quot;&gt;Xoops Troubleshooting Page&lt;/a&gt; for assistance.&lt;br/&gt;&lt;br/&gt;';
+-		}
+-		if (!$this-&gt;_showErrors || empty($this-&gt;_errors)) {
+-			return $output;
+-		}
+-
+-		foreach( $this-&gt;_errors as $error )
+-		{
+-			switch ( $error['errno'] )
+-			{
+-				case E_USER_NOTICE:
+-					$output .= &quot;Notice [Xoops]: &quot;;
+-					break;
+-				case E_USER_WARNING:
+-					$output .= &quot;Warning [Xoops]: &quot;;
+-					break;
+-				case E_USER_ERROR:
+-					$output .= &quot;Error [Xoops]: &quot;;
+-					break;
+-				case E_NOTICE:
+-					$output .= &quot;Notice [PHP]: &quot;;
+-					break;
+-				case E_WARNING:
+-					$output .= &quot;Warning [PHP]: &quot;;
+-					break;
+-				default:
+-					$output .= &quot;Unknown Condition [&quot; . $error['errno'] . &quot;]: &quot;;
+-			} 
+-			$output .= sprintf( &quot;%s in file %s line %s&lt;br&gt;\n&quot;, $error['errstr'], $error['errfile'], $error['errline'] );
+-		} 
+-		return $output;
+-	} 
+-
+-} 
+-
+-/**
+- * User-defined error handler (called from 'trigger_error')
+- * 
+- * NOTE: Some recent versions of PHP have a 5th parameter, &amp;$p_ErrContext
+- * which is an associative array of all variables defined in scope in which
+- * error occurred.  We cannot support this, for compatibility with older PHP.
+- * 
+- * @access public 
+- * @param int $errNo Type of error
+- * @param string $errStr Error message
+- * @param string $errFile File in which error occurred
+- * @param int $errLine Line number on which error occurred
+- * @return void 
+- */
+-function XoopsErrorHandler_HandleError($errNo, $errStr, $errFile, $errLine)
+-{ 
+-	// NOTE: we only store relative pathnames
+-	$new_error = array( 
+-		'errno' =&gt; $errNo,
+-		'errstr' =&gt; $errStr,
+-		'errfile' =&gt; preg_replace(&quot;|^&quot; . XOOPS_ROOT_PATH . &quot;/|&quot;, '', $errFile),
+-		'errline' =&gt; $errLine 
+-		);
+-	$error_handler =&amp; XoopsErrorHandler::getInstance();
+-	$error_handler-&gt;handleError($new_error);
+-} 
+-
+-/**
+- * User-defined shutdown function (called from 'exit')
+- * 
+- * @access public 
+- * @return void 
+- */
+-function XoopsErrorHandler_Shutdown()
+-{
+-	$error_handler =&amp; XoopsErrorHandler::getInstance();
+-	echo $error_handler-&gt;renderErrors();
+-} 
+-
+-?&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000161.html">[Xoops4-svn] r169 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000163.html">[Xoops4-svn] r171 - in XoopsCore/branches/tasks/123218-arch-cleanup/htdocs: class include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#162">[ date ]</a>
+              <a href="thread.html#162">[ thread ]</a>
+              <a href="subject.html#162">[ subject ]</a>
+              <a href="author.html#162">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r241 - XoopsCore/branches/tasks/123542-admin/XOOPS/Boot
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r241%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Boot&In-Reply-To=%3C200602131541.k1DFfCSO027277%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000232.html">
+   <LINK REL="Next"  HREF="000234.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r241 - XoopsCore/branches/tasks/123542-admin/XOOPS/Boot</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r241%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Boot&In-Reply-To=%3C200602131541.k1DFfCSO027277%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r241 - XoopsCore/branches/tasks/123542-admin/XOOPS/Boot">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 16:41:12 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000232.html">[Xoops4-svn] r240 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering
+</A></li>
+        <LI>Next message: <A HREF="000234.html">[Xoops4-svn] r242 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#233">[ date ]</a>
+              <a href="thread.html#233">[ thread ]</a>
+              <a href="subject.html#233">[ subject ]</a>
+              <a href="author.html#233">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 16:41:11 +0100 (Mon, 13 Feb 2006)
+New Revision: 241
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/exxos.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/kernel.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/rc.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/xoops2.php
+Log:
+Renamed the XoopsOS layer folder
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/exxos.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/exxos.php	2006-02-13 15:36:02 UTC (rev 240)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/exxos.php	2006-02-13 15:41:11 UTC (rev 241)
+@@ -114,7 +114,11 @@
+ 					$inst =&amp; $me-&gt;factories[$id]-&gt;createInstance( $options );
+ 				}
+ 			} else {
+-				$inst =&amp; XOS::createInstanceOf( $id, $options, $args );
++				if ( isset( $me-&gt;registry[$id]['xoBundleIdentifier'] ) ) {
++					$inst =&amp; XOS::createInstanceOf( $me-&gt;registry[$id]['xoBundleIdentifier'], $options, $args );
++				} else {
++					$inst =&amp; XOS::createInstanceOf( $id, $options, $args );
++				}
+ 			}
+ 			if ( is_object( $inst ) ) {
+ 				if ( @$inst-&gt;xoSingleton ) {
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/kernel.php	2006-02-13 15:36:02 UTC (rev 240)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/kernel.php	2006-02-13 15:41:11 UTC (rev 241)
+@@ -44,7 +44,7 @@
+ 	var $xoRunMode				= XO_MODE_PROD;
+ 	var $xoShortVersionString	= 'XOOPS 2.3.0-alpha1 &quot;Cheerleaders&quot;';
+ 
+-	var $xoBundleRoot = 'XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm';
++	var $xoBundleRoot = 'XOOPS/Frameworks/XoopsCore/XoopsOS/Kernel.xofrm';
+ 	
+ 	/**
+ 	 * Current host identifier
+@@ -95,7 +95,7 @@
+ 		'http'		=&gt; 'xoops_http_HttpHandler',
+ 		'session'	=&gt; 'xoops_http_SessionService',
+ 		'auth'		=&gt; 'xoops_auth_AuthenticationService',
+-		'theme'		=&gt; 'xoops_pyro_Theme',
++		'theme'		=&gt; 'xoops_opal_Theme',
+ 		'legacydb'	=&gt; array( 'xoops_db_Database', array( 'driverName' =&gt; 'xoops.legacy' ) ),
+ 	);
+ 	/** 
+@@ -170,6 +170,9 @@
+ 	 	$this-&gt;hostId = $hostId;
+ 	 	XOS::apply( $this, $hostVars );
+ 	 	
++		if ( @$GLOBALS['xoPreventDevMode'] ) {
++			$this-&gt;xoRunMode = 0;
++		}
+ 	 	// Enable error reporting by default in development mode, enable it otherwise
+  		error_reporting( ( $this-&gt;xoRunMode == XO_MODE_DEV ) ? E_ALL : 0 );
+ 
+@@ -278,6 +281,9 @@
+ 		if ( !$module ) {
+ 			$this-&gt;services['http']-&gt;sendResponse( 500, null, -1 );
+ 		} else {
++			if ( method_exists( $module, 'xoRunModule' ) &amp;&amp; !call_user_func( array( &amp;$module, 'xoRunModule' ) ) ) {
++				return false;
++			}
+ 			//if ( !$module-&gt;checkAccess() ) {
+ 				//$this-&gt;services['http']-&gt;sendResponse( 403, null, -1 );
+ 			//} else {
+@@ -376,7 +382,9 @@
+ 				'fullName' =&gt; $user-&gt;getVar( 'name', 'n' ),
+ 				'level' =&gt; $lvl_lookup[ $user-&gt;getVar( 'level', 'n' ) ],
+ 			) );
+-			
++			if ( isset( $this-&gt;services['http'] ) ) {
++				$this-&gt;services['http']-&gt;addVariation( 'xo-user', $this-&gt;currentUser-&gt;userId );
++			}
+ 			if ( $permanent &amp;&amp; $this-&gt;services['session'] ) {
+ 				$this-&gt;services['session']-&gt;start();
+ 				$_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] = $login;
+@@ -416,8 +424,25 @@
+ 			}
+ 		} else {
+ 			$root = XOS::classVar( $parts[0], 'xoBundleRoot' );
+-			return $this-&gt;path( $root . '/' . $parts[1], $virtual );
++			@list( $location, $query ) = explode( '?', $parts[1] );
++			if ( empty($location) || strpos( $location, '/' ) !== false ) {
++				return $this-&gt;path( $root . '/' . $location, $virtual );
++			}
++			if ( $module = $this-&gt;loadModule( $parts[0] ) ) {
++				$uri = $module-&gt;xoBundleRoot;
++				if ( isset( $module-&gt;moduleLocations[$location] ) ) {
++					$uri .= $module-&gt;moduleLocations[$location]['scriptFile'];
++				} else {
++					trigger_error( &quot;Unknown location {$parts[0]}#$location&quot;, E_USER_WARNING );
++					return false;
++				}
++				if ( isset($query ) ) {
++					$uri .= ( strpos( $uri, '?' ) ? '&amp;' : '?' ) . $query;
++				}
++				return $this-&gt;path( $uri, $virtual );
++			}
+ 		}
++		return false;
+ 	}
+ 	/**
+ 	* Convert a XOOPS path to an URL
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/rc.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/rc.php	2006-02-13 15:36:02 UTC (rev 240)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/rc.php	2006-02-13 15:41:11 UTC (rev 241)
+@@ -19,21 +19,27 @@
+ if ( !defined( 'XOOPS_PATH' ) ) exit();
+ 
+ 
++if ( isset( $_SERVER['SERVER_NAME'] ) ) {
++	// If we're not using the cli sapi, instanciate the http service
++	$this-&gt;loadService( 'http' );
++}
++
+ if ( $this-&gt;xoRunMode ) {
+ 	// If the server is not in production mode, instanciate the logger and error handling services	
+ 	$this-&gt;loadService( 'logger' );
+ 	$this-&gt;loadService( 'error' );
+ }
+ 
+-if ( isset( $_SERVER['SERVER_NAME'] ) ) {
+-	// If we're not using the cli sapi, instanciate the http related services
++if ( isset( $this-&gt;services['http'] ) ) {
+ 	$this-&gt;loadService( 'session' );
+-	$this-&gt;loadService( 'http' );
++	
++	if ( isset( $_SESSION ) ) {
++		$this-&gt;services['http']-&gt;reloadSessionState();
++	}
+ 	// Wake up user if info is found in the session
+ 	if ( isset( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] ) ) {
+ 		$this-&gt;acceptUser( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'], true );
+ 	}
+-
+ }
+ 
+ 
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/xoops2.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/xoops2.php	2006-02-13 15:36:02 UTC (rev 240)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Boot/xoops2.php	2006-02-13 15:41:11 UTC (rev 241)
+@@ -66,6 +66,8 @@
+ 		$vars['hostLocation']	= $vars['hostLocation'][$aliasNum];
+ 		$vars['secureLocation'] = $vars['secureLocation'][$aliasNum];
+ 		$vars['isSecure'] = $reqSecure;
++		$vars['hostsList'] = array_keys( $hostsInfo );
++		unset( $vars['hostsList'][''] );
+ 		// Instanciate the kernel
+ 		new xoops_kernel_Xoops2( $hostId, $vars );
+ 		return true;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000232.html">[Xoops4-svn] r240 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering
+</A></li>
+	<LI>Next message: <A HREF="000234.html">[Xoops4-svn] r242 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#233">[ date ]</a>
+              <a href="thread.html#233">[ thread ]</a>
+              <a href="subject.html#233">[ subject ]</a>
+              <a href="author.html#233">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

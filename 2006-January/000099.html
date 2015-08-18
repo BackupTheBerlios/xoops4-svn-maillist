@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r107%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/class&In-Reply-To=%3C200601030032.k030WC8p002687%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000098.html">
+   <LINK REL="Next"  HREF="000100.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r107%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/class&In-Reply-To=%3C200601030032.k030WC8p002687%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class">skalpa at berlios.de
+       </A><BR>
+    <I>Tue Jan  3 01:32:12 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000098.html">[Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+        <LI>Next message: <A HREF="000100.html">[Xoops4-svn] r108 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-03 01:32:08 +0100 (Tue, 03 Jan 2006)
+New Revision: 107
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/class/template.php
+Log:
+Put back the xoops_template_clear_module_cache() function as this one was really useful :-)
+Thx to philou for notifying me about this
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/class/template.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/class/template.php	2006-01-02 21:21:40 UTC (rev 106)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/class/template.php	2006-01-03 00:32:08 UTC (rev 107)
+@@ -102,6 +102,16 @@
+  * @return 
+  **/
+ function xoops_template_clear_module_cache($mid) {
+-	trigger_error( &quot;Function removed&quot;, E_USER_ERROR );
++	$block_arr =&amp; XoopsBlock::getByModule($mid);
++	$count = count($block_arr);
++	if ($count &gt; 0) {
++		$xoopsTpl = new XoopsTpl();	
++		$xoopsTpl-&gt;xoops_setCaching(2);
++		for ($i = 0; $i &lt; $count; $i++) {
++			if ($block_arr[$i]-&gt;getVar('template') != '') {
++				$xoopsTpl-&gt;clear_cache('db:'.$block_arr[$i]-&gt;getVar('template'), 'blk_'.$block_arr[$i]-&gt;getVar('bid'));
++			}
++		}
++	}
+ }
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000098.html">[Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+	<LI>Next message: <A HREF="000100.html">[Xoops4-svn] r108 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r32 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj: plugins smarty/plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r32%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj%3A%20plugins%20smarty/plugins&In-Reply-To=%3C200511251015.jAPAFcUA025284%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000024.html">
+   <LINK REL="Next"  HREF="000026.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r32 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj: plugins smarty/plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r32%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj%3A%20plugins%20smarty/plugins&In-Reply-To=%3C200511251015.jAPAFcUA025284%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r32 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj: plugins smarty/plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Nov 25 11:15:38 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000024.html">[Xoops4-svn] r31 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000026.html">[Xoops4-svn] r33 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#25">[ date ]</a>
+              <a href="thread.html#25">[ thread ]</a>
+              <a href="subject.html#25">[ subject ]</a>
+              <a href="author.html#25">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-25 11:15:36 +0100 (Fri, 25 Nov 2005)
+New Revision: 32
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/function.xoops_link.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/function.xoops_link.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/resource.db.php
+Log:
+Moved XOOPS specific Smarty plug-ins to their own folder.
+
+Now, the &quot;smarty&quot; folder of the xoops_template_Smarty component contains EXACTLY a vanilla Smarty distribution.
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/function.xoops_link.php (from rev 31, XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/function.xoops_link.php)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php (from rev 31, XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/resource.db.php)
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/function.xoops_link.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/function.xoops_link.php	2005-11-25 09:08:11 UTC (rev 31)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/function.xoops_link.php	2005-11-25 10:15:36 UTC (rev 32)
+@@ -1,102 +0,0 @@
+-&lt;?php
+-// $Id$
+-//  ------------------------------------------------------------------------ //
+-//                XOOPS - PHP Content Management System                      //
+-//                    Copyright (c) 2000 XOOPS.org                           //
+-//                       &lt;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&gt;                             //
+-//  ------------------------------------------------------------------------ //
+-//  This program is free software; you can redistribute it and/or modify     //
+-//  it under the terms of the GNU General Public License as published by     //
+-//  the Free Software Foundation; either version 2 of the License, or        //
+-//  (at your option) any later version.                                      //
+-//                                                                           //
+-//  You may not change or alter any portion of this comment or credits       //
+-//  of supporting developers from this source code or any supporting         //
+-//  source code which is considered copyrighted (c) material of the          //
+-//  original comment or credit authors.                                      //
+-//                                                                           //
+-//  This program is distributed in the hope that it will be useful,          //
+-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
+-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
+-//  GNU General Public License for more details.                             //
+-//                                                                           //
+-//  You should have received a copy of the GNU General Public License        //
+-//  along with this program; if not, write to the Free Software              //
+-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+-//  ------------------------------------------------------------------------ //
+-
+-/*
+- * Smarty plugin
+- * -------------------------------------------------------------
+- * Type:     function
+- * Name:     xoops_link
+- * Version:  1.0
+- * Author:	 Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+- * Purpose:  format URL for linking to specific Xoops page
+- * Input:    module	= module to link to (optional, default to current module)
+- *           page	= page to link to (optional, default to current page)
+- *           params	= query string parameters (optional, default to empty)
+- *					ex: urlparm1=,urlparm2,urlparm3=val3, etc.....
+- *						urlparm3 value will be set to val3
+- *						urlparm2 value will keep current one (no = sign)
+- *						urlparm1 value will be set to empty ( = sign, but nothing after)
+- *
+- *			I.e: The template called by 'index.php?cid=5' calls this function with
+- *				{xoops_link page=&quot;viewcat.php&quot; urlvars=&quot;cid,orderby=titleA&quot;}&gt;
+- *			Then the generated URL will be:
+- *				XOOPS_URL/modules/MODULENAME/viewcat.php?cid=5&amp;orderby=titleA
+- * -------------------------------------------------------------
+- */
+-
+-function smarty_function_xoops_link($params, $smarty) {
+-	$urlstr='';
+-	if (isset($params['urlvars'])) {
+-		$szvars=explode( '&amp;', $params['urlvars'] );
+-		$vars=array();
+-		// Split the string making an array from the ('name','value') pairs
+-		foreach ($szvars as $szvar) {
+-			$pos=strpos($szvar,'=');
+-			if ( $pos != false ) {			// If a value is specified, use it
+-				$vars[] = array( 'name' =&gt; substr($szvar,0,$pos), 'value' =&gt; substr($szvar,$pos+1) );
+-			} else {						// Otherwise use current one (if any)
+-				if ( isset($_POST[$szvar]) ) {
+-					$vars[] = array( 'name' =&gt; $szvar, 'value' =&gt; $_POST[$szvar] );
+-				} elseif ( isset($_GET[$szvar]) ) {
+-					$vars[] = array( 'name' =&gt; $szvar, 'value' =&gt; $_GET[$szvar] );
+-				}
+-			}
+-		}
+-		// Now reconstruct query string from specified variables
+-		foreach ($vars as $var) {
+-			$urlstr = &quot;$urlstr&amp;{$var['name']}={$var['value']}&quot;;
+-		}
+-		if ( strlen($urlstr) &gt; 0 ) {
+-			$urlstr = '?' . substr( $urlstr, 1 );
+-		}
+-	}
+-
+-	// Get default module/page from current ones if necessary
+-	$module='';
+-	$page='';
+-	if ( !isset($params['module']) ) {
+-		if ( isset($GLOBALS['xoopsModule']) &amp;&amp; is_object($GLOBALS['xoopsModule']) ) {
+-			$module = $GLOBALS['xoopsModule']-&gt;getVar('dirname');
+-		}
+-	} else {
+-		$module = $params['module'];
+-	}
+-	if ( !isset($params['page']) ) {
+-		$cur = $_SERVER['PHP_SELF'];
+-		$page = substr( $cur, strrpos( $cur, '/' ) + 1 );
+-	} else {
+-		$page = $params['page'];
+-	}
+-	// Now, return entire link URL :-)
+-	if ( empty($module) ) {
+-		echo XOOPS_URL . &quot;/$page&quot; . $urlstr;
+-	} else {
+-		echo XOOPS_URL . &quot;/modules/$module/$page&quot; . $urlstr;
+-	}
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/resource.db.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/resource.db.php	2005-11-25 09:08:11 UTC (rev 31)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/plugins/resource.db.php	2005-11-25 10:15:36 UTC (rev 32)
+@@ -1,123 +0,0 @@
+-&lt;?php
+-/*
+- * Smarty plugin
+- * ------------------------------------------------------------- 
+- * File:     resource.db.php
+- * Type:     resource
+- * Name:     db
+- * Purpose:  Fetches templates from a database
+- * -------------------------------------------------------------
+- */
+-function smarty_resource_db_source($tpl_name, &amp;$tpl_source, &amp;$smarty)
+-{
+-    $tplfile_handler =&amp; xoops_gethandler('tplfile');
+-	$tplobj =&amp; $tplfile_handler-&gt;find($GLOBALS['xoopsConfig']['template_set'], null, null, null, $tpl_name, true);
+-	if (count($tplobj) &gt; 0) {
+-		if (false != $smarty-&gt;xoops_canUpdateFromFile()) {
+-			$conf_theme = isset($GLOBALS['xoopsConfig']['theme_set']) ? $GLOBALS['xoopsConfig']['theme_set'] : 'default';
+-			if ($conf_theme != 'default') {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			} else {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			}
+-			if ($filepath != &quot;&quot; &amp;&amp; file_exists($filepath)) {
+-				$file_modified = filemtime($filepath);
+-				if ($file_modified &gt; $tplobj[0]-&gt;getVar('tpl_lastmodified')) {
+-					if (false != $fp = fopen($filepath, 'r')) {
+-						$filesource = fread($fp, filesize($filepath));
+-    					fclose($fp);
+-						$tplobj[0]-&gt;setVar('tpl_source', $filesource, true);
+-						$tplobj[0]-&gt;setVar('tpl_lastmodified', time());
+-						$tplobj[0]-&gt;setVar('tpl_lastimported', time());
+-    					$tplfile_handler-&gt;forceUpdate($tplobj[0]);
+-						$tpl_source = $filesource;
+-        				return true;
+-					}
+-				}
+-			}
+-		}
+-        $tpl_source = $tplobj[0]-&gt;getVar('tpl_source');
+-        return true;
+-    } else {
+-		return false;
+-	}
+-}
+-
+-function smarty_resource_db_timestamp($tpl_name, &amp;$tpl_timestamp, &amp;$smarty)
+-{
+-    $tplfile_handler =&amp; xoops_gethandler('tplfile');
+-    $tplobj =&amp; $tplfile_handler-&gt;find($GLOBALS['xoopsConfig']['template_set'], null, null, null, $tpl_name, false);
+-	if (count($tplobj) &gt; 0) {
+-		if (false != $smarty-&gt;xoops_canUpdateFromFile()) {
+-			$conf_theme = isset($GLOBALS['xoopsConfig']['theme_set']) ? $GLOBALS['xoopsConfig']['theme_set'] : 'default';
+-			if ($conf_theme != 'default') {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			} else {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			}
+-			if ($filepath != &quot;&quot; &amp;&amp; file_exists($filepath)) {
+-				$file_modified = filemtime($filepath);
+-				if ($file_modified &gt; $tplobj[0]-&gt;getVar('tpl_lastmodified')) {
+-					$tpl_timestamp = $file_modified;
+-					return true;
+-				}
+-			}
+-		}
+-        $tpl_timestamp = $tplobj[0]-&gt;getVar('tpl_lastmodified');
+-        return true;
+-    } else {
+-		return false;
+-	}
+-}
+-
+-function smarty_resource_db_secure($tpl_name, &amp;$smarty)
+-{
+-    // assume all templates are secure
+-    return true;
+-}
+-
+-function smarty_resource_db_trusted($tpl_name, &amp;$smarty)
+-{
+-    // not used for templates
+-}
+-?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000024.html">[Xoops4-svn] r31 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000026.html">[Xoops4-svn] r33 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#25">[ date ]</a>
+              <a href="thread.html#25">[ thread ]</a>
+              <a href="subject.html#25">[ subject ]</a>
+              <a href="author.html#25">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

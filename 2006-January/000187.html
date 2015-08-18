@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r195 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules: . sysutils sysutils/identification sysutils/identification/images sysutils/identification/templates
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r195%20-%20in%20XoopsCore/branches/tasks/123353-authentication/htdocs/modules%3A%20.%20sysutils%20sysutils/identification%20sysutils/identification/images%20sysutils/identification/templates&In-Reply-To=%3C200601262229.k0QMTjMS005638%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000186.html">
+   <LINK REL="Next"  HREF="000188.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r195 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules: . sysutils sysutils/identification sysutils/identification/images sysutils/identification/templates</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r195%20-%20in%20XoopsCore/branches/tasks/123353-authentication/htdocs/modules%3A%20.%20sysutils%20sysutils/identification%20sysutils/identification/images%20sysutils/identification/templates&In-Reply-To=%3C200601262229.k0QMTjMS005638%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r195 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules: . sysutils sysutils/identification sysutils/identification/images sysutils/identification/templates">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 26 23:29:45 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000186.html">[Xoops4-svn] r194 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000188.html">[Xoops4-svn] r196 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#187">[ date ]</a>
+              <a href="thread.html#187">[ thread ]</a>
+              <a href="subject.html#187">[ subject ]</a>
+              <a href="author.html#187">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-26 23:29:44 +0100 (Thu, 26 Jan 2006)
+New Revision: 195
+
+Added:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-bg.png
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-credentials-bg.png
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-logo.png
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-secure.png
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php
+Log:
+Added the new user login module (not entirely working or integrated with the boot sequence yet)
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-credentials-bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-credentials-bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-logo.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-logo.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-secure.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-secure.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-26 22:27:01 UTC (rev 194)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-26 22:29:44 UTC (rev 195)
+@@ -0,0 +1,39 @@
++&lt;?php
++
++
++
++	require_once '../../../mainfile.php';
++
++	global $xoops;
++
++	$app =&amp; $xoops-&gt;loadModule();
++	
++	// Read the request params defined in xo-info.php (use default if the var isnt found)
++	// sanitize them, and create corresponding global vars
++	extract( $app-&gt;requestParameters(), EXTR_OVERWRITE );
++	
++	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
++		// Check request parameters: if something is wrong, send an HTTP 'bad request' response
++		if ( empty($login) ) {
++			return $xoops-&gt;services['http']-&gt;sendResponse( 400, XOT_('You must supply a login name'), $_SERVER['REQUEST_URI'] );
++		}
++		$auth =&amp; $xoops-&gt;loadService( 'auth' );
++		if ( $auth-&gt;login( $login, $password, '' ) ) {
++			$xoops-&gt;services['session']-&gt;start();
++			return $xoops-&gt;services['http']-&gt;sendResponse( 303, XOT_('Thank you for logging in,') . &quot; $login&quot;, $xoops_redirect );
++		} else {
++			return $xoops-&gt;services['http']-&gt;sendResponse( 403, XOT_('Incorrect login'), $_SERVER['REQUEST_URI'] );
++		}
++	}
++
++	$theme =&amp; $xoops-&gt;loadService( 'theme' );
++	
++	$outputVars = array(
++		'login' =&gt; $login,
++		'password' =&gt; '',
++	);
++	$theme-&gt;addStylesheet( 'mod_xoops_Identification#style.css' );
++	$theme-&gt;render( null, null, 'mod_xoops_Identification#templates/page-login.xotpl', $outputVars );
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css	2006-01-26 22:27:01 UTC (rev 194)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css	2006-01-26 22:29:44 UTC (rev 195)
+@@ -0,0 +1,64 @@
++
++#xo-content .login_form  {
++	position:		relative;
++	max-width:		480px;
++	margin:			1em auto;
++	border:			1px solid #000000;
++	background:		url( images/login_win-bg.png );
++}
++#xo-content .login_form .safety_indicator {
++	position:		absolute;
++	top:			4px;
++	right:			4px;
++}
++
++
++#xo-content .login_form  h2 {
++	margin:			.5em;
++	padding:		130px 0px 0px;
++	background:		url( images/login_win-logo.png ) no-repeat center top;
++	text-align:		center;
++}
++
++#xo-content .login_form  .credentials {
++	margin:			.5em 1em;
++	padding:		1em;
++	background:		url( images/login_win-credentials-bg.png );
++	line-height:	1.5em;
++}
++
++#xo-content .login_form  .credentials label {
++	display:		-moz-inline-box;
++	display:		inline-block;
++	width:			10em;
++	margin:			1px;
++
++}
++
++#xo-content .login_form  .credentials input {
++	width:			13em;
++	margin:			1px;
++
++	border:			1px solid #000000;
++	padding:		1px;
++}
++
++#xo-content .login_form  .credentials input:focus {
++	border:			1px solid #2266cc;
++}
++
++#xo-content .login_form  .actions {
++	padding:		1.5em .5em .5em;
++	text-align:		center;
++}
++
++.helper_links {
++	margin:			.5em 1em;
++}
++.helper_links a {
++	display:		block;
++}
++.helper_links a.password_recovery {
++	text-align:		right;
++	margin-top:		-1.2em;
++}
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+___________________________________________________________________
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl	2006-01-26 22:27:01 UTC (rev 194)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl	2006-01-26 22:29:44 UTC (rev 195)
+@@ -0,0 +1,23 @@
++
++
++&lt;form method=&quot;post&quot; action=&quot;([xoAppUrl mod_xoops_Identification#login])&quot; class=&quot;login_form&quot;&gt;
++	&lt;h2 class=&quot;site_title&quot;&gt;My new XOOPS website&lt;/h2&gt;
++	&lt;div class=&quot;credentials&quot;&gt;
++		&lt;label for=&quot;login-form-login&quot;&gt;Login&lt;/label&gt;
++		&lt;input type=&quot;text&quot; name=&quot;login&quot; id=&quot;login-form-login&quot; value=&quot;([$login])&quot; /&gt;&lt;br /&gt;
++		&lt;label for=&quot;login-form-password&quot;&gt;Password&lt;/label&gt;
++		&lt;input type=&quot;text&quot; name=&quot;password&quot; id=&quot;login-form-password&quot; value=&quot;([$password])&quot; /&gt;&lt;br /&gt;
++	&lt;/div&gt;
++	&lt;div class=&quot;actions&quot;&gt;
++		&lt;button type=&quot;submit&quot;&gt;Login&lt;/button&gt;
++	&lt;/div&gt;
++	&lt;div class=&quot;helper_links&quot;&gt;
++		&lt;a href=&quot;#&quot; class=&quot;registration_link&quot;&gt;Not registered yet ?&lt;/a&gt;
++		&lt;a href=&quot;#&quot; class=&quot;password_recovery&quot;&gt;Lost your password ?&lt;/a&gt;
++	&lt;/div&gt;
++	([if $xoops-&gt;isSecure])
++		&lt;object type=&quot;image/png&quot; class=&quot;safety_indicator&quot; alt=&quot;Safe form&quot;
++			title=&quot;This form is using encryption. Your password won't be transmitted.&quot;
++			data=&quot;([xoImgUrl mod_xoops_Identification#images/login_win-secure.png])&quot;&gt;&lt;/object&gt;
++	([/if])
++&lt;/form&gt;
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php	2006-01-26 22:27:01 UTC (rev 194)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php	2006-01-26 22:29:44 UTC (rev 195)
+@@ -0,0 +1,52 @@
++&lt;?php
++/**
++ * mod_xoops_Identification bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		mod_xoops_Identification
++ * @version		$Id$
++ */
++
++
++
++return array(
++	'xoBundleIdentifier' =&gt; 'mod_xoops_Identification',
++	'xoBundleDisplayName' =&gt; 'XOOPS default identification module',
++	//'xoClassPath' =&gt; '/xoops-module.php',
++
++	'allowFor' =&gt; array( XOOPS_GROUP_ANONYMOUS, XOOPS_GROUP_USERS ),
++	
++	'moduleLocations' =&gt; array(
++		'login' =&gt; array(
++			'displayName' =&gt; 'User login',
++			'scriptFile' =&gt; '/login.php',
++			'parameters' =&gt; array(
++				'login' =&gt; array( '', XO_TYPE_STRING ),
++				'password' =&gt; array( '', XO_TYPE_STRING ),
++				'xoops_redirect' =&gt; array( '/www/', XO_TYPE_STRING ),
++			),
++		),
++		'logout' =&gt; array(
++			'displayName' =&gt; 'Logout',
++			'scriptFile' =&gt; '/logout.php',
++			'allowFor' =&gt; array( XOOPS_GROUP_USERS ),
++		),
++		'lost-password' =&gt; array(
++			'displayName' =&gt; 'Lost your password ?',
++			'scriptFile' =&gt; '/lostpass.php',
++		),
++	),
++	'xoServices' =&gt; array(
++		'xoops_identification_LoginForm' =&gt; array(
++			'xoClassPath' =&gt; '/class/loginform.php',
++		),
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000186.html">[Xoops4-svn] r194 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000188.html">[Xoops4-svn] r196 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#187">[ date ]</a>
+              <a href="thread.html#187">[ thread ]</a>
+              <a href="subject.html#187">[ subject ]</a>
+              <a href="author.html#187">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

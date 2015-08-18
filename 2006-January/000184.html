@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r192 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r192%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200601262223.k0QMNZQb005035%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000183.html">
+   <LINK REL="Next"  HREF="000185.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r192 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r192%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200601262223.k0QMNZQb005035%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r192 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 26 23:23:35 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000183.html">[Xoops4-svn] r191 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+        <LI>Next message: <A HREF="000185.html">[Xoops4-svn] r193 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#184">[ date ]</a>
+              <a href="thread.html#184">[ thread ]</a>
+              <a href="subject.html#184">[ subject ]</a>
+              <a href="author.html#184">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-26 23:23:34 +0100 (Thu, 26 Jan 2006)
+New Revision: 192
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+Log:
+Enhanced the theme resourcePath() method to support referencing modules by identifier
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-26 22:13:58 UTC (rev 191)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-26 22:23:34 UTC (rev 192)
+@@ -31,14 +31,15 @@
+ 	 * 
+ 	 * @var string
+ 	 */
+-	var $defaultTheme = 'default-web';
++	var $defaultTheme = 'default';
+ 
+ 	/**
+ 	 * Instanciate the specified theme
+ 	 */
+ 	function &amp;createInstance( $options = array(), $initArgs = array() ) {
+ 		if ( @empty( $options['folderName'] ) ) {
+-			$options['folderName'] = $this-&gt;defaultTheme;
++			//$options['folderName'] = $this-&gt;defaultTheme;
++			$options['folderName'] = $GLOBALS['xoopsConfig']['theme_set'];
+ 		} elseif ( !empty( $this-&gt;allowedThemes ) &amp;&amp; !in_array( $options['folderName'], $this-&gt;allowedThemes ) ) {
+ 			$options['folderName'] = $this-&gt;defaultTheme;
+ 		}
+@@ -241,8 +242,10 @@
+ 			$tpl = $zone . 'Template';
+ 			$tpl = $this-&gt;$tpl;
+ 			if ( !empty( $tpl ) ) {
+-				if ( $tpl{0} == '.' ) {
++				if ( substr( $tpl, 0, 1 ) == '.' ) {
+ 					$tpl = $xoops-&gt;path( $this-&gt;resourcePath( substr( $tpl, 1 ) ) );
++				} elseif ( !strpos( $tpl, ':' ) ) {
++					$tpl = 'xotpl:' . $tpl;
+ 				}
+ 				$this-&gt;template-&gt;display( $tpl );
+ 			} elseif ( $zone != 'content' ) {
+@@ -267,7 +270,19 @@
+ 	
+ 	function resourcePath( $path, $fromDocRoot = true ) {
+ 		global $xoops;
+-		if ( $path{0} == '/' ) {
++		
++		$parts = explode( '#', $path, 2 );
++		if ( count( $parts ) &gt; 1 ) {
++			list( $bundleId, $resPath ) = $parts;
++			// This is component resource: modules are in 'modules', and components in 'components'
++			$themedRoot = ( substr( $parts[0], 0, 4 ) == 'mod_' ) ? 'modules' : 'components';
++			if ( file_exists( &quot;$this-&gt;path/$themedRoot/$bundleId/$resPath&quot; ) ) {
++				return &quot;themes/$this-&gt;folderName/$themedRoot/$bundleId/$resPath&quot;;
++			} else {
++				return XOS::classVar( $bundleId, 'xoBundleRoot' ) . '/' . $resPath;
++			}
++		}		
++		if ( substr( $path, 0, 1 ) == '/' ) {
+ 			$path = substr( $path, 1 );
+ 			$fromDocRoot = false;
+ 		}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000183.html">[Xoops4-svn] r191 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+	<LI>Next message: <A HREF="000185.html">[Xoops4-svn] r193 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#184">[ date ]</a>
+              <a href="thread.html#184">[ thread ]</a>
+              <a href="subject.html#184">[ subject ]</a>
+              <a href="author.html#184">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

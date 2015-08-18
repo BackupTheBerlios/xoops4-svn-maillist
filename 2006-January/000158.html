@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r166%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601201734.k0KHYnKv032562%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000157.html">
+   <LINK REL="Next"  HREF="000159.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r166%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601201734.k0KHYnKv032562%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 18:34:49 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000157.html">[Xoops4-svn] r165 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000159.html">[Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#158">[ date ]</a>
+              <a href="thread.html#158">[ thread ]</a>
+              <a href="subject.html#158">[ subject ]</a>
+              <a href="author.html#158">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 18:34:48 +0100 (Fri, 20 Jan 2006)
+New Revision: 166
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+Log:
+Added the new logger component to the xoops_kernel framework.
+
+Events are not rendered yet, but I'm testing this logger, and am writing a real rendering routine once it works.
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-20 16:48:41 UTC (rev 165)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-20 17:34:48 UTC (rev 166)
+@@ -0,0 +1,141 @@
++&lt;?php
++/**
++ * xoops_kernel_Logger component main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_kernel
++ * @package		xoops_kernel_Logger
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++/**
++ * xoops_kernel_Logger (default logger service) implementation
++ *
++ * &lt;p&gt;The logger service is a standard service of the XOOPS system, and thus can be accessed using $xopps-&gt;services['logger'].
++ * It records information about any kind of events using its logEvent() method, and provides facilities to handle an
++ * named timers using the startTimer() and stopTimer() methods.&lt;/p&gt;
++ *
++ * &lt;p&gt;This logger only gets activated by default when the kernel runs in DEBUG or DEV mode on.
++ * If it is the case, it'll start buffering output to be able toinsert its output inside the page once
++ * the request has been processed.&lt;/p&gt;
++ */
++class xoops_kernel_Logger {
++	/**
++	 * Whether or not to keep record of events
++	 * @var boolean
++	 */
++ 	var $activated = false;
++	/**
++	 * Recorded events, grouped by category
++	 * @var array
++	 */
++	var $events = array();
++	/**
++	 * Available timers
++	 * @var array
++	 */
++	var $timers = array();
++
++	function xoInit( $options = array() ) {
++		ob_start();
++	 	return true;
++	}
++	/**
++	 * Shutdown this instance
++	 *
++	 * On shutdown, all remaining timers are stopped and the events log is rendered to the output.
++	 * If the &lt;code&gt;&lt;!--{xo-logger-output}--&gt;&lt;/code&gt; string is found within the output content,
++	 * the logger will replace it with its own output.
++	 * Otherwise, events will be shown after the page content.
++	 */
++	function xoShutdown() {
++	  	$now = $this-&gt;microtime();
++		foreach ($this-&gt;timers as $k =&gt; $v ) {
++			if ( !isset( $v['stop'] ) ) {
++				$this-&gt;timers[$k]['stop'] = $now;
++			}
++		}
++	  	$output = '';
++
++	 	while ( false !== ( $str = ob_get_contents() ) ) {		// Clean all open output buffers and reconstruct output :-)
++	 		$output = $str . $output;
++	 		ob_end_clean();
++		}
++		if ( $this-&gt;activated ) {
++			$this-&gt;renderEvents( $output );
++		}
++	}
++	/**
++	 * Returns the current microtime in seconds.
++	 * @return float
++	 */
++	function microtime() {
++		$now = explode( ' ', microtime() );
++		return (float)$now[0] + (float)$now[1];
++	}
++	/**
++	 * Adds an event to the log
++     * @param	string	$message	Event information
++     * @param	string  $cat		Event category
++	 */
++	function logEvent( $message, $category = '' ) {
++		if ( $this-&gt;activated ) {
++			if ( !isset( $this-&gt;events[$category] ) ) {
++				$this-&gt;events[$category] = array();
++			}
++			$this-&gt;events[$category][] = array( 'message' =&gt; $message, 'time' =&gt; $this-&gt;microtime() );
++		}
++	}
++	/**
++	 * Starts a timer
++     * @param	string  $name   name of the timer
++	 */
++	function startTimer( $name = 'XOOPS' ) {
++		$this-&gt;timers[$name] = array( 'start' =&gt; $this-&gt;microtime() );
++	}
++	/**
++	 * Stops a timer
++     * @param	string  $name   Name of the timer
++     * @param	boolean $clear  Whether or not we want to keep this timer afterwards
++     * @return float The duration of the stopped timer (in seconds)
++	 */
++	function stopTimer( $name = 'XOOPS', $clear = false ) {
++	 	$dur = ( $end = $this-&gt;microtime() ) - $this-&gt;timers[$name]['start'];
++		if ( $clear ) {
++			unset($this-&gt;timers[$name]);
++		} else {
++			$this-&gt;timers[$name]['stop'] = $end;
++		}
++	 	return $dur;
++	}
++
++	/**
++	 * Inserts the events log into the page output, and send it to the client
++	 * @param string $output The content generated during the current request
++	 */
++	function renderEvents( $output ) {
++		$log = &quot;events log&quot;;
++		$pattern = '&lt;!--{xo-logger-output}--&gt;';
++		$pos = strpos( $output, $pattern );
++		if ( $pos !== false ) {
++			echo substr( $output, 0, $pos ) . $log . substr( $output, $pos + strlen( $pattern ) );
++		} else {
++			echo $output . $log;
++		}
++	}	
++
++}
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php	2006-01-20 16:48:41 UTC (rev 165)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php	2006-01-20 17:34:48 UTC (rev 166)
+@@ -21,6 +21,9 @@
+ 		'xoops_kernel_ErrorHandler' =&gt; array(
+ 			'xoClassPath' =&gt; '/errorhandler.php',
+ 		),
++		'xoops_kernel_Logger' =&gt; array(
++			'xoClassPath' =&gt; '/logger.php',
++		),
+ 		'xoops_kernel_Module' =&gt; array(
+ 			'xoClassPath' =&gt; '/module.php',
+ 			'xoFactory' =&gt; 'xoops_kernel_ModuleFactory',
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000157.html">[Xoops4-svn] r165 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000159.html">[Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#158">[ date ]</a>
+              <a href="thread.html#158">[ thread ]</a>
+              <a href="subject.html#158">[ subject ]</a>
+              <a href="author.html#158">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

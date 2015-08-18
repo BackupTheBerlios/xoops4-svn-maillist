@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r202 - in XoopsCore/branches/tasks/123353-authentication/XOOPS: Boot Frameworks/XoopsCore/Foundation/Kernel.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r202%20-%20in%20XoopsCore/branches/tasks/123353-authentication/XOOPS%3A%20Boot%20Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601282038.k0SKcx2V020805%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000193.html">
+   <LINK REL="Next"  HREF="000195.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r202 - in XoopsCore/branches/tasks/123353-authentication/XOOPS: Boot Frameworks/XoopsCore/Foundation/Kernel.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r202%20-%20in%20XoopsCore/branches/tasks/123353-authentication/XOOPS%3A%20Boot%20Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601282038.k0SKcx2V020805%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r202 - in XoopsCore/branches/tasks/123353-authentication/XOOPS: Boot Frameworks/XoopsCore/Foundation/Kernel.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 28 21:38:59 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000193.html">[Xoops4-svn] r201 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000195.html">[Xoops4-svn] r203 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#194">[ date ]</a>
+              <a href="thread.html#194">[ thread ]</a>
+              <a href="subject.html#194">[ subject ]</a>
+              <a href="author.html#194">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-28 21:38:54 +0100 (Sat, 28 Jan 2006)
+New Revision: 202
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php
+Log:
+Fix in the object instanciation method to ensure the xoBundleIdentifier is assigned to created instances before the their xoInit() method is called
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php	2006-01-28 20:37:02 UTC (rev 201)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php	2006-01-28 20:38:54 UTC (rev 202)
+@@ -116,8 +116,6 @@
+ 				$inst =&amp; XOS::createInstanceOf( $id, $options, $args );
+ 			}
+ 			if ( is_object( $inst ) ) {
+-				$inst-&gt;xoBundleIdentifier = $id;
+-				$inst-&gt;xoBundleRoot = $me-&gt;registry[$id]['xoBundleRoot'];
+ 				if ( @$inst-&gt;xoSingleton ) {
+ 					$me-&gt;services[ $id ] =&amp; $inst;
+ 					if (!@empty( $options[ 'xoServiceName' ] ) ) {
+@@ -146,6 +144,7 @@
+ 			// Set specified properties values
+ 			XOS::apply( $inst, $options );
+ 			XOS::apply( $inst, $GLOBALS[EXXOS]-&gt;registry[$class] );
++			$inst-&gt;xoBundleIdentifier = $class;
+ 			// Initialize the component instance
+ 			if ( method_exists( $inst, 'xoInit' ) ) {
+ 				if ( !$inst-&gt;xoInit( $options ) ) {
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php	2006-01-28 20:37:02 UTC (rev 201)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php	2006-01-28 20:38:54 UTC (rev 202)
+@@ -55,6 +55,7 @@
+ 		} else {
+ 			$inst =&amp; XOS::createInstanceOf( 'xoops_kernel_Module', $options );
+ 		}
++		$inst-&gt;xoBundleIdentifier = $moduleInfo['xoBundleIdentifier'];
+ 		$inst-&gt;xoBundleRoot = XOS::classVar( $inst-&gt;xoBundleIdentifier, 'xoBundleRoot' );
+ 		// If we are instanciating the &quot;current&quot; module, find the current location
+ 		if ( $inst &amp;&amp; empty( $bundleId ) ) {
+@@ -62,7 +63,7 @@
+ 			$scriptFile = substr( strstr( $_SERVER['SCRIPT_NAME'], $moduleRoot ), strlen( $moduleRoot ) );
+ 			foreach ( $inst-&gt;moduleLocations as $k =&gt; $loc ) {
+ 				if ( $scriptFile == $loc['scriptFile'] ) {
+-					$inst-&gt;currentLocation =&amp; $inst-&gt;moduleLocations[$k];
++					$inst-&gt;currentLocation = $k;
+ 				}				
+ 			}
+ 		}
+@@ -96,7 +97,8 @@
+ 
+ 	
+ 	function requestParameters( $source = 'R' ) {
+-		return isset( $this-&gt;currentLocation['parameters'] ) ? $this-&gt;requestValues( $this-&gt;currentLocation['parameters'], $source ) : array();
++		$loc =&amp; $this-&gt;moduleLocations[ $this-&gt;currentLocation ];
++		return isset( $loc['parameters'] ) ? $this-&gt;requestValues( $loc['parameters'], $source ) : array();
+ 	}
+ 	
+ 	function requestValues( $defs, $source = 'R' ) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000193.html">[Xoops4-svn] r201 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000195.html">[Xoops4-svn] r203 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#194">[ date ]</a>
+              <a href="thread.html#194">[ thread ]</a>
+              <a href="subject.html#194">[ subject ]</a>
+              <a href="author.html#194">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

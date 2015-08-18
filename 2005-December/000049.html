@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r56 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r56%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200512010421.jB14LCU6017095%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000048.html">
+   <LINK REL="Next"  HREF="000050.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r56 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r56%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200512010421.jB14LCU6017095%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r56 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Dec  1 05:21:13 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000048.html">[Xoops4-svn] r55 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000050.html">[Xoops4-svn] r57 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-01 05:21:10 +0100 (Thu, 01 Dec 2005)
+New Revision: 56
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+Log:
+Enhanced the db: BC resource handler so it nows uses xotpl: (this makes all the db: templates themable too)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php	2005-12-01 04:19:28 UTC (rev 55)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php	2005-12-01 04:21:10 UTC (rev 56)
+@@ -17,7 +17,7 @@
+ 
+ function smarty_resource_db_source($tpl_name, &amp;$tpl_source, &amp;$smarty) {
+ 
+-	if ( $tplPath = smarty_resource_db_lookup( $tpl_name ) ) {
++	if ( $tplPath = smarty_resource_db_lookup( $tpl_name, $smarty ) ) {
+ 		if ( $tpl_source = file_get_contents( $tplPath ) ) {
+ 			return true;
+ 		}
+@@ -27,7 +27,7 @@
+ 
+ function smarty_resource_db_timestamp($tpl_name, &amp;$tpl_timestamp, &amp;$smarty) {
+ 
+-	if ( $tplPath = smarty_resource_db_lookup( $tpl_name ) ) {
++	if ( $tplPath = smarty_resource_db_lookup( $tpl_name, $smarty ) ) {
+ 		if ( $tpl_timestamp = filemtime( $tplPath ) ) {
+ 			return true;
+ 		}
+@@ -51,7 +51,7 @@
+  * @param bool		$refresh	Set this to true to force regeneration of the cache
+  * @return string	Full path to the template (or false if not found)
+  */
+-function smarty_resource_db_lookup( $tplName, $refresh = false ) {
++function smarty_resource_db_lookup( $tplName, &amp;$smarty, $refresh = false ) {
+ 	static $list = null;
+ 	global $xoops;
+ 
+@@ -89,12 +89,15 @@
+ 			trigger_error( &quot;Cannot create db: resource handler templates list&quot;, E_USER_WARNING );
+ 		}
+ 	}
+-	
++	if ( !function_exists( 'smarty_resource_xotpl_getpath' ) ) {
++		$path = str_replace( DIRECTORY_SEPARATOR, '/', dirname( __FILE__ ) );
++		include_once &quot;$path/resource.xotpl.php&quot;;
++	}
+ 	if ( $tplName == 'system_notification_select.html' ) {
+ 		$tplName = 'system_notification_select.xotpl';
+ 	}
+ 	if ( isset( $list[$tplName] ) ) {
+-		return $xoops-&gt;path( $list[$tplName] );
++		return smarty_resource_xotpl_getpath( $list[$tplName], $smarty );
+ 	}
+ 	return false;
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000048.html">[Xoops4-svn] r55 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000050.html">[Xoops4-svn] r57 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

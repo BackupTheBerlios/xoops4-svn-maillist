@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r110 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r110%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default&In-Reply-To=%3C200601121809.k0CI9VRc008949%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000101.html">
+   <LINK REL="Next"  HREF="000103.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r110 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r110%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default&In-Reply-To=%3C200601121809.k0CI9VRc008949%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r110 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 12 19:09:31 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000101.html">[Xoops4-svn] r109 - in XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/xoops-devteam: . img
+</A></li>
+        <LI>Next message: <A HREF="000103.html">[Xoops4-svn] r111 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#102">[ date ]</a>
+              <a href="thread.html#102">[ thread ]</a>
+              <a href="subject.html#102">[ subject ]</a>
+              <a href="author.html#102">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-12 19:09:28 +0100 (Thu, 12 Jan 2006)
+New Revision: 110
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.css
+Log:
+Fixed MSIE 6 compat by removing the use of a child selector to specify margins
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl	2006-01-12 17:43:50 UTC (rev 109)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl	2006-01-12 18:09:28 UTC (rev 110)
+@@ -10,6 +10,10 @@
+ 
+ 	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl page-default.css])&quot; /&gt;
+ 
++&lt;!--[if lte IE 6]&gt;
++	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl msie.css])&quot; /&gt;
++&lt;![endif]--&gt;
++
+ 	
+ 	&lt;title&gt;([$xoops_sitename]) - ([$xoops_pagetitle])&lt;/title&gt;
+ 
+@@ -18,7 +22,15 @@
+ &lt;/head&gt;
+ &lt;body&gt;
+ 
+-&lt;div id=&quot;xo-canvas&quot;&gt;
++([if $xoBlocks.canvas_left and $xoBlocks.canvas_right])
++	([assign var=canvas_class value=&quot;xo-with_both&quot;])
++([elseif $xoBlocks.canvas_left])
++	([assign var=canvas_class value=&quot;xo-with_left&quot;])
++([elseif $xoBlocks.canvas_right])
++	([assign var=canvas_class value=&quot;xo-with_right&quot;])
++([/if])
++
++&lt;div id=&quot;xo-canvas&quot;([if $canvas_class]) class=&quot;([$canvas_class])&quot;([/if])&gt;
+ 	&lt;div id=&quot;xo-canvas-header&quot;&gt;
+ 		&lt;div id=&quot;xo-banner&quot;&gt;
+ 			&lt;div id=&quot;xo-banner-logo&quot;&gt;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css	2006-01-12 17:43:50 UTC (rev 109)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css	2006-01-12 18:09:28 UTC (rev 110)
+@@ -0,0 +1,6 @@
++
++
++#xo-page {
++	/* Fix to allow 100% large elements inside the content zone (this browser is so lame... it's unbelievable) */
++	height:			1%;
++}
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css
+___________________________________________________________________
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.css
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.css	2006-01-12 17:43:50 UTC (rev 109)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.css	2006-01-12 18:09:28 UTC (rev 110)
+@@ -72,11 +72,11 @@
+ 	min-height:		300px;
+ }
+ 
+-#xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
++#xo-canvas.xo-with_left #xo-page, #xo-canvas.xo-with_both #xo-page {
+ 	margin-left:	176px;
+ }
+ 
+-#xo-canvas-rightcolumn + #xo-page {
++#xo-canvas.xo-with_right #xo-page, #xo-canvas.xo-with_both #xo-page {
+ 	margin-right:	176px;
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000101.html">[Xoops4-svn] r109 - in XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/xoops-devteam: . img
+</A></li>
+	<LI>Next message: <A HREF="000103.html">[Xoops4-svn] r111 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#102">[ date ]</a>
+              <a href="thread.html#102">[ thread ]</a>
+              <a href="subject.html#102">[ subject ]</a>
+              <a href="author.html#102">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

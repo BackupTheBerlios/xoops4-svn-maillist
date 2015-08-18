@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r45%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore%3A%20.%20Logos%20Logos/PageBuilder.xoobj&In-Reply-To=%3C200511271013.jARAD925003958%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000037.html">
+   <LINK REL="Next"  HREF="000039.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r45%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore%3A%20.%20Logos%20Logos/PageBuilder.xoobj&In-Reply-To=%3C200511271013.jARAD925003958%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Nov 27 11:13:09 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000037.html">[Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates
+</A></li>
+        <LI>Next message: <A HREF="000039.html">[Xoops4-svn] r46 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#38">[ date ]</a>
+              <a href="thread.html#38">[ thread ]</a>
+              <a href="subject.html#38">[ subject ]</a>
+              <a href="author.html#38">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-27 11:13:07 +0100 (Sun, 27 Nov 2005)
+New Revision: 45
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/xo-info.php
+Log:
+Moved blocks aggregation code from header.php to a custom class (if you wonder about the folder name: Logos will be the name of the portal module ;)).
+Notable changes:
+- Blocks use the new xotpl: resource handler, and can now be customized by themes
+- The block array assigned to the theme template contains additional vars:
+module: Name of this block owner module
+weight: Weight given to the block in the admin
+name: Identifier for the block type
+lastmod: Last modification date
+
+The 'name' var will change later: right now there is no way to get an identifier for the block type (the 'name' specified in xoops_version.php is translatable :-( and will change with the language)
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2005-11-27 09:58:09 UTC (rev 44)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2005-11-27 10:13:07 UTC (rev 45)
+@@ -0,0 +1,110 @@
++&lt;?php
++/**
++ * xoops_logos_PageBuilder component class file
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @package      xoops_logos
++ * @subpackage   xoops_logos_PageBuilder
++ * @version		$Id$
++ * @author       Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since        2.3.0
++ */
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) )	exit();
++
++include_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
++
++/**
++ * xoops_logos_PageBuilder main class
++ *
++ * @package     xoops_logos
++ * @subpackage  xoops_logos_PageBuilder
++ * @author 		Skalpa Keo
++ * @since       2.3.0
++ */
++class xoops_logos_PageBuilder {
++	
++	var $blocks = array();	
++
++	function retrieveBlocks() {
++		global $xoopsUser, $xoopsModule, $xoopsConfig;
++		
++		if ( @is_object( $xoopsModule ) ) {
++			list( $mid, $dirname ) = array( $xoopsModule-&gt;getVar('mid'), $xoopsModule-&gt;getVar('dirname') );
++		} else {
++			list( $mid, $dirname ) = array( 0, 'system' );
++		}
++		$startMod = ( $xoopsConfig['startpage'] == '--' ) ? 'system' : $xoopsConfig['startpage'];
++		$isStart = ( substr( $_SERVER['SCRIPT_NAME'], -9 ) == 'index.php' &amp;&amp; $startMod == $dirname );
++		
++		$groups = @is_object( $xoopsUser ) ? $xoopsUser-&gt;getGroups() : array( XOOPS_GROUP_ANONYMOUS );
++		
++		$oldzones = array(
++        	XOOPS_SIDEBLOCK_LEFT		=&gt; 'canvas_left',
++        	XOOPS_SIDEBLOCK_RIGHT		=&gt; 'canvas_right',
++        	XOOPS_CENTERBLOCK_CENTER	=&gt; 'page_top',
++        	XOOPS_CENTERBLOCK_LEFT		=&gt; 'page_topleft',
++        	XOOPS_CENTERBLOCK_RIGHT		=&gt; 'page_topright',
++		);
++
++		$xoopsblock = new XoopsBlock();
++    	$block_arr = array();
++	    $block_arr =&amp; $xoopsblock-&gt;getAllByGroupModule( $groups, $mid, $isStart, XOOPS_BLOCK_VISIBLE);
++	    foreach ( $block_arr as $block ) {
++	    	$side = $oldzones[ $block-&gt;getVar('side') ];
++	    	if ( $var = $this-&gt;buildBlock( $block ) ) {
++	    		$this-&gt;blocks[$side][] = $var;
++	    	}
++	    }
++	}
++	
++	function buildBlock( $xobject ) {
++		// The lame type workaround will change
++		$block = array(
++			'module'	=&gt; $xobject-&gt;getVar( 'dirname' ),
++			'title'		=&gt; $xobject-&gt;getVar( 'title' ),
++			'name'		=&gt; strtolower( preg_replace( '/[^0-9a-zA-Z_]/', '', str_replace( ' ', '_', $xobject-&gt;getVar( 'name' ) ) ) ),
++			'weight'	=&gt; $xobject-&gt;getVar( 'weight' ),
++			'lastmod'	=&gt; $xobject-&gt;getVar( 'last_modified' ),
++		);
++
++		global $xoopsTpl, $xoopsLogger;
++		
++		$bcachetime = intval( $xobject-&gt;getVar('bcachetime') );
++        if (empty($bcachetime)) {
++            $xoopsTpl-&gt;caching = 0;
++        } else {
++            $xoopsTpl-&gt;caching = 2;
++            $xoopsTpl-&gt;cache_lifetime = $bcachetime;
++        }
++		if ( '' != ( $tplName = $xobject-&gt;getVar('template') ) ) {
++			$tplName = &quot;xotpl:modules/{$block['module']}/templates/blocks/$tplName&quot;;
++		} else {
++			$tplName = &quot;xotpl:modules/system/templates/blocks/system_block_dummy.html&quot;;
++		}
++		$cacheid = 'blk_' . $xobject-&gt;getVar('bid') . ':' . md5( serialize( $xobject-&gt;getVar( 'options', 'n' ) ) );
++             
++        if ( !$bcachetime || !$xoopsTpl-&gt;is_cached( $tplName, $cacheid ) ) {
++            $xoopsLogger-&gt;addBlock( $xobject-&gt;getVar('name') );
++            if ( ! ( $bresult = $xobject-&gt;buildBlock() ) ) {
++                return false;
++            }
++			$xoopsTpl-&gt;assign( 'block', $bresult );
++            $block['content'] = $xoopsTpl-&gt;fetch( $tplName, $cacheid );
++            $xoopsTpl-&gt;clear_assign('block');
++        } else {
++            $xoopsLogger-&gt;addBlock( $xobject-&gt;getVar('name'), true, $bcachetime );
++            $block['content'] = $xoopsTpl-&gt;fetch( $tplName, $cacheid );
++        }
++        return $block;
++	}
++	
++	function assignVars( &amp;$template ) {
++		$template-&gt;assign( 'xoBlocks', $this-&gt;blocks );
++	}
++	
++	
++}
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/xo-info.php	2005-11-27 09:58:09 UTC (rev 44)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/xo-info.php	2005-11-27 10:13:07 UTC (rev 45)
+@@ -0,0 +1,23 @@
++&lt;?php
++/**
++* xoops_logos_PageBuilder bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @package		xoops_logos
++* @subpackage	xoops_logos_PageBuilder
++* @version		$Id$
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since        2.3.0
++*/
++
++return array(
++	'xoBundleDisplayName' =&gt; 'XOOPSLogos page builder',
++	'xoBundleIdentifier' =&gt; 'xoops_logos_PageBuilder',
++	'xoClassPath' =&gt; '/builder.php',
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000037.html">[Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates
+</A></li>
+	<LI>Next message: <A HREF="000039.html">[Xoops4-svn] r46 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#38">[ date ]</a>
+              <a href="thread.html#38">[ thread ]</a>
+              <a href="subject.html#38">[ subject ]</a>
+              <a href="author.html#38">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

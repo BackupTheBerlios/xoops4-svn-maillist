@@ -1,0 +1,496 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r48 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web default-web/img default-web/modules default-web/modules/system
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r48%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes%3A%20.%20default-web%20default-web/img%20default-web/modules%20default-web/modules/system&In-Reply-To=%3C200511281050.jASAoNYb025602%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000040.html">
+   <LINK REL="Next"  HREF="000042.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r48 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web default-web/img default-web/modules default-web/modules/system</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r48%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes%3A%20.%20default-web%20default-web/img%20default-web/modules%20default-web/modules/system&In-Reply-To=%3C200511281050.jASAoNYb025602%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r48 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web default-web/img default-web/modules default-web/modules/system">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Nov 28 11:50:23 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000040.html">[Xoops4-svn] r47 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default: . modules modules/system modules/system/blocks
+</A></li>
+        <LI>Next message: <A HREF="000042.html">[Xoops4-svn] r49 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-28 11:50:18 +0100 (Mon, 28 Nov 2005)
+New Revision: 48
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/block.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/body_bg.jpg
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/body_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-banner_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blockcontent_bg_blue.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blockcontent_bg_grey.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blocktitle_bg_blue.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blocktitle_bg_grey.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-rightcolumn_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/separator.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/xoops-logo.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/modules/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/modules/system/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/modules/system/blocks/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/xo-info.php
+Log:
+Added new default theme (MSIE compat not here yet: try only with a real browser)
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/block.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/block.xotpl	2005-11-27 13:22:24 UTC (rev 47)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/block.xotpl	2005-11-28 10:50:18 UTC (rev 48)
+@@ -0,0 +1,4 @@
++&lt;div class=&quot;xo-block ([$block.module])-([$block.name])&quot;&gt;
++	&lt;div class=&quot;xo-blocktitle&quot;&gt;([$block.title])&lt;/div&gt;
++	&lt;div class=&quot;xo-blockcontent&quot;&gt;([$block.content])&lt;/div&gt;
++&lt;/div&gt;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl	2005-11-27 13:22:24 UTC (rev 47)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl	2005-11-28 10:50:18 UTC (rev 48)
+@@ -0,0 +1,61 @@
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;([$xoops_langcode])&quot; lang=&quot;([$xoops_langcode])&quot;&gt;
++&lt;head&gt;
++	&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=([$xoops_charset])&quot; /&gt;
++	&lt;meta http-equiv=&quot;content-language&quot; content=&quot;([$xoops_langcode])&quot; /&gt;
++
++	([include file='xotpl:xoops_pyro_Theme#templates/metas.xotpl'])
++
++	&lt;link rel=&quot;SHORTCUT ICON&quot; href=&quot;([xoImgUrl favicon.ico])&quot; /&gt;
++
++	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl xoops.css])&quot; /&gt;
++	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl style.css])&quot; /&gt;
++
++	
++	&lt;title&gt;([$xoops_sitename]) - ([$xoops_pagetitle])&lt;/title&gt;
++
++	([$xoops_module_header])
++
++&lt;/head&gt;
++&lt;body&gt;
++
++&lt;div id=&quot;xo-canvas&quot;&gt;
++	&lt;div id=&quot;xo-canvas-header&quot;&gt;
++		&lt;div id=&quot;xo-banner&quot;&gt;
++			&lt;div id=&quot;xo-banner-logo&quot;&gt;
++				&lt;a href=&quot;([xoAppUrl /www/])&quot;&gt;&lt;img src=&quot;([xoImgUrl img/xoops-logo.png])&quot; alt=&quot;XOOPS&quot; /&gt;&lt;/a&gt;
++			&lt;/div&gt;
++			([if $xoops_banner != '&nbsp;'])
++			&lt;div id=&quot;xo-banner-ad&quot;&gt;([$xoops_banner])&lt;/div&gt;
++			([/if])
++		&lt;/div&gt;
++	&lt;/div&gt;
++	&lt;div id=&quot;xo-canvas-main&quot;&gt;
++		([if !empty($xoBlocks.canvas_left)])
++		&lt;div class=&quot;xo-canvas-column xo-blockszone&quot; id=&quot;xo-canvas-leftcolumn&quot;&gt;
++		([foreach from=$xoBlocks.canvas_left key=n item=block])
++			([include file=&quot;`$xoTheme-&gt;folderName`/block.xotpl&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++	
++		([if !empty($xoBlocks.canvas_right)])
++		&lt;div class=&quot;xo-canvas-column xo-blockszone&quot; id=&quot;xo-canvas-rightcolumn&quot;&gt;
++		([foreach from=$xoBlocks.canvas_right key=n item=block])
++			([include file=&quot;`$xoTheme-&gt;folderName`/block.xotpl&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		([$xoTheme-&gt;renderZone('page')])
++		&lt;br clear=&quot;all&quot; /&gt;
++	&lt;/div&gt;
++	&lt;div id=&quot;xo-canvas-footer&quot;&gt;
++		&lt;a href=&quot;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&quot; target=&quot;_blank&quot;&gt;
++			Powered by ([$xoops-&gt;xoShortVersionString])
++		&lt;/a&gt;
++	&lt;/div&gt;
++
++&lt;/div&gt;
++  
++&lt;/body&gt;
++&lt;/html&gt;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/body_bg.jpg
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/body_bg.jpg
+___________________________________________________________________
+Name: svn:mime-type
+   + image/jpeg
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/body_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/body_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-banner_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-banner_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blockcontent_bg_blue.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blockcontent_bg_blue.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blockcontent_bg_grey.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blockcontent_bg_grey.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blocktitle_bg_blue.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blocktitle_bg_blue.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blocktitle_bg_grey.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-blocktitle_bg_grey.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-rightcolumn_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-rightcolumn_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/separator.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/separator.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/xoops-logo.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/xoops-logo.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.xotpl	2005-11-27 13:22:24 UTC (rev 47)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.xotpl	2005-11-28 10:50:18 UTC (rev 48)
+@@ -0,0 +1,30 @@
++
++	&lt;div id=&quot;xo-page&quot;&gt;
++		([if !empty($xoops_ccblocks)])
++		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topblocks&quot;&gt;
++		([foreach item=block from=$xoops_ccblocks])
++			([include file=&quot;default-web/block.html&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		([if !empty($xoops_clblocks)])
++		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topleftblocks&quot;&gt;
++		([foreach item=block from=$xoops_clblocks])
++			([include file=&quot;default-web/block.html&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		([if !empty($xoops_crblocks)])
++		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-toprightblocks&quot;&gt;
++		([foreach item=block from=$xoops_crblocks])
++			([include file=&quot;default-web/block.html&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		
++		([include file='xotpl:modules/news/templates/blocks/news_block_topics.html'])
++
++		&lt;div id=&quot;xo-content&quot;&gt;
++			([$xoTheme-&gt;renderZone('content')])
++		&lt;/div&gt;
++	&lt;/div&gt;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-11-27 13:22:24 UTC (rev 47)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-11-28 10:50:18 UTC (rev 48)
+@@ -0,0 +1,139 @@
++
++html, body {
++	margin:			0px;
++	background:		#ffffff url(img/body_bg.png) repeat-x left top;
++	background-attachment:	fixed;
++	color:			#000000;
++	font:			11pt sans-serif;
++}
++
++#xo-canvas {
++	margin:			15px;
++	background:		#EEEEEE;
++}
++
++#xo-canvas-header {
++	border-bottom:	1px solid #CCCCCC;
++	background:		#FFFFFF;
++	padding:		3px 3px 3px;
++}
++
++#xo-banner {
++	height:			60px;
++	border:			1px solid #000000;
++	padding:		2px;
++	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
++}
++
++#xo-canvas-main {
++	border-top:		1px solid #FFFFFF;
++	padding:		6px;
++}
++
++.xo-canvas-column {
++	width:			160px;
++}
++#xo-canvas-leftcolumn {
++	float:			left;
++	border:			1px solid #666666;
++}
++#xo-canvas-rightcolumn {
++	float:			right;
++	padding-bottom:	128px;
++	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
++}
++
++#xo-page {
++	background:		#ffffff;
++	padding:		1em 0px;
++	border:			1px solid #CCCCCC;
++}
++
++#xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
++	margin-left:	176px;
++}
++
++#xo-canvas-rightcolumn + #xo-page {
++	margin-right:	176px;
++}
++
++#xo-canvas-footer {
++	padding:		1px;
++	background:		#DDDDDD;
++	text-align:		center;
++	font-size:		80%;
++	font-family:	monospace;
++}
++#xo-canvas-footer, #xo-canvas-footer a {
++	color:			#666666;
++	text-decoration:	none;
++}
++
++
++#xo-canvas-leftcolumn .xo-blocktitle {
++	background:		url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
++	color:			#ffffff;
++	border-bottom:	1px solid #666666;
++	padding:		.2em .5em;
++	font-weight:	bold;
++	text-shadow:	1px 1px #000000;
++}
++
++#xo-canvas-leftcolumn .xo-blockcontent {
++	background:		#999999 url(img/canvas-blockcontent_bg_grey.png) repeat-x left top;
++}
++
++
++#xo-canvas-rightcolumn .xo-block {
++	padding:		8px 0px;
++	background:		url(img/separator.png) no-repeat center bottom;
++}
++#xo-canvas-rightcolumn :last-child {
++	background:		transparent none;
++}
++
++
++#xo-canvas-rightcolumn .xo-blocktitle {
++	font-size:		90%;
++	font-weight:	bold;
++}
++#xo-canvas-rightcolumn .xo-blockcontent {
++	font-size:		80%;
++}
++
++
++#xo-canvas-rightcolumn a {
++	color:				#666666;
++}
++#xo-canvas-rightcolumn a:hover {
++	text-decoration:	underline;
++}
++
++
++
++.xo-canvas-column a {
++	text-decoration:	none;
++	font:				80%;
++	color:				#CCCCCC;
++}
++.xo-canvas-column a:hover {
++	color:				#FFFFFF;
++}
++
++.system-main_menu .xo-blocktitle {
++	background:		url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
++}
++
++.system-main_menu .xo-blockcontent {
++	background:		#5E77D4 url(img/canvas-blockcontent_bg_blue.png) repeat-x left top;
++}
++
++.xo-canvas-column .system-main_menu  a {
++	color:				#B6C6EC;
++}
++
++.xo-block ul {
++	margin:				0px;
++	padding:			0px;
++	list-style-type:	none;
++}
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+___________________________________________________________________
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/xo-info.php	2005-11-27 13:22:24 UTC (rev 47)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/xo-info.php	2005-11-28 10:50:18 UTC (rev 48)
+@@ -0,0 +1,27 @@
++&lt;?php
++
++
++
++
++return array(
++	'xoBundleIdentifier'	=&gt; 'theme_default__web',
++	'xoBundleDisplayName'	=&gt; 'XOOPS default theme (standards compliant)',
++	// This theme default templates
++	// templates paths must start with a &quot;.&quot; to be considered relative to the theme folder
++	'canvasTemplate' =&gt; './canvas-default.xotpl',
++	'pageTemplate' =&gt; './page-default.xotpl',
++);
++
++
++
++
++
++
++
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000040.html">[Xoops4-svn] r47 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default: . modules modules/system modules/system/blocks
+</A></li>
+	<LI>Next message: <A HREF="000042.html">[Xoops4-svn] r49 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

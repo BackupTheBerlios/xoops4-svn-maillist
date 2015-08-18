@@ -1,0 +1,1028 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r228 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . Http.xofrm Http.xofrm/http.xoobj Http.xofrm/session.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r228%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices%3A%20.%20Http.xofrm%20Http.xofrm/http.xoobj%20Http.xofrm/session.xoobj&In-Reply-To=%3C200602130323.k1D3N8oH021086%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000219.html">
+   <LINK REL="Next"  HREF="000221.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r228 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . Http.xofrm Http.xofrm/http.xoobj Http.xofrm/session.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r228%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices%3A%20.%20Http.xofrm%20Http.xofrm/http.xoobj%20Http.xofrm/session.xoobj&In-Reply-To=%3C200602130323.k1D3N8oH021086%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r228 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . Http.xofrm Http.xofrm/http.xoobj Http.xofrm/session.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 04:23:08 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000219.html">[Xoops4-svn] r227 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+        <LI>Next message: <A HREF="000221.html">[Xoops4-svn] r229 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#220">[ date ]</a>
+              <a href="thread.html#220">[ thread ]</a>
+              <a href="subject.html#220">[ subject ]</a>
+              <a href="author.html#220">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 04:23:01 +0100 (Mon, 13 Feb 2006)
+New Revision: 228
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/http.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/responses.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/handler-db.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session-custom.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/xo-info.php
+Removed:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/http.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/responses.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/handler-db.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session-custom.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/xo-info.php
+Log:
+Moving the HTTP framework to CoreServices/
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm (from rev 217, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm)
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/http.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/http.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,196 +0,0 @@
+-&lt;?php
+-/**
+-* xoops_http_HttpHandler component main class definition
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @subpackage	xoops_http_HttpHandler
+-* @version		$Id$
+-*/
+-
+-
+-/**
+- * xoops_http_HttpHandler component
+- *
+- * The HttpHandler component encapsulates the HTTP response manipulation functions
+- * (redirection for now, and more later on)
+- */
+-class xoops_http_HttpHandler {
+-	/**
+-	* Whether HTTP redirections are enabled or not
+-	* @var bool
+-	*/
+-	var $enableRedirections	= true;
+-	/**
+-	* How many seconds the fake redirection page should be shown
+-	* @var integer
+-	*/
+-	var $fakeRedirectPageDelay = 3;
+-
+-	/**
+-	 * Fake redirection page content template
+-	 * 
+-	 * &lt;p&gt;When HTTP redirections are disabled, this string is returned to the client.&lt;/p&gt;
+-	 * &lt;p&gt;This page can contain any of the following, and they will be replaced before the page is sent:&lt;br /&gt;
+-	 * &lt;ul&gt;
+-	 * &lt;li&gt;{message}: The redirection message&lt;/li&gt;
+-	 * &lt;li&gt;{refresh}: A &lt;meta http-equiv=&quot;refresh&quot;&gt; tag that ensures client-side redirection is performed&lt;/li&gt;
+-	 * &lt;/ul&gt;
+-	 *
+-	 * @var string
+-	 */
+-	var $fakeRedirectTemplate = '&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;&gt;	
+-&lt;head&gt;{refresh}&lt;/head&gt;
+-&lt;body&gt;
+-	&lt;div style=&quot;text-align:center; background-color: #EBEBEB; border-top: 1px solid #FFFFFF; border-left: 1px solid #FFFFFF; border-right: 1px solid #AAAAAA; border-bottom: 1px solid #AAAAAA; font-weight : bold;&quot;&gt;
+-		&lt;h4&gt;{message}&lt;/h4&gt;&lt;p&gt;{ifnotreload}&lt;/p&gt;
+-	&lt;/div&gt;
+-	&lt;!--{xo-logger-output}--&gt;
+-&lt;/body&gt;&lt;/html&gt;';
+-	/**
+-	* Location of the default error pages (unimplemented)
+-	* @var string
+-	*/
+-	var $defaultErrorPages = false;
+-	/**
+-	* Redirection message sent by the last page
+-	* @var string
+-	*/
+-	var $redirectMessage = '';
+-
+-
+-	function xoInit( $options = array() ) {
+-		if ( !empty( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] ) ) {
+-			foreach ( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] as $k =&gt; $v ) {
+-				$_SERVER[ 'REDIRECT_' . $k ] = $v;
+-			}
+-			//var_export( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] );
+-			unset( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] );
+-			$this-&gt;redirectMessage = $_SERVER['REDIRECT_ERROR_NOTES'];
+-		}
+-		if ( @$_SESSION[$this-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] ) {
+-			$this-&gt;enableRedirections = false;
+-		}
+-		header( 'X-Powered-By: ' . $GLOBALS['xoops']-&gt;xoShortVersionString, false );
+-		header( 'X-Powered-By: The noosphere', false );
+-		return true;
+-	}
+-
+-	/**
+-	 * Convert a relative URI to an absolute one
+-	 */
+-	function absoluteUrl( $url ) {
+-		global $xoops;
+-
+-		if ( strpos( $url, '://' ) === false ) {
+-			$host = 'http' . ( $xoops-&gt;isSecure ? 's' : '' ) . '://' . $xoops-&gt;hostName;
+-			if ( !strlen($url) ) {
+-	            $url = $_SERVER['REQUEST_URI'];
+-        	} elseif ( substr( $url, 0, 1 ) == '/' ) {
+-	            return $host . $url;
+-        	}
+-        	// Check for PATH_INFO
+-        	if (isset($_SERVER['PATH_INFO']) &amp;&amp; $_SERVER['PHP_SELF'] != $_SERVER['PATH_INFO']) {
+-            	$path = dirname(substr($_SERVER['PHP_SELF'], 0, -strlen($_SERVER['PATH_INFO'])));
+-        	} else {
+-            	$path = dirname($_SERVER['PHP_SELF']);
+-        	}
+-        	if (substr($path = strtr($path, '\\', '/'), -1) != '/') {
+-            	$path .= '/';
+-        	}
+-			$url = $host . $path . $url;
+-		}
+-		return $url;
+-	}
+-	/**
+-	 * Set/send the response status and redirection location
+-	 * 
+-	 * This set the status response headers, and optionally redirect the client to the 
+-	 * specified location.
+-	 * The way the redirection is performed depends on the value of the $enableRedirections property:
+-	 * if true, a Location: header is sent
+-	 * if false, a custom html page containing a refresh &lt;meta&gt; tag will be displayed to perform client-side
+-	 * redirection
+-	 * 
+-	 * @param int $status The HTTP status code to send to the client
+-	 * @param string $message The HTTP status message to send to the client
+-	 * @param string $location Location to redirect the client to
+-	 */
+-	function sendResponse( $status = null, $message = '', $location = '' ) {
+-		global $xoops;
+-
+- 	 	if ( is_array($status) ) {
+-	 		list( $status, $message, $location ) = $status;
+-		}
+-		if ( empty($status) ) {
+-			$status = 200;			// HTTP_STATUS_OK
+-		}
+-		/* if ( empty($location) &amp;&amp; isset($this-&gt;errorPages[$status]) ) {
+-			$location = $this-&gt;errorPages[$status];
+-		} */
+-		if ( $location == -1 ) {
+-			$location = !@empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : $xoops-&gt;url( '/www/' );
+-		}
+-		if ( !empty($location) ) {
+-		    if ( preg_match( &quot;/[\\0-\\31]|about:|script:/i&quot;, $location ) ) {
+-        		$location = $xoops-&gt;url( '/www/' );
+-    		}
+-    		if ( !strpos( $location, '://' ) ) {
+-				$location = $this-&gt;absoluteUrl( $location );
+-    		}
+-		}
+-		if ( !$xoops-&gt;isVirtual ) {
+-			$this-&gt;sendResponseCode( $status, $message );
+-			if ( !empty( $location ) ) {
+-				if ( $this-&gt;enableRedirections ) {
+-					$_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] = array(
+-						'STATUS' =&gt; $status,
+-						'URL' =&gt; $_SERVER['REQUEST_URI'],
+-						'REQUEST_METHOD' =&gt; $_SERVER['REQUEST_METHOD'],
+-						'ERROR_NOTES' =&gt; $message,
+-					);
+-					header( &quot;Location: $location&quot; );
+-					echo &quot;&lt;body&gt;&lt;a href='$location'&gt;Page redirected. Status: $status, $message.&lt;/a&gt;&lt;/body&gt;&quot;;
+-				} else {
+-					//$this-&gt;sendResponseCode( 200, $message );
+-					$vars = array(
+-						'{refresh}' =&gt; '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $this-&gt;fakeRedirectPageDelay . '; url=' . htmlspecialchars( $location, ENT_QUOTES ) . '&quot; /&gt;',
+-						'{message}' =&gt; $message,
+-						'{ifnotreload}' =&gt; sprintf( _IFNOTRELOAD, $location )
+-					);
+-					echo str_replace( array_keys( $vars ), array_values( $vars ), $this-&gt;fakeRedirectTemplate );
+-				}
+-			}
+-		}
+-		return array( $status, $message, $location );
+-	}
+-	/**
+-	 * Send the specified response code header to the response
+-	 * @param int $status The HTTP status code to send to the client
+-	 * @param string $message The HTTP status message to send to the client
+-	 * @access protected
+-	 */
+-	function sendResponseCode( $status = 200, $message = 'OK' ) {
+-		if ( !headers_sent() ) {
+-			$message = str_replace( array( &quot;\r&quot;, &quot;\n&quot; ), '', $message );
+-			if ( $pos = strpos( $message, '&lt;' ) ) {
+-				$message = substr( $message, 0, $pos );
+-			}
+-			//header( &quot;Status: $status $message&quot; );
+-			header( &quot;HTTP/1.1 $status $message&quot; );
+-		}
+-	}
+-	
+-	
+-}
+-
+-
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/http.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/responses.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/responses.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,64 +0,0 @@
+-&lt;?php
+-/**
+-* xoops_http response codes definition file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @version		$Id$
+-*/
+-
+-define( 'HTTP_STATUS_OK',			200 );		// The client's request was successful, and the server's response contains the requested data.
+-define( 'HTTP_STATUS_CREATED',		201 );		// This status code is used whenever a new URL is created. With this result code, the Location header is given by the server to specify where the new data was placed.
+-define( 'HTTP_STATUS_ACCEPTED',		202 );		// The request was accepted but not immediately acted upon. More information about the transaction may be given in the entity-body of the server's response. There is no guarantee that the server will actually honor the request, even though it may seem like a legitimate request at the time of acceptance.
+-define( 'HTTP_STATUS_NONAUTH',		203 );		// The information in the entity header is from a local or third-party copy, not from the original server.
+-define( 'HTTP_STATUS_NOCONTENT',	204 );		// A status code and header are given in the response, but there is no entity-body in the reply. Browsers should not update their document view upon receiving this response. This is a useful code for CGI programs to use when they accept data from a form but want the browser view to stay at the form.
+-define( 'HTTP_STATUS_RESETCONTENT',	205 );		// The browser should clear the form used for this transaction for additional input. For data-entry CGI applications.
+-define( 'HTTP_STATUS_PARTCONTENT',	206 );		// The server is returning partial data of the size requested. Used in response to a request specifying a Range header. The server must specify the range included in the response with the Content-Range header.
+-
+-define( 'HTTP_STATUS_MOVED',		301 );		// The requested URL is no longer used by the server, and the operation specified in the request was not performed. The new location for the requested document is specified in the Location header. All future requests for the document should use the new URL.
+-define( 'HTTP_STATUS_SEEOTHER',		303 );		// The requested URL can be found at a different URL (specified in the Location header) and should be retrieved by a GET on that resource.
+-define( 'HTTP_STATUS_NOTMODIFIED',	304 );		// This is the response code to an If-Modified-Since or If-None-Match header, where the URL has not been modified since the specified date. The entity-body is not sent, and the client should use its own local copy.
+-define( 'HTTP_STATUS_USEPROXY',		305 );		// The requested URL must be accessed through the proxy in the Location header.
+-define( 'HTTP_STATUS_MOVEDTEMP',	307 );		// The requested URL has moved, but only temporarily. The Location header specifies the new location, but no information is given about the validity of the redirect in the future. The client should revisit the original URL in the future.
+-
+-define( 'HTTP_STATUS_BADREQUEST',	400 );		//This response code indicates that the server detected a syntax error in the client's request.
+-define( 'HTTP_STATUS_UNAUTHORIZED',	401 );		// Given along with the WWW-Authenticate header to indicate that the request lacked proper authorization, and the client should supply proper authorization when requesting this URL again. See the description of the Authorization header for more information on how authorization works in HTTP.
+-define( 'HTTP_STATUS_NEEDPAYMENT',	402 );		// This code is not yet implemented in HTTP.
+-define( 'HTTP_STATUS_FORBIDDEN',	403 );		// The request was denied for a reason the server does not want to (or has no means to) indicate to the client.
+-define( 'HTTP_STATUS_NOTFOUND',		404 );		// The document at the specified URL does not exist.
+-define( 'HTTP_STATUS_BADMETHOD',	405 );		// This code is given with the Allow header and indicates that the method used by the client is not supported for this URL.
+-define( 'HTTP_STATUS_NOTACCEPTABLE',406 );		// The URL specified by the client exists, but not in a format preferred by the client. Along with this code, the server provides the Content-Language, Content-Encoding, and Content-type headers.
+-define( 'HTTP_STATUS_TIMEOUT',		408 );		// This response code means the client did not produce a full request within some predetermined time (usually specified in the server's configuration), and the server is disconnecting the network connection.
+-define( 'HTTP_STATUS_CONFLICT',		409 );		// This code indicates that the request conflicts with another request or with the server's configuration. Information about the conflict should be returned in the data portion of the reply. For example, this response code could be given when a client's request would cause integrity problems in a database.
+-define( 'HTTP_STATUS_GONE',			410 );		// This code indicates that the requested URL no longer exists and has been permanently removed from the server.
+-
+-define( 'HTTP_STATUS_SERVERERROR',		500 );		// A part of the server (for example, a CGI program) has crashed or encountered a configuration error.
+-define( 'HTTP_STATUS_NOTIMPLEMENTED',	501 );		// The client requested an action that cannot be performed by the server.
+-define( 'HTTP_STATUS_SERVICEUNAVAIL',	503 );		// The service is temporarily unavailable, but should be restored in the future. If the server knows when it will be available again, a Retry-After header may also be supplied.
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/responses.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/xo-info.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,25 +0,0 @@
+-&lt;?php
+-/**
+-* xoops_http framework bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @version		$Id$
+-*/
+-
+-// xoBundleVersion: x.y.zRn  with R=release type (a:cvs snapshot, b:alpha, c:beta, d: RC, e: final)
+-// We must be able to compare versions by comparing this string
+-
+-return array(
+-	'xoBundleDisplayName' =&gt; 'XOOPS HTTP handler',
+-	'xoBundleIdentifier' =&gt; 'xoops_http_HttpHandler',
+-	'xoClassPath' =&gt; '/http.php',
+-);
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj/xo-info.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/handler-db.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/handler-db.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/handler-db.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,119 +0,0 @@
+-&lt;?php
+-/**
+- * xoops_http_DatabaseSessionHandler main class file
+- *
+- * See the enclosed file LICENSE for licensing information.
+- * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+- *
+- * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+- * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+- * @author		Kazumi Ono	&lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+- * @since		2.3.0
+- * @package		xoops_http
+- * @package		xoops_http_Session
+- * @version		$Id$
+- */
+-
+-/**
+- * Handler for a session
+- */
+-class xoops_http_DatabaseSessionHandler {
+-
+-	var $tableName = 'session';
+-
+-     /**
+-      * Database connection object
+-      *
+-      * @var	object
+-      * @access	protected
+-      */
+-    var $db;
+-
+-    function xoInit( $options = array() ) {
+-    	global $xoops;
+-    	//( 'xoops_db_LegacyDatabase' );
+-    	if ( !$this-&gt;db =&amp; $xoops-&gt;loadService( 'legacydb' ) ) {
+-    		return false;
+-    	}
+-    	$this-&gt;tableName =&amp; $this-&gt;db-&gt;prefix( $this-&gt;tableName );
+-    	return true;
+-    }
+-    
+-    /**
+-     * Open a session
+-     * @return	bool
+-     */
+-    function open($save_path, $session_name) {
+-        return true;
+-    }
+-    /**
+-     * Close a session
+-     * 
+-     * @return	bool
+-     */
+-    function close() {
+-        return true;
+-    }
+-    /**
+-     * Read a session from the database
+-     *
+-     * @param	string  &amp;sess_id    ID of the session
+-     *
+-     * @return	array   Session data
+-     */
+-    function read( $sessionId ) {
+-    	$sessionId = $this-&gt;db-&gt;quote( $sessionId );
+-    	$res = $this-&gt;db-&gt;query(  &quot;SELECT `sess_data` FROM `$this-&gt;tableName` WHERE `sess_id`=$sessionId&quot; );
+-    	if ( $res ) {
+-            list( $data ) = $this-&gt;db-&gt;fetchRow( $res );
+-            return $data;
+-        }
+-        return '';
+-    }
+-    /**
+-     * Write a session to the database
+-     *
+-     * @param   string  $sess_id
+-     * @param   string  $sess_data
+-     *
+-     * @return  bool
+-     **/
+-    function write( $sessionId, $data ) {
+-    	$sessionId = $this-&gt;db-&gt;quote( $sessionId );
+-		$data = $this-&gt;db-&gt;quote( $data );
+-		$time = time();
+-    	
+-    	list( $count ) = $this-&gt;db-&gt;fetchRow( $this-&gt;db-&gt;query( &quot;SELECT COUNT(*) FROM `$this-&gt;tableName` WHERE sess_id=$sessionId&quot; ) );
+- 	
+-    	if ( $count &gt; 0 ) {
+-			$sql = &quot;UPDATE `$this-&gt;tableName` SET sess_updated=$time,sess_data=$data WHERE sess_id=$sessionId&quot;;
+-    	} else {
+-    		$ip = $this-&gt;db-&gt;quote( $_SERVER['REMOTE_ADDR'] );
+-    		$sql = &quot;INSERT INTO `$this-&gt;tableName` (sess_id,sess_updated,sess_ip,sess_data) VALUES ($sessionId,$time,$ip,$data)&quot;;
+-    	}
+-		return $this-&gt;db-&gt;queryF( $sql );
+-    }
+-    /**
+-     * Destroy a session
+-     *
+-     * @param   string  $sess_id
+-     *
+-     * @return  bool
+-     **/
+-    function destroy( $sessionId ) {
+-    	$sessionId = $this-&gt;db-&gt;quote( $sessionId );
+-    	return $this-&gt;db-&gt;queryF( &quot;DELETE FROM `$this-&gt;tableName` WHERE sess_id=$sessionId&quot; );
+-    }
+-    /**
+-     * Garbage Collector
+-     *
+-     * @param   int $expire Time in seconds until a session expires
+-	 * @return  bool
+-     **/
+-    function gc( $expire ) {
+-        $time = time() - intval($expire);
+-        return $this-&gt;db-&gt;queryF( &quot;DELETE FROM `$this-&gt;tableName` WHERE sess_updated &lt; $time&quot; );
+-    }
+-}
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/handler-db.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/handler-db.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session-custom.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session-custom.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,206 +0,0 @@
+-&lt;?php
+-/**
+- * xoops_http_CustomSessionService main class file
+- *
+- * See the enclosed file LICENSE for licensing information.
+- * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+- *
+- * @copyright	The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+- * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+- * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+- * @since		2.3
+- * @package		xoops_http
+- * @subpackage	xoops_http_Session
+- * @version		$Id$
+- */
+-
+-/**
+- * This file cannot be requested directly
+- */
+-if ( !defined( 'XOOPS_PATH' ) ) exit();
+-
+-XOS::import( 'xoops_http_SessionService' );
+-
+-/**Only use cookies to propagate session ID*/
+-define( 'XO_SID_USE_COOKIE', 1 );
+-/**Only use URI to propagate session ID*/
+-define( 'XO_SID_USE_URI', 2 );
+-/**Try cookie and fall back to query string if not supported by the user agent*/
+-define( 'XO_SID_USE_ANY', 3 );
+-
+-/**
+- * xoops_http_CustomSessionService main class
+- * @since		2.3
+- * @package		xoops_http
+- * @subpackage	xoops_http_Session
+- */
+-class xoops_http_CustomSessionService extends xoops_http_SessionService {
+-
+-	// ---------- Session ID options ----------
+-	/**
+-	 * Server variables used to compute the session id (comma separated)  i.e: USER_AGENT,REMOTE_ADDR
+-	 * @var string
+-	 */
+-	var $hashVars		= '';
+-	/**
+-	 * Hash algorithm used to generate the session IDs. '0' means MD5 (128 bits) and '1' means SHA-1 (160 bits)
+-	 * @var integer
+-	 */
+-	var $hashFunction	= 0;
+-	/**
+-	 * Define how many bits are stored in each character when converting the binary hash data to something readable.
+-	 *
+-	 * The possible values are '4' (0-9, a-f), '5' (0-9, a-v), and '6' (0-9, a-z, A-Z, &quot;-&quot;, &quot;,&quot;)
+-	 * @var integer
+-	 */
+-	var $hashBitsPerCharacter = 4;
+-	/**
+-	 * Policy for session ID propagation
+-	 * @var integer
+-	 */
+-	var $sidPolicy = XO_SID_USE_COOKIE;
+-
+-	// ---------- Session cookie options (for cookie SID propagation) ----------
+-	/**
+-	 * Name of the cookie used to store the session identifier
+-	 * @var string
+-	 */
+-	var $cookieName		= 'XOSESSIONID';
+-	/**
+-	 * Maximum allowed duration of a session (if set to 0: until the user closes its browser)
+-	 *
+-	 * Setting the cookie lifetime allows you to specify a maximum duration for your users sessions. This will make
+-	 * a session automatically expire after a specific time, even if its owner is still active (to remove sessions
+-	 * after inactivity, see garbage collection properties).
+-	 * @var integer
+-	 */
+-	var $cookieLifetime	= 0;
+-	/**
+-	 * Domain of the cookie
+-	 * @var string
+-	 */
+-	var $cookieDomain	= '';
+-	/**
+-	 * Path of the cookie
+-	 * @var string
+-	 */
+-	var $cookiePath		= '/';
+-
+-	// ---------- Transparent SID options (for URI SID propagation) ----------
+-	/**
+-	 * Whether to enable transparent session id management if necessary (only applicable if sidPolicy allows the use of URI for SID propagation)
+-	 * @var string
+-	 */
+-	var $useTransparentSid = true;
+-	/**
+-	 * Tags that need rewriting by transparent sid
+-	 * @var string
+-	 */
+-	var $urlRewriterTags	= 'a=href,area=href,frame=src,iframe=src,input=src,form=,fieldset=';
+-	/**
+-	 * String used as parameters separator in rewritting tags
+-	 * @var string
+-	 */
+-	var $outputArgSeparator = '&amp;';
+-
+-	// ---------- Garbage collection option ----------
+-	/**
+-	 * Numbers of seconds of inactivity after which the session is considered invalid
+-	 * 
+-	 * Defaults to 15 minutes
+-	 * @var integer
+-	 */
+-	var $gcMaxlifetime	= 900;
+-	/**
+-	 * Probability of execution of the garbage collection routine
+-	 * @var integer
+-	 */
+-	var $gcProbability	= 1;
+-	/**
+-	 * Divisor used to calculate the probability of execution of the garbage collection routine
+-	 * @var integer
+-	 */
+-	var $gcDivisor		= 100;
+-
+-	// ---------- Content caching ----------
+-	/**
+-	 * Default cache lifetime for content (in minutes)
+-	 * @var integer
+-	 */
+-	var $cacheLimiter = 'private_no_expire';
+-	/**
+-	 * Default cache lifetime for content (in minutes)
+-	 * @var integer
+-	 */
+-	var $cacheLifetime = 1;
+-	
+-	/**
+-	 * Property =&gt; php.ini setting lookup table
+-	 * @var array
+-	 * @access private
+-	 */
+-	var $propertyToPhp = array(
+-		'gcMaxlifetime'		=&gt; 'session.gc_maxlifetime',
+-		'gcProbability'		=&gt; 'session.gc_probability',
+-		'gcDivisor'			=&gt; 'session.gc_divisor',
+-		'useTransparentSid'	=&gt; 'session.use_trans_sid',
+-		'urlRewriterTags'	=&gt; 'url_rewriter.tags',
+-		'outputArgSeparator'=&gt; 'arg_separator.output',
+-	);
+-	/**
+-	* Initialize the session service
+-	*/
+-	function init( $options = array() ) {
+-
+-		switch ($this-&gt;sidPolicy) {
+-		case XO_SID_USE_URI:
+-			ini_set( 'session.use_cookies', false );
+-			ini_set( 'session.use_only_cookies', false );
+-			break;
+-		case XO_SID_USE_ANY:
+-			ini_set( 'session.use_cookies', true );
+-			ini_set( 'session.use_only_cookies', false );
+-			break;
+-		case XO_SID_USE_COOKIE:
+-		default:
+-			ini_set( 'session.use_cookies', true );
+-			ini_set( 'session.use_only_cookies', true );
+-			break;
+-		}
+-	 	foreach ( $this-&gt;propertyToPhp as $prop =&gt; $php ) {
+-	 		if ( isset($this-&gt;$prop ) ) {
+-	 			ini_set( $php, $this-&gt;$prop );
+-	 		}
+-	 	}
+-
+-		if ( $this-&gt;sidPolicy &amp; XO_SID_USE_COOKIE ) {
+-			if ( isset( $_COOKIE[$this-&gt;cookieName] ) ) {
+-				$this-&gt;sessionId = $_COOKIE[$this-&gt;cookieName];
+-			}
+-			session_set_cookie_params( $this-&gt;cookieLifetime, $this-&gt;cookiePath, $this-&gt;cookieDomain );
+-		}
+-		session_name( $this-&gt;cookieName );
+-		session_cache_expire( $this-&gt;cacheLifetime );
+-
+-		return parent::xoInit( $options );
+-	}
+-	function start() {
+-		if ( $id = parent::start() ) {
+-			$expire = $this-&gt;cookieLifetime ? ( $this-&gt;cookieLifetime + time() ) : 0;
+-			setcookie( $this-&gt;cookieName, $id, $expire, $this-&gt;cookiePath, $this-&gt;cookieDomain );
+-		}
+-	}
+-	
+-	/**
+-	 * Destroy the current session
+-	 */
+-	function destroy() {
+-		parent::destroy();
+-		if ( $this-&gt;sidPolicy &amp; XO_SID_USE_COOKIE ) {
+-			setcookie( $this-&gt;cookieName, '', time() - 3600, $this-&gt;cookiePath, $this-&gt;cookieDomain );
+-		}
+-	}
+-}
+-
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session-custom.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,184 +0,0 @@
+-&lt;?php
+-/**
+- * xoops_http_SessionService main class file
+- *
+- * See the enclosed file LICENSE for licensing information.
+- * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+- *
+- * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+- * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+- * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+- * @since		2.3.0
+- * @package		xoops_http
+- * @subpackage	xoops_http_Session
+- * @version		$Id$
+- */
+-
+-/**
+- * This file cannot be requested directly
+- */
+-if ( !defined( 'XOOPS_PATH' ) ) exit();
+-
+-/**
+- * xoops_http_SessionService main class
+- * 
+- * The default session service provides basic session management functionality.
+- * It uses the settings defined in the PHP configuration files, and thus is not really
+- * user-configurable (you must use xoops_http_CustomSessionService for that).
+- * 
+- * Only cache limiting has been enhanced: this component allows to configure this setting
+- * on a user basis (if the 'cacheLimiter' variable is stored in the session, it will be used)
+- */
+-class xoops_http_SessionService {
+-	/**
+-	* Save handler to use for reading/writing session data
+-	* @var mixed
+-	*/
+-	var $saveHandler = 'xoops_http_DatabaseSessionHandler';
+-	/**
+-	 * Identifier of the current session
+-	 * @var string
+-	 */
+-	var $sessionId = 0;
+-	/**
+-	 * Default cache limiting policy (if different from the one defined in php.ini
+-	 * @var string
+-	 */
+-	var $cacheLimiter = '';
+-	/**
+-	* If sessions are created for unauthenticated visitors
+-	* @var boolean
+-	*/
+-	var $createGuestSessions = false;
+-	
+-	/**
+-	* Initialize the session service
+-	*/
+-	function xoInit( $options = array() ) {
+-		if ( $this-&gt;saveHandler &amp;&amp; !$this-&gt;attachHandler( $this-&gt;saveHandler ) ) {
+-			return false;
+-		}
+-		if ( isset( $_COOKIE[ session_name() ] ) || $this-&gt;createGuestSessions ) {
+-			$this-&gt;start();
+-		}
+-	 	return true;
+-	}
+-	/**
+-	 * Initialize the specified object as a save handler
+-	 *
+-	 * @param mixed $handler Object to attach (or bundleIdentifier of the handler to instanciate)
+-	 * @return boolean true on success, false otherwise
+-	 */
+-	function attachHandler( $handler ) {
+-		if ( !is_object( $handler ) ) {
+-			if ( ! ( $handler = XOS::create( $handler ) ) ) {
+-				trigger_error( &quot;Failed to initialize the session save handler.&quot;, E_USER_WARNING );
+-				return false;
+-			}
+-		}
+-    	session_set_save_handler(
+-    		array( &amp;$handler, 'open' ), array( &amp;$handler, 'close'),
+-    		array( &amp;$handler, 'read'), array( &amp;$handler, 'write'),
+-    		array( &amp;$handler, 'destroy'), array( &amp;$handler, 'gc')
+-    	);
+-		$this-&gt;saveHandler =&amp; $handler;
+-		return true;
+-	}
+-	
+-	/**
+-	* Create a new session
+-	*/
+-	function start() {
+-		if ( isset($_SESSION) ) {
+-		  	return true;
+-		}
+-		if ( !empty($this-&gt;sessionId) ) {
+-			session_id( $this-&gt;sessionId );
+-		}
+-		if ( !$this-&gt;cacheLimiter ) {
+-			$this-&gt;cacheLimiter = session_cache_limiter();
+-		}
+-		session_cache_limiter( 'none' );
+-		@session_start();
+-		$this-&gt;sessionId = session_id();
+-		// Do this here to allow user-dependent cacheLimiter setting
+-		//if ( @$var = $this-&gt;getObjectVar( $this, 'cacheLimiter' ) ) {
+-		//	$this-&gt;cacheLimiter = $var;
+-		//}
+-		$this-&gt;resetCacheLimiting( $this-&gt;cacheLimiter, 60 * session_cache_expire() );
+-		return $this-&gt;sessionId;
+-	}
+-	/**
+-	* Destroy the current session
+-	*/
+-	function destroy() {
+-		$_SESSION = array();
+-		unset( $_COOKIE[ session_name() ] );
+-		session_destroy();
+-	}
+-	/**
+-	* Set a named session variable
+-	*/
+-	function setObjectVar( $owner, $key, $value ) {
+-		if ( !isset($_SESSION) ) {
+-			return null;
+-		}
+-		if ( is_object($owner) ) {
+-			$owner = $owner-&gt;xoBundleIdentifier;
+-		}
+-		return $_SESSION[$owner][$key] = $value;
+-	}
+-	/**
+-	* Get the value of a named session variable
+-	*/
+-	function getObjectVar( $owner, $key ) {
+-		if ( is_object($owner) ) {
+-			$owner = $owner-&gt;xoBundleIdentifier;
+-		}
+-		return @$_SESSION[$owner][$key];
+-	}
+-	/**
+-	 * Resend the cache limiting headers
+-	 */
+-	function resetCacheLimiting( $policy, $cacheLifetime = 0, $lastModified = null ) {
+-		if ( !isset( $lastModified ) ) {
+-			$lastModified = time();
+-		}
+-		switch ( $policy ) {
+-		case 'none':
+-			break;
+-		case 'no-cache':
+-		case 'nocache':
+-			header( 'Expires: ' . $this-&gt;date( time() - 3600 ) );
+-			header( 'Cache-Control: no-store,no-cache,must-revalidate,post-check=0,pre-check=0' );
+-			break;
+-		case 'private':
+-			header( 'Expires: ' . $this-&gt;date( time() - 3600 ) );
+-		case 'private_no_expire':
+-			header( &quot;Cache-Control: private,max-age=$cacheLifetime,pre-check=$cacheLifetime&quot; );
+-			break;
+-		case 'public':
+-		default:
+-			header( 'Expires: ' . $this-&gt;date( time() + $cacheLifetime ) );
+-			header( &quot;Cache-Control: public,max-age=$cacheLifetime&quot; );
+-			header( &quot;Last-Modified: &quot; . $this-&gt;date( $lastModified ) );
+-			break;
+-		}
+-	}
+-	/**
+-	 * Return an RFC compliant (RFC822 or RFC850) date string from a timestamp
+-	 *
+-	 * @param interger $time
+-	 * @return string
+-	 */	
+-	function date( $time = null ) {
+-        return gmdate(
+-        	( ini_get('y2k_compliance') ? 'D, d M Y' : 'l, d-M-y' ) .' H:i:s',
+-        	isset($time) ? $time : time()
+-        ) . ' GMT';
+-    }
+-
+-}
+-
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/session.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/xo-info.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,41 +0,0 @@
+-&lt;?php
+-/**
+-* xoops_http session component bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @package		xoops_http_Session
+-* @version		$Id$
+-*/
+-
+-return array(
+-	'xoBundleDisplayName' =&gt; 'XOOPS Session management component',
+-	'xoBundleIdentifier' =&gt; 'xoops_http_Session',
+-	'xoClassPath' =&gt; '/session.php',
+-	'xoFactory' =&gt; 'xoops_http_SessionFactory',
+-	'xoServices' =&gt; array(
+-		'xoops_http_SessionService' =&gt; array(
+-			'xoBundleDisplayName' =&gt; 'XOOPS default session service (using php.ini settings)',
+-			'xoClassPath' =&gt; '/session.php',
+-		),
+-		'xoops_http_CustomSessionService' =&gt; array(
+-			'xoBundleDisplayName' =&gt; 'XOOPS custom session service (using custom settings)',
+-			'xoClassPath' =&gt; '/session-custom.php',
+-		),
+-		'xoops_http_DatabaseSessionHandler' =&gt; array(
+-			'xoBundleDisplayName' =&gt; 'XOOPS database session handler',
+-			'xoClassPath' =&gt; '/handler-db.php',
+-		),
+-	),
+-	
+-	
+-	
+-);
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/session.xoobj/xo-info.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php	2006-01-31 05:49:31 UTC (rev 217)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/xo-info.php	2006-02-13 03:23:01 UTC (rev 228)
+@@ -1,29 +0,0 @@
+-&lt;?php
+-/**
+-* xoops_http framework bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @version		$Id$
+-*/
+-
+-// xoBundleVersion: x.y.zRn  with R=release type (a:cvs snapshot, b:alpha, c:beta, d: RC, e: final)
+-// We must be able to compare versions by comparing this string
+-
+-return array(
+-	'xoBundleDisplayName'			=&gt; 'Xoops HTTP framework',
+-	'xoBundleIdentifier'			=&gt; 'xoops_http',
+-
+-	'xoServices' =&gt; array(
+-		'xoops_http_HttpHandler'	=&gt; array ( 'xoBundleRoot' =&gt; '/http.xoobj' ),
+-		'xoops_http_SessionService'	=&gt; array ( 'xoBundleRoot' =&gt; '/session.xoobj' ),
+-	),
+-);
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/xo-info.php (from rev 226, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000219.html">[Xoops4-svn] r227 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+	<LI>Next message: <A HREF="000221.html">[Xoops4-svn] r229 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#220">[ date ]</a>
+              <a href="thread.html#220">[ thread ]</a>
+              <a href="subject.html#220">[ subject ]</a>
+              <a href="author.html#220">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r270 - XoopsCore/branches/2.2.x/2.2.5/html/install/sql
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r270%20-%20XoopsCore/branches/2.2.x/2.2.5/html/install/sql&In-Reply-To=%3C200603221024.k2MAOFEX004111%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000259.html">
+   <LINK REL="Next"  HREF="000261.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r270 - XoopsCore/branches/2.2.x/2.2.5/html/install/sql</H1>
+    <B>phppp at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r270%20-%20XoopsCore/branches/2.2.x/2.2.5/html/install/sql&In-Reply-To=%3C200603221024.k2MAOFEX004111%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r270 - XoopsCore/branches/2.2.x/2.2.5/html/install/sql">phppp at berlios.de
+       </A><BR>
+    <I>Wed Mar 22 11:24:15 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000259.html">[Xoops4-svn] r269 - XoopsCore/branches/2.2.x/2.2.5/html/install/class
+</A></li>
+        <LI>Next message: <A HREF="000261.html">[Xoops4-svn] r271 - XoopsCore/branches/2.2.x/2.2.5/html/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#260">[ date ]</a>
+              <a href="thread.html#260">[ thread ]</a>
+              <a href="subject.html#260">[ subject ]</a>
+              <a href="author.html#260">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: phppp
+Date: 2006-03-22 11:24:14 +0100 (Wed, 22 Mar 2006)
+New Revision: 270
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql
+Log:
+MySQL 5.02+ compatible
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql	2006-03-22 10:22:48 UTC (rev 269)
++++ XoopsCore/branches/2.2.x/2.2.5/html/install/sql/mysql.structure.sql	2006-03-22 10:24:14 UTC (rev 270)
+@@ -167,7 +167,7 @@
+   conf_modid smallint(5) unsigned NOT NULL default '0',
+   conf_catid smallint(5) unsigned NOT NULL default '0',
+   conf_name varchar(25) NOT NULL default '',
+-  conf_title varchar(30) NOT NULL default '',
++  conf_title varchar(255) NOT NULL default '',
+   conf_value text NOT NULL,
+   conf_desc varchar(50) NOT NULL default '',
+   conf_formtype varchar(15) NOT NULL default '',
+@@ -184,8 +184,8 @@
+ 
+ CREATE TABLE configcategory (
+   confcat_id smallint(5) unsigned NOT NULL,
+-  confcat_modid smallint(5) unsigned NOT NULL,
+-  confcat_name varchar(25) NOT NULL default '',
++  confcat_modid smallint(5) unsigned NOT NULL default '0',
++  confcat_name varchar(255) NOT NULL default '',
+   confcat_order smallint(5) unsigned NOT NULL default '0',
+   confcat_nameid varchar(255) NOT NULL default '',
+   confcat_description text NOT NULL,
+@@ -416,7 +416,7 @@
+   rank_min mediumint(8) unsigned NOT NULL default '0',
+   rank_max mediumint(8) unsigned NOT NULL default '0',
+   rank_special tinyint(1) unsigned NOT NULL default '0',
+-  rank_image varchar(255) default NULL,
++  rank_image varchar(255) default NULL default '',
+   PRIMARY KEY  (rank_id),
+   KEY rank_min (rank_min),
+   KEY rank_max (rank_max),
+@@ -546,7 +546,7 @@
+ 
+ CREATE TABLE `block_instance` (
+   `instanceid` int(12) unsigned NOT NULL auto_increment,
+-  `bid` int(12) unsigned NOT NULL,
++  `bid` int(12) unsigned NOT NULL default '0',
+   `options` text NOT NULL default '',
+   `title` varchar(255) NOT NULL default '',
+   `side` tinyint(1) unsigned NOT NULL default '0',
+@@ -554,5 +554,5 @@
+   `visible` tinyint(1) unsigned NOT NULL default '0',
+   `bcachetime` int(10) unsigned NOT NULL default '0',
+   PRIMARY KEY (`instanceid`),
+-  KEY `join` (`instanceid`, `visible`, `weight`)
++  KEY `joinkeys` (`instanceid`, `visible`, `weight`)
+ ) TYPE=MyISAM;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000259.html">[Xoops4-svn] r269 - XoopsCore/branches/2.2.x/2.2.5/html/install/class
+</A></li>
+	<LI>Next message: <A HREF="000261.html">[Xoops4-svn] r271 - XoopsCore/branches/2.2.x/2.2.5/html/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#260">[ date ]</a>
+              <a href="thread.html#260">[ thread ]</a>
+              <a href="subject.html#260">[ subject ]</a>
+              <a href="author.html#260">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

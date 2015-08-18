@@ -1,0 +1,872 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r265 - in XoopsCore/branches/tasks/123542-admin/htdocs/themes/default: . img
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r265%20-%20in%20XoopsCore/branches/tasks/123542-admin/htdocs/themes/default%3A%20.%20img&In-Reply-To=%3C200602191941.k1JJfbC5018730%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000256.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r265 - in XoopsCore/branches/tasks/123542-admin/htdocs/themes/default: . img</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r265%20-%20in%20XoopsCore/branches/tasks/123542-admin/htdocs/themes/default%3A%20.%20img&In-Reply-To=%3C200602191941.k1JJfbC5018730%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r265 - in XoopsCore/branches/tasks/123542-admin/htdocs/themes/default: . img">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 20:41:37 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000256.html">[Xoops4-svn] r264 - XoopsCore/branches/tasks/123542-admin/htdocs
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#257">[ date ]</a>
+              <a href="thread.html#257">[ thread ]</a>
+              <a href="subject.html#257">[ subject ]</a>
+              <a href="author.html#257">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 20:41:32 +0100 (Sun, 19 Feb 2006)
+New Revision: 265
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blockszone.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/header.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/html-head.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/button-hover_bg.png
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/input_bg.png
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/toolbar_bg.png
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/theme-canvas-default.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/theme-page-default.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xoops.js
+Removed:
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/canvas-default.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/page-default.xotpl
+Modified:
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/block.xotpl
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blocks.css
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/elements.css
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/button_bg.png
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/msie.css
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/style-default.css
+   XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xo-info.php
+Log:
+Several changes to the default theme, to ensure it deals with new features... it now supports html, xhtml, and shows how to make pdf (for fun...)
+
+This branch should theorically be usable again !
+(well, I'm sure I crapped old modules support/themes compatibility at some point, and should disable XHTML support by default, so modules sending not well-formed output don't break everything, but that won't be long)
+
+Will take care of this tomorrow, and give some news on the devlog too
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/block.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/block.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/block.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -1,4 +1,4 @@
+ &lt;div class=&quot;xo-block ([$block.module])-([$block.name])&quot;&gt;
+ 	&lt;div class=&quot;xo-blocktitle&quot;&gt;([$block.title])&lt;/div&gt;
+-	&lt;div class=&quot;xo-blockcontent&quot;&gt;([$block.content])&lt;/div&gt;
++	&lt;div class=&quot;xo-blockcontent&quot;&gt;([$block.content|smarty:nodefaults])&lt;/div&gt;
+ &lt;/div&gt;
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blocks.css
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blocks.css	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blocks.css	2006-02-19 19:41:32 UTC (rev 265)
+@@ -1,40 +1,30 @@
+ 
+-/* --------- Rules for canvas blocks --------- */
+-.xo-canvas-column ul {
+-	margin:				0px;
+-	padding:			0px;
+-	list-style-type:	none;
++/* --------- Left column blocks --------- */
++#xo-canvas-leftcolumn .xo-block {
++	border:			1px solid #666666;
+ }
+-
+-.xo-canvas-column a {
+-	display:			block;
+-	padding:			1px .3em;
+-	text-decoration:	none;
+-	font-size:			90%;
+-	color:				#CCCCCC;
+-}
+-.xo-canvas-column a:hover {
+-	color:				#FFFFFF;
+-}
+-.xo-canvas-column .menuSub a {
+-	padding-left:		1em;
+-}
+-
+-
+-
+ #xo-canvas-leftcolumn .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
++	background:		#9D9D9D url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
+ 	color:			#ffffff;
+ 	border-bottom:	1px solid #666666;
+ 	padding:		.2em .5em;
+ 	font-weight:	bold;
+ 	text-shadow:	1px 1px #000000;
+ }
+-
+ #xo-canvas-leftcolumn .xo-blockcontent {
+ 	background:		#999999 url(img/canvas-blockcontent_bg_grey.png) repeat-x left top;
+ }
+ 
++#xo-canvas-leftcolumn a {
++	color:				#CCCCCC;
++	text-decoration:	none;
++	font-size:			90%;
++}
++#xo-canvas-leftcolumn a:hover {
++	color:				#EEEEEE;
++}
++
++/* --------- Right column blocks --------- */
+ #xo-canvas-rightcolumn .xo-block {
+ 	padding:		8px 0px;
+ 	background:		url(img/separator.png) no-repeat center bottom;
+@@ -42,7 +32,6 @@
+ #xo-canvas-rightcolumn :last-child {
+ 	background:		transparent none;
+ }
+-
+ #xo-canvas-rightcolumn .xo-blocktitle {
+ 	font-weight:	bold;
+ }
+@@ -50,19 +39,53 @@
+ 	font-size:		90%;
+ }
+ 
+-#xo-canvas-leftcolumn a:hover {
+-	color:				#EEEEEE;
+-	background:			#555555;
+-}
+-
+ #xo-canvas-rightcolumn a {
+ 	color:				#666666;
++	text-decoration:	none;
+ }
+ #xo-canvas-rightcolumn a:hover {
+ 	color:				#333333;
+ 	text-decoration:	underline;
+ }
+ 
++
++
++.xo-canvas-column ul {
++	margin:				0px;
++	padding:			.2em;
++}
++.xo-canvas-column li {
++	list-style:		none;
++	margin:			0px;
++	padding:		0px;
++}
++
++
++
++/*
++
++
++
++
++.xo-canvas-column a {
++	display:			inline-block;
++	width:				100%;
++	margin:				0px;
++	padding:			1px .3em;
++	text-decoration:	none;
++	font-size:			90%;
++	color:				#CCCCCC;
++}
++.xo-canvas-column a:hover {
++}
++.xo-canvas-column .menuSub a {
++	padding-left:		1em;
++}
++
++*/
++
++
++
+ /* --------- Rules for page blocks --------- */
+ 
+ #xo-content .xo-block {
+@@ -103,7 +126,7 @@
+ 
+ 
+ #xo-canvas-leftcolumn .system-main_menu .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
++	background:		#647FD7 url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
+ }
+ 
+ #xo-canvas-leftcolumn .system-main_menu .xo-blockcontent {
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blockszone.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blockszone.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/blockszone.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -0,0 +1,9 @@
++
++([if $xoBlocks[$zone] ])
++	([if not $zoneTag])([assign var=zoneTag value='div'])([/if])
++	&lt;([$zoneTag]) class=&quot;xo-blockszone([if $zoneClass]) ([$zoneClass])([/if])&quot;([if $zoneId]) id=&quot;([$zoneId])&quot;([/if])&gt;
++	([foreach from=$xoBlocks[$zone] key=n item=block])
++		([include file=&quot;xotpl:block.xotpl&quot;])
++	([/foreach])
++	&lt;/([$zoneTag])&gt;
++([/if])
+
+Deleted: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/canvas-default.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/canvas-default.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -1,110 +0,0 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html
+-	xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;
+-	xml:lang=&quot;([$xoops_langcode])&quot; lang=&quot;([$xoops_langcode])&quot;
+-&gt;
+-&lt;head&gt;
+-	&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=([$xoops_charset])&quot; /&gt;
+-	&lt;meta http-equiv=&quot;content-language&quot; content=&quot;([$xoops_langcode])&quot; /&gt;
+-
+-	([include file='xotpl:xoops_pyro_Theme#templates/metas.xotpl'])
+-
+-	&lt;link rel=&quot;SHORTCUT ICON&quot; href=&quot;([xoImgUrl favicon.ico])&quot; /&gt;
+-
+-	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl style-default.css])&quot; /&gt;
+-
+-&lt;!--[if lte IE 6]&gt;
+-	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl msie.css])&quot; /&gt;
+-&lt;![endif]--&gt;
+-
+-	&lt;title&gt;([$xoops_sitename]) - ([$xoops_pagetitle])&lt;/title&gt;
+-
+-	([$xoops_module_header])
+-
+-	
+-&lt;script type=&quot;text/javascript&quot;&gt;//&lt;![CDATA[
+-	function xoHideRedirectMessage() {
+-		var msg = document.getElementById( &quot;xo-redirect-message&quot; );
+-		var dec = .05;
+-		if (!msg) return;
+-		if ( msg.style.opacity === '' ) {
+-			if (document.defaultView) {
+-				msg.style.opacity = document.defaultView.getComputedStyle(msg, &quot;&quot;).getPropertyValue(&quot;opacity&quot;) - dec;
+-			} else msg.style.opacity = 1-dec;
+-		} else msg.style.opacity -= dec;
+-		if ( msg.style.opacity ) {
+-			window.setTimeout( &quot;xoHideRedirectMessage()&quot;, 75 );
+-		}
+-	}
+-//]]&gt;
+-&lt;/script&gt;
+-	
+-&lt;/head&gt;
+-&lt;body class=&quot;([$xoops-&gt;currentModule-&gt;xoBundleIdentifier])&quot;&gt;
+-
+-([if $xoBlocks.canvas_left and $xoBlocks.canvas_right])
+-	([assign var=canvas_class value=&quot;xo-with_both&quot;])
+-([elseif $xoBlocks.canvas_left])
+-	([assign var=canvas_class value=&quot;xo-with_left&quot;])
+-([elseif $xoBlocks.canvas_right])
+-	([assign var=canvas_class value=&quot;xo-with_right&quot;])
+-([/if])
+-
+-&lt;div id=&quot;xo-canvas&quot;([if $canvas_class]) class=&quot;([$canvas_class])&quot;([/if])&gt;
+-	&lt;div id=&quot;xo-canvas-header&quot;&gt;
+-		&lt;div id=&quot;xo-banner&quot;&gt;
+-			&lt;div id=&quot;xo-banner-logo&quot;&gt;
+-				&lt;a href=&quot;([xoAppUrl /www/])&quot;&gt;&lt;img src=&quot;([xoImgUrl img/xoops-logo.png])&quot; alt=&quot;XOOPS&quot; /&gt;&lt;/a&gt;
+-			&lt;/div&gt;
+-			([if $xoops_banner != '&nbsp;'])
+-			&lt;div id=&quot;xo-banner-ad&quot;&gt;([$xoops_banner])&lt;/div&gt;
+-			([/if])
+-		&lt;/div&gt;
+-		&lt;div id=&quot;xo-header-userinfo&quot;&gt;
+-		([if not $xoops-&gt;currentUser-&gt;userId])
+-			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#login])&quot;&gt;Log in&lt;/a&gt;
+-			&lt;a href=&quot;([xoAppUrl /www/register.php])&quot;&gt;Register&lt;/a&gt;
+-		([else])
+-			&lt;div class=&quot;user-name&quot;&gt;
+-				([if $xoops-&gt;currentUser-&gt;fullName])([$xoops-&gt;currentUser-&gt;fullName])([else])([$xoops-&gt;currentUser-&gt;login])([/if])
+-			&lt;/div&gt;
+-			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#logout])&quot;&gt;Log out&lt;/a&gt;
+-		([/if])
+-		&lt;/div&gt;
+-	&lt;/div&gt;
+-([if $xoops-&gt;services.http-&gt;redirectMessage])
+-	&lt;div id=&quot;xo-redirect-message&quot;&gt;
+-		([$xoops-&gt;services.http-&gt;redirectMessage])
+-	&lt;/div&gt;
+-	&lt;script type=&quot;text/javascript&quot;&gt;if (xoHideRedirectMessage) window.setTimeout( 'xoHideRedirectMessage()', 4200 );&lt;/script&gt;
+-([/if])
+-	&lt;div id=&quot;xo-canvas-main&quot;&gt;
+-		([if !empty($xoBlocks.canvas_left)])
+-		&lt;div class=&quot;xo-canvas-column xo-blockszone&quot; id=&quot;xo-canvas-leftcolumn&quot;&gt;
+-		([foreach from=$xoBlocks.canvas_left key=n item=block])
+-			([include file=&quot;xotpl:block.xotpl&quot;])
+-		([/foreach])
+-		&lt;/div&gt;
+-		([/if])
+-	
+-		([if !empty($xoBlocks.canvas_right)])
+-		&lt;div class=&quot;xo-canvas-column xo-blockszone&quot; id=&quot;xo-canvas-rightcolumn&quot;&gt;
+-		([foreach from=$xoBlocks.canvas_right key=n item=block])
+-			([include file=&quot;xotpl:block.xotpl&quot;])
+-		([/foreach])
+-		&lt;/div&gt;
+-		([/if])
+-		([$xoTheme-&gt;renderZone('page')])
+-		&lt;br clear=&quot;all&quot; /&gt;
+-	&lt;/div&gt;
+-	&lt;div id=&quot;xo-canvas-footer&quot;&gt;
+-		&lt;a href=&quot;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&quot; target=&quot;_blank&quot;&gt;
+-			Powered by ([$xoops-&gt;xoShortVersionString])
+-		&lt;/a&gt;
+-	&lt;/div&gt;
+-&lt;/div&gt;
+-  
+-&lt;!--{xo-logger-output}--&gt;
+-
+-&lt;/body&gt;
+-&lt;/html&gt;
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/elements.css
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/elements.css	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/elements.css	2006-02-19 19:41:32 UTC (rev 265)
+@@ -11,6 +11,9 @@
+ a:hover {
+ 	text-decoration:	underline;
+ }
++form {
++	margin:				0px;
++}
+ 
+ 
+ /* Web resources lists */
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/header.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/header.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/header.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -0,0 +1,21 @@
++	&lt;div id=&quot;xo-canvas-header&quot;&gt;
++		&lt;div id=&quot;xo-banner&quot;&gt;
++			&lt;div id=&quot;xo-banner-logo&quot;&gt;
++				&lt;a href=&quot;([xoAppUrl /www/])&quot;&gt;&lt;img src=&quot;([xoImgUrl img/xoops-logo.png])&quot; alt=&quot;XOOPS&quot; /&gt;&lt;/a&gt;
++			&lt;/div&gt;
++			([if $xoops_banner != '&nbsp;'])
++			&lt;div id=&quot;xo-banner-ad&quot;&gt;([$xoops_banner])&lt;/div&gt;
++			([/if])
++		&lt;/div&gt;
++		&lt;div id=&quot;xo-header-userinfo&quot;&gt;
++		([if not $xoops-&gt;currentUser-&gt;userId])
++			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#login])&quot;&gt;Log in&lt;/a&gt;
++			&lt;a href=&quot;([xoAppUrl /www/register.php])&quot;&gt;Register&lt;/a&gt;
++		([else])
++			&lt;div class=&quot;user-name&quot;&gt;
++				([if $xoops-&gt;currentUser-&gt;fullName])([$xoops-&gt;currentUser-&gt;fullName])([else])([$xoops-&gt;currentUser-&gt;login])([/if])
++			&lt;/div&gt;
++			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#logout])&quot;&gt;Log out&lt;/a&gt;
++		([/if])
++		&lt;/div&gt;
++	&lt;/div&gt;
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/html-head.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/html-head.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/html-head.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -0,0 +1,17 @@
++
++	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl style-default.css])&quot; /&gt;
++&lt;!--[if lte IE 6]&gt;
++	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;([xoImgUrl msie.css])&quot; /&gt;
++&lt;![endif]--&gt;
++	([include file='xotpl:xoops_opal_Theme#templates/metas.xotpl'])
++
++	&lt;link rel=&quot;SHORTCUT ICON&quot; href=&quot;([xoImgUrl favicon.ico])&quot; /&gt;
++
++	&lt;script type=&quot;text/javascript&quot; src=&quot;([xoImgUrl xoops.js])&quot;&gt;&lt;/script&gt;
++	&lt;script type=&quot;text/javascript&quot;&gt;
++		xoops.url = &quot;([xoAppUrl /www])&quot;;
++	&lt;/script&gt;
++
++	&lt;title&gt;([$xoops_sitename]) - ([$xoops_pagetitle])&lt;/title&gt;
++
++	([$xoops_module_header])
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/button-hover_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/button-hover_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/button_bg.png
+===================================================================
+(Binary files differ)
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/input_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/input_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/toolbar_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/img/toolbar_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/msie.css
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/msie.css	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/msie.css	2006-02-19 19:41:32 UTC (rev 265)
+@@ -1,5 +1,4 @@
+ 
+-
+ #xo-header-userinfo {
+ 	right:			25px;
+ }
+@@ -8,17 +7,6 @@
+ 	padding:		0px;
+ }
+ 
+-
+-#xo-page {
+-	/* Fix to allow 100% large elements inside the content zone (this browser is so lame... it's unbelievable) */
+-	height:			1%;
+-}
+-
+-#xo-canvas-left {
+-	display:	inline;
+-}
+-
+-
+ .mod_xoops_Identification #xo-page.login {
+ 	text-align:		center;
+ }
+
+Deleted: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/page-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/page-default.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/page-default.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -1,28 +0,0 @@
+-
+-	&lt;div id=&quot;xo-page&quot;([if $xoops-&gt;currentModule-&gt;currentLocation]) class=&quot;([$xoops-&gt;currentModule-&gt;currentLocation])&quot;([/if])&gt;
+-		([if !empty($xoops_ccblocks)])
+-		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topblocks&quot;&gt;
+-		([foreach item=block from=$xoops_ccblocks])
+-			([include file=&quot;xotpl:block.xotpl&quot;])
+-		([/foreach])
+-		&lt;/div&gt;
+-		([/if])
+-		([if !empty($xoops_clblocks)])
+-		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topleftblocks&quot;&gt;
+-		([foreach item=block from=$xoops_clblocks])
+-			([include file=&quot;xotpl:block.xotpl&quot;])
+-		([/foreach])
+-		&lt;/div&gt;
+-		([/if])
+-		([if !empty($xoops_crblocks)])
+-		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-toprightblocks&quot;&gt;
+-		([foreach item=block from=$xoops_crblocks])
+-			([include file=&quot;xotpl:block.xotpl&quot;])
+-		([/foreach])
+-		&lt;/div&gt;
+-		([/if])
+-		
+-		&lt;div id=&quot;xo-content&quot;&gt;
+-			([$xoTheme-&gt;renderZone('content')])
+-		&lt;/div&gt;
+-	&lt;/div&gt;
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/style-default.css
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/style-default.css	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/style-default.css	2006-02-19 19:41:32 UTC (rev 265)
+@@ -11,13 +11,12 @@
+ 	font:					10pt sans-serif;
+ }
+ 
+-
+ #xo-canvas {
+-	margin:			15px;
++	margin:			.4em;
+ 	background:		#EEEEEE;
+ }
+ 
+-/* ------------------- Canvas banner ------------------- */
++/* ------------------- Canvas header ------------------- */
+ #xo-canvas-header {
+ 	position:		relative;
+ 	border-bottom:	1px solid #CCCCCC;
+@@ -27,7 +26,7 @@
+ 
+ #xo-banner {
+ 	position:		relative;
+-	height:			60px;
++	height:			4.5em;
+ 	border:			1px solid #000000;
+ 	padding:		2px;
+ 	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
+@@ -82,44 +81,38 @@
+ /* ------------------- Main canvas zone (columns and page) ------------------- */
+ #xo-canvas-main {
+ 	border-top:		1px solid #FFFFFF;
+-	padding:		6px;
++	margin:			0px;
+ }
+-
++#xo-canvas-content {
++	display:		table;
++	width:			100%;
++	border-spacing:	6px;
++}
+ .xo-canvas-column {
+-	width:			160px;
++	width:			11em;
+ }
++.xo-canvas-column, #xo-page {
++	display:		table-cell;
++	vertical-align:	top;
++}
+ 
+-#xo-canvas-leftcolumn {
+-	float:			left;
+-	border:			1px solid #666666;
+-}
+ #xo-canvas-column .xo-block {
+ 	display:		block;
+ }
+-#xo-canvas-rightcolumn {
+-	float:			right;
+-}
++
+ #xo-page {
++	min-height:		300px;
++	border:			1px solid #999999;
+ 	background:		#ffffff;
+-	padding:		0px;
+-	border:			1px solid #CCCCCC;
+-	min-height:		300px;
+ }
+ 
+-#xo-canvas.xo-with_left #xo-page, #xo-canvas.xo-with_both #xo-page {
+-	margin-left:	170px;
+-}
+-#xo-canvas.xo-with_right #xo-page, #xo-canvas.xo-with_both #xo-page {
+-	margin-right:	170px;
+-}
+-
+ #xo-content {
+ 	position:		relative;
+ }
+ 
+ 
+ #xo-canvas-footer {
+-	padding:		1px;
++	padding:		.1em;
+ 	background:		#DDDDDD;
+ 	text-align:		center;
+ 	font-size:		90%;
+@@ -129,3 +122,20 @@
+ 	color:				#666666;
+ 	text-decoration:	none;
+ }
++
++
++input[type=text], input[type=password] {
++	border:			1px solid #B3B9C3;
++	background:		#ffffff url(img/input_bg.png) no-repeat left top;
++	color:			#000000;
++	padding:		1px 2px;
++}
++
++button {
++	background:		#D3D2D6 url(img/button_bg.png) repeat-x left bottom;
++}
++
++button:hover {
++	background:		#E6EBFF url(img/button-hover_bg.png) repeat-x left bottom;
++}
++
+
+Copied: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/theme-canvas-default.xotpl (from rev 264, XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/canvas-default.xotpl)
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/canvas-default.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/theme-canvas-default.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -0,0 +1,118 @@
++&lt;?xml version='1.0' encoding='utf-8'?&gt;
++&lt;XoopsTemplate&gt;
++	&lt;TemplateData contentType=&quot;text/html&quot; default=&quot;true&quot;&gt;&lt;![CDATA[
++&lt;!DOCTYPE ([$xoTheme-&gt;doctype|smarty:nodefaults])&gt;
++&lt;html
++	([$xoTheme-&gt;namespacesString()|smarty:nodefaults])
++	xml:lang=&quot;en&quot; lang=&quot;en&quot;
++&gt;
++&lt;head&gt;
++	([includeq file='xotpl:html-head.xotpl'])
++&lt;/head&gt;
++&lt;body&gt;
++&lt;div id=&quot;xo-canvas&quot; class=&quot;([$xoops-&gt;currentModule-&gt;xoBundleIdentifier])&quot;&gt;
++	([include file='xotpl:header.xotpl'])
++	([if $xoops-&gt;services.http-&gt;redirectMessage])
++	&lt;div id=&quot;xo-redirect-message&quot;&gt;
++		([$xoops-&gt;services.http-&gt;redirectMessage])
++	&lt;/div&gt;
++	&lt;script type=&quot;text/javascript&quot;&gt;if (xoHideRedirectMessage) window.setTimeout( 'xoHideRedirectMessage()', 4200 );&lt;/script&gt;
++	([/if])
++	&lt;div id=&quot;xo-canvas-main&quot;&gt;
++		&lt;div id=&quot;xo-canvas-globalnav&quot; style=&quot;display:none&quot;&gt;Global navigation bar&lt;/div&gt;
++		&lt;table id=&quot;xo-canvas-content&quot; cellspacing=&quot;6&quot;&gt;
++		&lt;tr&gt;
++			([include file='xotpl:blockszone.xotpl' zone='canvas_left'
++				zoneClass='xo-canvas-column' zoneId='xo-canvas-leftcolumn' zoneTag='td'
++			])
++			&lt;td id=&quot;xo-page&quot;([if $xoops-&gt;currentModule-&gt;currentLocation]) class=&quot;([$xoops-&gt;currentModule-&gt;currentLocation])&quot;([/if])&gt;
++			([$xoTheme-&gt;renderZone('page')])
++			&lt;/td&gt;
++			([include file='xotpl:blockszone.xotpl' zone='canvas_right'
++				zoneClass='xo-canvas-column' zoneId='xo-canvas-rightcolumn' zoneTag='td'
++			])
++		&lt;/tr&gt;
++		&lt;/table&gt;
++	&lt;/div&gt;
++	&lt;div id=&quot;xo-canvas-footer&quot;&gt;
++		&lt;a href=&quot;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&quot; target=&quot;_blank&quot;&gt;
++			Powered by ([$xoops-&gt;xoShortVersionString])
++		&lt;/a&gt;
++	&lt;/div&gt;
++&lt;/div&gt;
++&lt;!--{xo-logger-output}--&gt;
++&lt;/body&gt;
++&lt;/html&gt;]]&gt;
++	&lt;/TemplateData&gt;
++	&lt;TemplateData contentType=&quot;application/xhtml+xml&quot;&gt;
++	&lt;![CDATA[&lt;?xml version='1.0'?&gt;
++&lt;!DOCTYPE ([$xoTheme-&gt;doctype|smarty:nodefaults])&gt;
++&lt;html
++	([$xoTheme-&gt;namespacesString()|smarty:nodefaults])
++	xml:lang=&quot;en&quot; lang=&quot;en&quot;
++&gt;
++&lt;head&gt;
++	([includeq file='xotpl:html-head.xotpl'])
++&lt;/head&gt;
++&lt;body&gt;
++&lt;div id=&quot;xo-canvas&quot; class=&quot;([$xoops-&gt;currentModule-&gt;xoBundleIdentifier])&quot;&gt;
++	([include file='xotpl:header.xotpl'])
++	([if $xoops-&gt;services.http-&gt;redirectMessage])
++	&lt;div id=&quot;xo-redirect-message&quot;&gt;
++		([$xoops-&gt;services.http-&gt;redirectMessage])
++	&lt;/div&gt;
++	&lt;script type=&quot;text/javascript&quot;&gt;if (xoHideRedirectMessage) window.setTimeout( 'xoHideRedirectMessage()', 4200 );&lt;/script&gt;
++	([/if])
++	&lt;div id=&quot;xo-canvas-main&quot;&gt;
++		&lt;div id=&quot;xo-canvas-globalnav&quot; style=&quot;display:none&quot;&gt;Global navigation bar&lt;/div&gt;
++		&lt;div id=&quot;xo-canvas-content&quot;&gt;
++			([include file='xotpl:blockszone.xotpl' zone='canvas_left'
++				zoneClass='xo-canvas-column' zoneId='xo-canvas-leftcolumn'
++			])
++			&lt;div id=&quot;xo-page&quot;([if $xoops-&gt;currentModule-&gt;currentLocation]) class=&quot;([$xoops-&gt;currentModule-&gt;currentLocation])&quot;([/if])&gt;
++			([$xoTheme-&gt;renderZone('page')])
++			&lt;/div&gt;
++			([include file='xotpl:blockszone.xotpl' zone='canvas_right'
++				zoneClass='xo-canvas-column' zoneId='xo-canvas-rightcolumn'
++			])
++		&lt;/div&gt;
++	&lt;/div&gt;
++	&lt;div id=&quot;xo-canvas-footer&quot;&gt;
++		&lt;a href=&quot;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&quot; target=&quot;_blank&quot;&gt;
++			Powered by ([$xoops-&gt;xoShortVersionString])
++		&lt;/a&gt;
++	&lt;/div&gt;
++&lt;/div&gt;
++&lt;!--{xo-logger-output}--&gt;
++&lt;/body&gt;
++&lt;/html&gt;]]&gt;
++	&lt;/TemplateData&gt;
++	&lt;TemplateData contentType=&quot;application/pdf&quot;&gt;
++	&lt;![CDATA[
++&lt;pdml&gt;
++&lt;head&gt;
++	&lt;title&gt;Document title goes here&lt;/title&gt;
++	&lt;subject&gt;Document subject goes here&lt;/subject&gt;
++	&lt;keywords&gt;example,php,document,and,stuff&lt;/keywords&gt;
++&lt;/head&gt;
++&lt;body&gt;
++&lt;header&gt;
++	&lt;font size=10pt&gt;
++		&lt;div top=0.2cm left=0cm&gt;Insert site name here&lt;/div&gt;
++		&lt;i&gt;&lt;div top=0.2cm left=50%&gt;&lt;a href=&quot;<A HREF="http://([$xoops-">http://([$xoops-</A>&gt;hostLocation])/&quot;&gt;<A HREF="http://([$xoops-">http://([$xoops-</A>&gt;hostLocation])/&lt;/a&gt;&lt;/div&gt;&lt;/i&gt;
++	&lt;/font&gt;
++&lt;/header&gt;
++.
++&lt;font size=1cm&gt;
++	&lt;multicell top=40% align=center&gt;
++		This is the front page sent before each document
++	&lt;/multicell&gt;
++&lt;/font&gt;
++&lt;page&gt;
++	This is the content now (well, this will be where the content goes)...
++
++&lt;/body&gt;
++&lt;/pdml&gt;
++]]&gt;	
++	&lt;/TemplateData&gt;
++&lt;/XoopsTemplate&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/theme-page-default.xotpl (from rev 264, XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/page-default.xotpl)
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/page-default.xotpl	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/theme-page-default.xotpl	2006-02-19 19:41:32 UTC (rev 265)
+@@ -0,0 +1,26 @@
++
++		([if !empty($xoops_ccblocks)])
++		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topblocks&quot;&gt;
++		([foreach item=block from=$xoops_ccblocks])
++			([include file=&quot;xotpl:block.xotpl&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		([if !empty($xoops_clblocks)])
++		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topleftblocks&quot;&gt;
++		([foreach item=block from=$xoops_clblocks])
++			([include file=&quot;xotpl:block.xotpl&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		([if !empty($xoops_crblocks)])
++		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-toprightblocks&quot;&gt;
++		([foreach item=block from=$xoops_crblocks])
++			([include file=&quot;xotpl:block.xotpl&quot;])
++		([/foreach])
++		&lt;/div&gt;
++		([/if])
++		
++		&lt;div id=&quot;xo-content&quot;&gt;
++			([$xoTheme-&gt;renderZone('content')])
++		&lt;/div&gt;
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xo-info.php	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xo-info.php	2006-02-19 19:41:32 UTC (rev 265)
+@@ -4,12 +4,17 @@
+ 
+ 
+ return array(
+-	'xoBundleIdentifier'	=&gt; 'theme_default__web',
++	'xoBundleIdentifier'	=&gt; 'theme_default',
+ 	'xoBundleDisplayName'	=&gt; 'XOOPS default theme (standards compliant)',
+ 	// This theme default templates
+ 	// templates paths must start with a &quot;.&quot; to be considered relative to the theme folder
+-	'canvasTemplate' =&gt; './canvas-default.xotpl',
+-	'pageTemplate' =&gt; './page-default.xotpl',
++	'canvasTemplate' =&gt; './theme-canvas-default.xotpl',
++	'pageTemplate' =&gt; './theme-page-default.xotpl',
++	// Properties that indicate the type of content this theme generates
++	'supportedMimeTypes' =&gt; &quot;application/xhtml+xml,text/html,application/pdf&quot;,
++	
++	'namespaces' =&gt; '<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>',
++	'doctype' =&gt; 'html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;',
+ );
+ 
+ 
+
+Added: XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xoops.js
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xoops.js	2006-02-19 19:31:15 UTC (rev 264)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/themes/default/xoops.js	2006-02-19 19:41:32 UTC (rev 265)
+@@ -0,0 +1,40 @@
++
++function XoopsUtility() {
++	this.url = '';
++	
++	
++	this.addElementClass = function (  elt, cls ) {
++		var current = &quot; &quot; + elt.className + &quot; &quot;;
++		if ( current.indexOf( &quot; &quot; + cls + &quot; &quot; ) == -1 ) {
++			elt.className += elt.className ? ( &quot; &quot; + cls ) : cls;
++		}
++	}
++	this.removeElementClass = function ( elt, cls ) {
++		var current = &quot; &quot; + elt.className + &quot; &quot;;
++		var nClass = current.replace( new RegExp( &quot; &quot; + cls + &quot; &quot; ), &quot; &quot; );
++		elt.className = nClass.substr( 1, nClass.length - 2 );
++	}
++	this.replaceElementClass = function( elt, cls1, cls2 ) {
++		var current = &quot; &quot; + elt.className + &quot; &quot;;
++		var nClass = current.replace( new RegExp( &quot; &quot; + cls1 + &quot; &quot; ), &quot; &quot; + cls2 + &quot; &quot; );
++		elt.className = nClass.substr( 1, nClass.length - 2 );
++	}
++
++}
++
++var xoops = new XoopsUtility();
++
++
++	function xoHideRedirectMessage() {
++		var msg = document.getElementById( &quot;xo-redirect-message&quot; );
++		var dec = .05;
++		if (!msg) return;
++		if ( msg.style.opacity === '' ) {
++			if (document.defaultView) {
++				msg.style.opacity = document.defaultView.getComputedStyle(msg, &quot;&quot;).getPropertyValue(&quot;opacity&quot;) - dec;
++			} else msg.style.opacity = 1-dec;
++		} else msg.style.opacity -= dec;
++		if ( msg.style.opacity ) {
++			window.setTimeout( &quot;xoHideRedirectMessage()&quot;, 75 );
++		}
++	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000256.html">[Xoops4-svn] r264 - XoopsCore/branches/tasks/123542-admin/htdocs
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#257">[ date ]</a>
+              <a href="thread.html#257">[ thread ]</a>
+              <a href="subject.html#257">[ subject ]</a>
+              <a href="author.html#257">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

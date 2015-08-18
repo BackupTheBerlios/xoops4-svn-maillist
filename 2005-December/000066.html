@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r73 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops-devteam xoops-devteam/img xoops-devteam/modules xoops-devteam/modules/articles
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r73%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes%3A%20.%20xoops-devteam%20xoops-devteam/img%20xoops-devteam/modules%20xoops-devteam/modules/articles&In-Reply-To=%3C200512031417.jB3EHkcF020892%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000065.html">
+   <LINK REL="Next"  HREF="000067.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r73 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops-devteam xoops-devteam/img xoops-devteam/modules xoops-devteam/modules/articles</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r73%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes%3A%20.%20xoops-devteam%20xoops-devteam/img%20xoops-devteam/modules%20xoops-devteam/modules/articles&In-Reply-To=%3C200512031417.jB3EHkcF020892%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r73 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops-devteam xoops-devteam/img xoops-devteam/modules xoops-devteam/modules/articles">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Dec  3 15:17:46 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000065.html">[Xoops4-svn] r72 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+        <LI>Next message: <A HREF="000067.html">[Xoops4-svn] r74 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#66">[ date ]</a>
+              <a href="thread.html#66">[ thread ]</a>
+              <a href="subject.html#66">[ subject ]</a>
+              <a href="author.html#66">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-03 15:17:25 +0100 (Sat, 03 Dec 2005)
+New Revision: 73
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/canvas-rightcolumn_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php
+Log:
+Added the devteam site theme to the repository, to have a showcase for the themes inheritance system
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/canvas-rightcolumn_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/canvas-rightcolumn_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,50 @@
++([*
++articles
++    topic
++        article
++        article
++    /topic
++/articles
++*])
++
++&lt;h3&gt;([$category_list_title])&lt;/h3&gt;
++
++([foreach from=$categories item=category])
++&lt;div class=&quot;xo-block xo-mentas-list articles-topic-items&quot;&gt;
++	&lt;div class=&quot;xo-blocktitle&quot;&gt;
++		&lt;a href=&quot;index.php?cat_id=([$category.id])&quot; title=&quot;([$category.cat_description])&quot;&gt;
++			([$category.cat_name]) (([$category.number_articles]) ([$number_articles_caption]))
++		&lt;/a&gt;
++	&lt;/div&gt;
++	&lt;div class=&quot;xo-blockcontent&quot;&gt;
++	([foreach from=$category.articles item=article])
++		&lt;div class=&quot;xo-menta articles-article&quot;&gt;
++			&lt;div class=&quot;xo-head&quot;&gt;
++	            &lt;a class=&quot;title&quot; href=&quot;article.php?id=([$article.id])&quot;&gt;([$article.title])&lt;/a&gt;
++			&lt;/div&gt;
++			&lt;div class=&quot;xo-body description&quot;&gt;
++				([$article.article_description])
++			&lt;/div&gt;
++			&lt;div class=&quot;xo-foot&quot;&gt;
++            ([if $index_reads eq 1])
++              [([$article.article_views]) ([$article_views_caption])]
++            ([/if])
++			&lt;/div&gt;
++		&lt;/div&gt;
++	([/foreach])
++	&lt;/div&gt;
++&lt;/div&gt;
++([/foreach])
++
++([if $show_pagin eq 1])
++&lt;div class=&quot;pager-widget&quot;&gt;
++	([$articles_num]) ([$articles_numstart]) ([$articles_to]) ([$articles_numend]) ([$articles_of]) ([$articles_numtotal])
++	([$articles_prev]) ([$articles_sep]) ([$articles_next])
++&lt;/div&gt;
++([/if])
++
++&lt;!-- notification --&gt;
++([include file='db:system_notification_select.html'])
++&lt;!--  end notification --&gt;
++
++
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,32 @@
++
++&lt;div class=&quot;xo-menta news-item&quot;&gt;
++
++
++([$story.news_title])
++rr
++
++&lt;/div&gt;
++
++
++&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;item&quot;&gt;
++&lt;tr&gt;
++	&lt;td&gt;
++		&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;98%&quot;&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;itemHead&quot;&gt;&lt;span class=&quot;itemTitle&quot;&gt;&lt;{$story.title}&gt;&lt;/span&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;itemInfo&quot;&gt;&lt;{if $story.files_attached}&gt;&lt;{$story.attached_link}&gt;&nbsp;&lt;{/if}&gt;
++			&lt;{if $story.poster != ''}&gt;&lt;span class=&quot;itemPoster&quot;&gt;&lt;{$lang_postedby}&gt; &lt;{$story.poster}&gt;&lt;/span&gt;
++			&lt;{/if}&gt; &lt;span class=&quot;itemPostDate&quot;&gt;&lt;{$lang_on}&gt; &lt;{$story.posttime}&gt;&lt;/span&gt; (&lt;span class=&quot;itemStats&quot;&gt;&lt;{$story.hits}&gt; &lt;{$lang_reads}&gt;&lt;/span&gt;) &lt;{$news_by_the_same_author_link}&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td&gt;&lt;div class=&quot;itemBody&quot;&gt;&lt;{$story.imglink}&gt;&lt;p class=&quot;itemText&quot;&gt;&lt;{$story.text}&gt;&lt;/p&gt;&lt;/div&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;itemFoot&quot;&gt;&lt;span class=&quot;itemAdminLink&quot;&gt;&lt;{$story.adminlink}&gt;&lt;/span&gt;&lt;{if $rates}&gt;&lt;b&gt;&lt;{$lang_ratingc}&gt;&lt;/b&gt; &lt;{$story.rating}&gt; (&lt;{$story.votes}&gt;) - &lt;a href=&quot;&lt;{$xoops_url}&gt;/modules/news/ratenews.php?storyid=&lt;{$story.id}&gt;&quot; rel=&quot;nofollow&quot;&gt;&lt;{$lang_ratethisnews}&gt;&lt;/a&gt; - &lt;{/if}&gt;&lt;span class=&quot;itemPermaLink&quot;&gt;&lt;{$story.morelink}&gt;&lt;/span&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;/table&gt;
++	&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,14 @@
++
+<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">+ at import</A> url(../default/page-default.css);
++
++
++#xo-canvas-leftcolumn {
++	float:			right;
++}
++
++#xo-canvas-rightcolumn {
++	float:			left;
++	background-image:		url(img/canvas-rightcolumn_bg.png);
++}
++
++
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+___________________________________________________________________
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,28 @@
++&lt;?php
++
++
++
++
++return array(
++	'xoBundleIdentifier'	=&gt; 'theme_xoops__devteam',
++	'xoBundleDisplayName'	=&gt; 'devteam.xoops.org theme',
++	'parentTheme'			=&gt; 'default',
++	// This theme default templates
++	// templates paths must start with a &quot;.&quot; to be considered relative to the theme folder
++	'canvasTemplate' =&gt; './canvas-default.xotpl',
++	'pageTemplate' =&gt; './page-default.xotpl',
++);
++
++
++
++
++
++
++
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000065.html">[Xoops4-svn] r72 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+	<LI>Next message: <A HREF="000067.html">[Xoops4-svn] r74 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#66">[ date ]</a>
+              <a href="thread.html#66">[ thread ]</a>
+              <a href="subject.html#66">[ subject ]</a>
+              <a href="author.html#66">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r272 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r272%20-%20XoopsCore/branches/2.2.x/2.2.5/html/language/english&In-Reply-To=%3C200603230234.k2N2YVWs011258%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000261.html">
+   <LINK REL="Next"  HREF="000263.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r272 - XoopsCore/branches/2.2.x/2.2.5/html/language/english</H1>
+    <B>phppp at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r272%20-%20XoopsCore/branches/2.2.x/2.2.5/html/language/english&In-Reply-To=%3C200603230234.k2N2YVWs011258%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r272 - XoopsCore/branches/2.2.x/2.2.5/html/language/english">phppp at berlios.de
+       </A><BR>
+    <I>Thu Mar 23 03:34:31 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000261.html">[Xoops4-svn] r271 - XoopsCore/branches/2.2.x/2.2.5/html/include
+</A></li>
+        <LI>Next message: <A HREF="000263.html">[Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#262">[ date ]</a>
+              <a href="thread.html#262">[ thread ]</a>
+              <a href="subject.html#262">[ subject ]</a>
+              <a href="author.html#262">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: phppp
+Date: 2006-03-23 03:33:55 +0100 (Thu, 23 Mar 2006)
+New Revision: 272
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php
+Log:
+Added description plus utf8_encode cleanup
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php	2006-03-23 02:24:27 UTC (rev 271)
++++ XoopsCore/branches/2.2.x/2.2.5/html/language/english/local.php	2006-03-23 02:33:55 UTC (rev 272)
+@@ -1,11 +1,27 @@
+ &lt;?php
+-// $Id$
++/**
++ * Xoops multi-language string and encoding handling class
++ *
++ * @copyright	 The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @package      language
++ * @version      $Id$
++ * @author       D.J. (phppp)
++ * @since        2.2
++ */
++ 
++/**
++ * The class should be an abstract one using PHP embedded functions
++ * based on which, 
++ * each local language defines its own equalient methods
++ *
++ * A comprehensive handler is expected in Xoops 2.3 or 2.4
++ */
+ 
+-// Local handler for string and encoding
+ class XoopsLocal
+ {	
+ 	// localized substr
+-	function &amp;substr($str, $start, $length, $trimmarker = '...')
++	function substr($str, $start, $length, $trimmarker = '...')
+ 	{
+ 	    if ( !XOOPS_USE_MULTIBYTES ) {
+ 	        return ( strlen($str) - $start &lt;= $length ) ? substr( $str, $start, $length ) : substr( $str, $start, $length - strlen($trimmarker) ) . $trimmarker;
+@@ -16,13 +32,13 @@
+ 	    }
+ 	}
+ 	
+-	function &amp;utf8_encode(&amp;$text)
++	// Each local language should define its own equalient utf8_encode 
++	function utf8_encode($text)
+ 	{
+-		$text = XoopsLocal::convert_encoding($text, 'utf-8');
+-	        return $text;
+-	    }
++		return utf8_encode($text);
++    }
+ 	
+-	function &amp;convert_encoding(&amp;$text, $to='utf-8', $from='')
++	function convert_encoding($text, $to='utf-8', $from='')
+ 	{
+ 		if(empty($text)) {		
+ 			return $text;
+@@ -38,7 +54,7 @@
+ 	    return $text;
+ 	}
+ 
+-	function &amp;trim($text)
++	function trim($text)
+ 	{
+ 	    $ret = trim($text);
+ 	    return $ret;
+@@ -107,7 +123,7 @@
+ 	// calling the function:
+ 	// Method 1: echo xoops_local(&quot;hello&quot;, &quot;Some greeting words&quot;);
+ 	// Method 2: echo XoopsLocal::hello(&quot;Some greeting words&quot;);
+-	function &amp;hello($text)
++	function hello($text)
+ 	{
+ 		$ret = &quot;&lt;div&gt;Hello, &quot;.$text.&quot;&lt;/div&gt;&quot;;
+ 		return $ret;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000261.html">[Xoops4-svn] r271 - XoopsCore/branches/2.2.x/2.2.5/html/include
+</A></li>
+	<LI>Next message: <A HREF="000263.html">[Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#262">[ date ]</a>
+              <a href="thread.html#262">[ thread ]</a>
+              <a href="subject.html#262">[ subject ]</a>
+              <a href="author.html#262">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

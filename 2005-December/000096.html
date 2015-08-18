@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r104 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r104%20-%20XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200512290951.jBT9pFxn003837%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000095.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r104 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r104%20-%20XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200512290951.jBT9pFxn003837%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r104 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Dec 29 10:51:15 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000095.html">[Xoops4-svn] r103 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-29 10:51:14 +0100 (Thu, 29 Dec 2005)
+New Revision: 104
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php
+Log:
+Updated the xotpl: resource handler so it favors '.xotpl' templates.
+
+Modules writers should now be able to deliver their apps with both an old style and a new style version of each of their templates, and 2.3+ will automatically grab the .xotpl template (even if their code states to retrieve my_tpl_something.html)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php	2005-12-20 23:58:51 UTC (rev 103)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php	2005-12-29 09:51:14 UTC (rev 104)
+@@ -1,20 +1,13 @@
+ &lt;?php
+ /**
+- * Smarty plugin
++ * Smarty xotpl resource handler
+  * 
+- * Kept for XOOPS 2.0 backward compatibility only !!!
++ * The xotpl resource handler is integrated with the core theming layer.
++ * It may be very resource inten
+  * 
+- * Use the new xotpl: handler to access XOOPS templates
++ * 
+  * ------------------------------------------------------------- 
+- * File:     resource.db.php
+- * Type:     resource
+- * Name:     db
+- * Purpose:  Fetches templates from a database
+- * -------------------------------------------------------------
+- * @package xoops20
+- * @deprecated
+  */
+-
+ function smarty_resource_xotpl_source($tpl_name, &amp;$tpl_source, &amp;$smarty) {
+ 
+ 	if ( $tplPath = smarty_resource_xotpl_getpath( $tpl_name, $smarty ) ) {
+@@ -47,29 +40,36 @@
+ function smarty_resource_xotpl_getpath( $tplName, &amp;$smarty ) {
+ 	global $xoops;
+ 	
++	$realpath = '';
++	$name = str_replace( 'templates/', '', $tplName );
++	$pos = strrpos( $name, '.' );
++	$basename = substr( $name, 0, $pos );
++	$ext = substr( $name, $pos + 1 );
++
+ 	if ( $smarty-&gt;currentTheme ) {
+-		$name = str_replace( '/templates/', '/', $tplName );
+-		$themed = $smarty-&gt;currentTheme-&gt;resourcePath( $name );
++		// Look for an .xotpl version of the template first, then try with .html
++		// this allows modules devs to provide both 2.0.x and 2.3.x templates
++		// and ensure the correct one is used by 2.3+
++		$themed = $smarty-&gt;currentTheme-&gt;resourcePath( &quot;$basename.xotpl&quot; );
+ 		if ( substr( $themed, 0, 7 ) == 'themes/' ) {
+-			$tplName = $themed;
++			$realpath = $themed;
+ 		} else {
+-			if ( false !== ( $pos = strrpos( $tplName, '.' ) ) ) {
+-				$name = substr( $tplName, 0, $pos );
+-				$ext = substr( $tplName, $pos );
+-				$name = ( $ext == '.xotpl' ) ? &quot;$name.html&quot; : &quot;$name.xotpl&quot;;
+-				$name = str_replace( '/templates/', '/', $name );
+-				// If the template is not in the theme folder,
+-				// check if it's not here, but with a different extension
+-				$themed = $smarty-&gt;currentTheme-&gt;resourcePath( $name );
+-				if ( substr( $themed, 0, 7 ) == 'themes/' ) {
+-					$tplName = $themed;
+-				}
++			$themed = $smarty-&gt;currentTheme-&gt;resourcePath( &quot;$basename.html&quot; );
++			if ( substr( $themed, 0, 7 ) == 'themes/' ) {
++				$realpath = $themed;
+ 			}
+ 		}
+ 	}
+-	//echo $xoops-&gt;path( $tplName ) . &quot;&lt;br /&gt;\n&quot;;
+-	return $xoops-&gt;path( $tplName );
+ 
++	if ( empty( $realpath ) ) {
++		$realpath = substr( $tplName, 0, $pos + 10 );
++		if ( file_exists( $xoops-&gt;path( &quot;$realpath.xotpl&quot; ) ) ) {
++			$realpath .=  '.xotpl';
++		} else {
++			$realpath .= '.html';
++		}
++	}
++	return $xoops-&gt;path( $realpath );
+ }
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000095.html">[Xoops4-svn] r103 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

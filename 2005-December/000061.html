@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r68 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r68%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes%3A%20.%20default-web&In-Reply-To=%3C200512022344.jB2NiaLq026878%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000060.html">
+   <LINK REL="Next"  HREF="000062.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r68 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r68%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes%3A%20.%20default-web&In-Reply-To=%3C200512022344.jB2NiaLq026878%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r68 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Dec  3 00:44:36 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000060.html">[Xoops4-svn] r67 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops20
+</A></li>
+        <LI>Next message: <A HREF="000062.html">[Xoops4-svn] r69 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-03 00:44:35 +0100 (Sat, 03 Dec 2005)
+New Revision: 68
+
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/
+Log:
+Renamed the old theme 'xoops20'
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-12-02 23:42:07 UTC (rev 67)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-12-02 23:44:35 UTC (rev 68)
+@@ -1,139 +0,0 @@
+-
+-html, body {
+-	margin:			0px;
+-	background:		#ffffff url(img/body_bg.png) repeat-x left top;
+-	background-attachment:	fixed;
+-	color:			#000000;
+-	font:			11pt sans-serif;
+-}
+-
+-#xo-canvas {
+-	margin:			15px;
+-	background:		#EEEEEE;
+-}
+-
+-#xo-canvas-header {
+-	border-bottom:	1px solid #CCCCCC;
+-	background:		#FFFFFF;
+-	padding:		3px 3px 3px;
+-}
+-
+-#xo-banner {
+-	height:			60px;
+-	border:			1px solid #000000;
+-	padding:		2px;
+-	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
+-}
+-
+-#xo-canvas-main {
+-	border-top:		1px solid #FFFFFF;
+-	padding:		6px;
+-}
+-
+-.xo-canvas-column {
+-	width:			160px;
+-}
+-#xo-canvas-leftcolumn {
+-	float:			left;
+-	border:			1px solid #666666;
+-}
+-#xo-canvas-rightcolumn {
+-	float:			right;
+-	padding-bottom:	128px;
+-	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
+-}
+-
+-#xo-page {
+-	background:		#ffffff;
+-	padding:		1em 0px;
+-	border:			1px solid #CCCCCC;
+-}
+-
+-#xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
+-	margin-left:	176px;
+-}
+-
+-#xo-canvas-rightcolumn + #xo-page {
+-	margin-right:	176px;
+-}
+-
+-#xo-canvas-footer {
+-	padding:		1px;
+-	background:		#DDDDDD;
+-	text-align:		center;
+-	font-size:		80%;
+-	font-family:	monospace;
+-}
+-#xo-canvas-footer, #xo-canvas-footer a {
+-	color:			#666666;
+-	text-decoration:	none;
+-}
+-
+-
+-#xo-canvas-leftcolumn .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
+-	color:			#ffffff;
+-	border-bottom:	1px solid #666666;
+-	padding:		.2em .5em;
+-	font-weight:	bold;
+-	text-shadow:	1px 1px #000000;
+-}
+-
+-#xo-canvas-leftcolumn .xo-blockcontent {
+-	background:		#999999 url(img/canvas-blockcontent_bg_grey.png) repeat-x left top;
+-}
+-
+-
+-#xo-canvas-rightcolumn .xo-block {
+-	padding:		8px 0px;
+-	background:		url(img/separator.png) no-repeat center bottom;
+-}
+-#xo-canvas-rightcolumn :last-child {
+-	background:		transparent none;
+-}
+-
+-
+-#xo-canvas-rightcolumn .xo-blocktitle {
+-	font-size:		90%;
+-	font-weight:	bold;
+-}
+-#xo-canvas-rightcolumn .xo-blockcontent {
+-	font-size:		80%;
+-}
+-
+-
+-#xo-canvas-rightcolumn a {
+-	color:				#666666;
+-}
+-#xo-canvas-rightcolumn a:hover {
+-	text-decoration:	underline;
+-}
+-
+-
+-
+-.xo-canvas-column a {
+-	text-decoration:	none;
+-	font:				80%;
+-	color:				#CCCCCC;
+-}
+-.xo-canvas-column a:hover {
+-	color:				#FFFFFF;
+-}
+-
+-.system-main_menu .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
+-}
+-
+-.system-main_menu .xo-blockcontent {
+-	background:		#5E77D4 url(img/canvas-blockcontent_bg_blue.png) repeat-x left top;
+-}
+-
+-.xo-canvas-column .system-main_menu  a {
+-	color:				#B6C6EC;
+-}
+-
+-.xo-block ul {
+-	margin:				0px;
+-	padding:			0px;
+-	list-style-type:	none;
+-}
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000060.html">[Xoops4-svn] r67 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops20
+</A></li>
+	<LI>Next message: <A HREF="000062.html">[Xoops4-svn] r69 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

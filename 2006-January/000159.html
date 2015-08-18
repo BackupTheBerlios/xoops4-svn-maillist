@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r167%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot&In-Reply-To=%3C200601201802.k0KI2aAQ023614%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000158.html">
+   <LINK REL="Next"  HREF="000160.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r167%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot&In-Reply-To=%3C200601201802.k0KI2aAQ023614%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 19:02:36 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000158.html">[Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000160.html">[Xoops4-svn] r168 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#159">[ date ]</a>
+              <a href="thread.html#159">[ thread ]</a>
+              <a href="subject.html#159">[ subject ]</a>
+              <a href="author.html#159">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 19:02:34 +0100 (Fri, 20 Jan 2006)
+New Revision: 167
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php
+Log:
+Added default bundleIds for the error and logger services, and implemented system-wide shutdown.
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php	2006-01-20 17:34:48 UTC (rev 166)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php	2006-01-20 18:02:34 UTC (rev 167)
+@@ -80,9 +80,11 @@
+ 	 */
+ 	var $services				= null;
+ 	var $captures				= array(
+-		'auth'		=&gt; 'xoops_auth_AuthenticationService',
++		'error'		=&gt; 'xoops_kernel_ErrorHandler',
++		'logger'	=&gt; 'xoops_kernel_Logger',
+ 		'http'		=&gt; 'xoops_http_HttpHandler',
+ 		'session'	=&gt; 'xoops_http_SessionService',
++		'auth'		=&gt; 'xoops_auth_AuthenticationService',
+ 		'legacydb'	=&gt; array( 'xoops_db_Database', array( 'driverName' =&gt; 'xoops.legacy' ) ),
+ 	);
+ 	/** 
+@@ -144,12 +146,6 @@
+ 	 */
+ 	var $isVirtual				= false;
+ 
+-	var $previousErrorHandler	= false;
+-
+-	var $isHandlingErrors		= false;
+-	var $_oldReporting			= 0;
+-	var $errorReporting			= 0;
+-	
+ 	function xoops_kernel_Xoops2( $hostId, $hostVars ) {
+ 	 	$GLOBALS['xoops']	=&amp; $this;
+ 	 	$GLOBALS['exxos']-&gt;pathHandler =&amp; $this;
+@@ -157,13 +153,10 @@
+ 	 	$this-&gt;hostId = $hostId;
+ 	 	XOS::apply( $this, $hostVars );
+ 	 	
+-		if ( $this-&gt;xoRunMode &amp; XO_MODE_DEV_MASK ) {
+-			$this-&gt;errorReporting |= E_ALL;
+-		}
+-		//error_reporting(E_ALL);
+-		$this-&gt;activateErrorHandler( true );
++	 	// Enable error reporting by default in development mode, enable it otherwise
++ 		error_reporting( ( $this-&gt;xoRunMode == XO_MODE_DEV ) ? E_ALL : 0 );
+ 
+-		$this-&gt;loadRegistry();
++ 		$this-&gt;loadRegistry();
+ 	 	$this-&gt;services =&amp; $GLOBALS['exxos']-&gt;services;
+ 
+ 	 	$captures = @include $this-&gt;path( 'var/Application Support/xoops_kernel_Xoops2/services.php' );
+@@ -179,7 +172,6 @@
+ 		} else {
+ 			$this-&gt;baseLocation = '';
+ 		}
+-		//$this-&gt;services['logger'] = $this-&gt;services['errorhandler'] = $this;
+ 	}
+ 
+ 	/**
+@@ -196,7 +188,7 @@
+ 	 */
+ 	function boot() {
+ 		if ( !$this-&gt;hasBooted ) {
+-			//register_shutdown_function( array( &amp;$this, 'shutdown' ) );
++			register_shutdown_function( array( &amp;$this, 'shutdown' ) );
+ 			if ( !empty($this-&gt;bootFile) ) {
+ 				require_once $this-&gt;path( &quot;/XOOPS/Boot/$this-&gt;bootFile&quot; );
+ 			}
+@@ -211,7 +203,10 @@
+ 		return true;
+ 	}
+ 	/**
+-	 * Perform the shutdown sequence
++	 * Perform the system-wide shutdown sequence
++	 * 
++	 * During kernel shutdown, instanciated services are checked for an 'xoShutdown'
++	 * method and if they provide one it will be called.
+ 	 *
+ 	 * @access public
+ 	 * @return bool
+@@ -219,6 +214,12 @@
+ 	function shutdown() {
+ 		if ( !$this-&gt;hasShutdown ) {
+ 			$this-&gt;hasShutdown = true;
++			$services = array_reverse( array_keys( $this-&gt;services ) );
++			foreach ( $services as $srv ) {
++				if ( method_exists( $this-&gt;services[$srv], 'xoShutdown' ) ) {
++					$this-&gt;services[$srv]-&gt;xoShutdown();
++				}
++			}
+ 		}
+ 	}
+ 	/**
+@@ -327,49 +328,6 @@
+ 	}
+ 	
+ 	/**
+-	 * Enable/disable the errorhandler.
+-	 *
+-	 * When set to active, the error handler set the php error reporting level to E_ALL and uses its own
+-	 * $errorReporting property to mask the errors to report (so the @ operator still works :-)
+-	 * 
+-	 * @param bool	$enable		Whether to enable or disable the error handler
+-	 */
+-	function activateErrorHandler( $enable = true ) {
+-		if ( $enable &amp;&amp; !$this-&gt;isHandlingErrors ) {
+-			set_error_handler( array( &amp;$this, 'handleError' ) );
+-			$this-&gt;_oldReporting = error_reporting( E_ALL );
+-			return $this-&gt;isHandlingErrors = true;
+-		} elseif ( !$enable &amp;&amp; $this-&gt;isHandlingErrors ) {
+-		 	restore_error_handler();
+-			error_reporting( $this-&gt;_oldReporting );
+-			return $this-&gt;isHandlingErrors = false;
+-		}
+-		return $this-&gt;isHandlingErrors;
+-	}
+-	
+-	function handleError( $num, $str, $file = '', $line = 0, $context = false ) {
+-		static $names = array(
+-			E_ERROR =&gt; 'Error', E_USER_ERROR =&gt; 'Error', E_WARNING =&gt; 'Warning', E_USER_WARNING =&gt; 'Warning',
+-			E_NOTICE =&gt; 'Notice', E_USER_NOTICE =&gt; 'Notice',
+-		);
+-		if ( $num &amp; $this-&gt;errorReporting &amp; error_reporting() ) {
+-			foreach ( $this-&gt;paths as $root =&gt; $v ) {
+-				$str  = str_replace( $v[0] . '/', &quot;/$root/&quot;, $str );
+-			}
+-			$name = isset( $names[$num] ) ? $names[$num] : 'Undefined error';
+-			$msg = &quot;$name: $str&quot;;
+-			if ( $file &amp;&amp; $line ) {
+-				$file = str_replace( DIRECTORY_SEPARATOR, '/', $file );
+-				foreach ( $this-&gt;paths as $root =&gt; $v ) {
+-					$file = str_replace( $v[0] . '/', &quot;/$root/&quot;, $file );
+-				}
+-				$msg .= &quot; in $file on line $line&quot;;
+-			}
+-			echo &quot;$msg&lt;br /&gt;\r\n&quot;;
+-		}
+-	}
+-	
+-	/**
+ 	* Convert a XOOPS path to a physical one
+ 	*/
+ 	function path( $url, $virtual = false ) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000158.html">[Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000160.html">[Xoops4-svn] r168 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#159">[ date ]</a>
+              <a href="thread.html#159">[ thread ]</a>
+              <a href="subject.html#159">[ subject ]</a>
+              <a href="author.html#159">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

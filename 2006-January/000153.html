@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r161 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r161%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601200855.k0K8tXqT023712%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000152.html">
+   <LINK REL="Next"  HREF="000154.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r161 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r161%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601200855.k0K8tXqT023712%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r161 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 09:55:33 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000152.html">[Xoops4-svn] r160 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000154.html">[Xoops4-svn] r162 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#153">[ date ]</a>
+              <a href="thread.html#153">[ thread ]</a>
+              <a href="subject.html#153">[ subject ]</a>
+              <a href="author.html#153">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 09:55:32 +0100 (Fri, 20 Jan 2006)
+New Revision: 161
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+Log:
+A few fixes/adds: statements are now prepared correctly, closeCursor() has been added, and queries are executed using mysql_unbuffered_query(), as the native PDO does
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php	2006-01-20 08:33:19 UTC (rev 160)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php	2006-01-20 08:55:32 UTC (rev 161)
+@@ -262,9 +262,9 @@
+ 	
+ 	function xoInit( $options = array() ) {
+ 		if ( strpos( $this-&gt;query, '?' ) !== false ) {
+-			$this-&gt;preparedQuery = preg_replace( '/(\\?)/', '\\{__p$1\\}', $this-&gt;query );
++			$this-&gt;preparedQuery = preg_replace( '/(\\?)/', '{__p$1}', $this-&gt;query );
+ 		} else {
+-			$this-&gt;preparedQuery = preg_replace( '/:([a-zA-Z_]*)/', '\\{$1\\}', $this-&gt;query );
++			$this-&gt;preparedQuery = preg_replace( '/:([a-zA-Z_]*)/', '{$1}', $this-&gt;query );
+ 		}
+ 		return true;
+ 	}
+@@ -302,6 +302,16 @@
+ 		$this-&gt;paramBindings[$param] = array( $value, $type );
+ 	}
+ 	/**
++	 * Closes the cursor, enabling the statement to be executed again
++	 */	
++	function closeCursor() {
++		if ( $this-&gt;result ) {
++			mysql_free_result( $this-&gt;result );
++			$this-&gt;result = false;
++		}
++		return true;
++	}	
++	/**
+ 	 * Returns the number of columns in the result set
+ 	 * @return integer
+ 	 */
+@@ -319,7 +329,8 @@
+ 			$replace[] = $this-&gt;castValue( $v[0], $v[1] );
+ 		}
+ 		$sql = str_replace( $search, $replace, $this-&gt;preparedQuery );
+-		$this-&gt;result = mysql_query( $sql, $this-&gt;db-&gt;conn );
++		echo $sql;
++		$this-&gt;result = mysql_unbuffered_query( $sql, $this-&gt;db-&gt;conn );
+ 		return (bool)$this-&gt;result;
+ 	}
+ 	
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000152.html">[Xoops4-svn] r160 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000154.html">[Xoops4-svn] r162 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#153">[ date ]</a>
+              <a href="thread.html#153">[ thread ]</a>
+              <a href="subject.html#153">[ subject ]</a>
+              <a href="author.html#153">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

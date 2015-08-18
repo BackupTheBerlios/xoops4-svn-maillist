@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r93 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r93%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences&In-Reply-To=%3C200512121853.jBCIrupY003714%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000085.html">
+   <LINK REL="Next"  HREF="000087.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r93 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r93%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences&In-Reply-To=%3C200512121853.jBCIrupY003714%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r93 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Dec 12 19:53:56 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000085.html">[Xoops4-svn] r92 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates
+</A></li>
+        <LI>Next message: <A HREF="000087.html">[Xoops4-svn] r94 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-12 19:53:48 +0100 (Mon, 12 Dec 2005)
+New Revision: 93
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php
+Log:
+YARF
+
+@TODO: The main prefs page still has traces of the old tplsets system.
+Should be removed later.
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php	2005-12-12 18:47:21 UTC (rev 92)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php	2005-12-12 18:53:48 UTC (rev 93)
+@@ -46,8 +46,8 @@
+         $confcat_id = intval($_GET['confcat_id']);
+     }
+     if ($op == 'list') {
+-        $confcat_handler =&amp; xoops_gethandler('configcategory');
+-        $confcats =&amp; $confcat_handler-&gt;getObjects();
++        $confcat_handler = xoops_gethandler('configcategory');
++        $confcats = $confcat_handler-&gt;getObjects();
+         $catcount = count($confcats);
+         xoops_cp_header();
+         echo '&lt;h4 style=&quot;text-align:left&quot;&gt;'._MD_AM_SITEPREF.'&lt;/h4&gt;&lt;ul&gt;';
+@@ -75,7 +75,7 @@
+         $criteria = new CriteriaCompo();
+         $criteria-&gt;add(new Criteria('conf_modid', 0));
+         $criteria-&gt;add(new Criteria('conf_catid', $confcat_id));
+-        $config =&amp; $config_handler-&gt;getConfigs($criteria);
++        $config = $config_handler-&gt;getConfigs($criteria);
+         $confcount = count($config);
+         for ($i = 0; $i &lt; $confcount; $i++) {
+             $title = (!defined($config[$i]-&gt;getVar('conf_desc')) || constant($config[$i]-&gt;getVar('conf_desc')) == '') ? constant($config[$i]-&gt;getVar('conf_title')) : constant($config[$i]-&gt;getVar('conf_title')).'&lt;br /&gt;&lt;br /&gt;&lt;span style=&quot;font-weight:normal;&quot;&gt;'.constant($config[$i]-&gt;getVar('conf_desc')).'&lt;/span&gt;';
+@@ -91,7 +91,7 @@
+                 break;
+             case 'select':
+                 $ele = new XoopsFormSelect($title, $config[$i]-&gt;getVar('conf_name'), $config[$i]-&gt;getConfValueForOutput());
+-                $options =&amp; $config_handler-&gt;getConfigOptions(new Criteria('conf_id', $config[$i]-&gt;getVar('conf_id')));
++                $options = $config_handler-&gt;getConfigOptions(new Criteria('conf_id', $config[$i]-&gt;getVar('conf_id')));
+                 $opcount = count($options);
+                 for ($j = 0; $j &lt; $opcount; $j++) {
+                     $optval = defined($options[$j]-&gt;getVar('confop_value')) ? constant($options[$j]-&gt;getVar('confop_value')) : $options[$j]-&gt;getVar('confop_value');
+@@ -101,7 +101,7 @@
+                 break;
+             case 'select_multi':
+                 $ele = new XoopsFormSelect($title, $config[$i]-&gt;getVar('conf_name'), $config[$i]-&gt;getConfValueForOutput(), 5, true);
+-                $options =&amp; $config_handler-&gt;getConfigOptions(new Criteria('conf_id', $config[$i]-&gt;getVar('conf_id')));
++                $options = $config_handler-&gt;getConfigOptions(new Criteria('conf_id', $config[$i]-&gt;getVar('conf_id')));
+                 $opcount = count($options);
+                 for ($j = 0; $j &lt; $opcount; $j++) {
+                     $optval = defined($options[$j]-&gt;getVar('confop_value')) ? constant($options[$j]-&gt;getVar('confop_value')) : $options[$j]-&gt;getVar('confop_value');
+@@ -139,7 +139,7 @@
+             case 'tplset':
+                 $ele = new XoopsFormSelect($title, $config[$i]-&gt;getVar('conf_name'), $config[$i]-&gt;getConfValueForOutput());
+                 $tplset_handler =&amp; xoops_gethandler('tplset');
+-                $tplsetlist =&amp; $tplset_handler-&gt;getList();
++                $tplsetlist = $tplset_handler-&gt;getList();
+                 asort($tplsetlist);
+                 foreach ($tplsetlist as $key =&gt; $name) {
+                     $ele-&gt;addOption($key, $name);
+@@ -158,7 +158,7 @@
+                 $module_handler =&amp; xoops_gethandler('module');
+                 $criteria = new CriteriaCompo(new Criteria('hasmain', 1));
+                 $criteria-&gt;add(new Criteria('isactive', 1));
+-                $moduleslist =&amp; $module_handler-&gt;getList($criteria, true);
++                $moduleslist = $module_handler-&gt;getList($criteria, true);
+                 $moduleslist['--'] = _MD_AM_NONE;
+                 $ele-&gt;addOptionArray($moduleslist);
+                 break;
+@@ -177,7 +177,7 @@
+                 break;
+             case 'module_cache':
+                 $module_handler =&amp; xoops_gethandler('module');
+-                $modules =&amp; $module_handler-&gt;getObjects(new Criteria('hasmain', 1), true);
++                $modules = $module_handler-&gt;getObjects(new Criteria('hasmain', 1), true);
+                 $currrent_val = $config[$i]-&gt;getConfValueForOutput();
+                 $cache_options = array('0' =&gt; _NOCACHE, '30' =&gt; sprintf(_SECONDS, 30), '60' =&gt; _MINUTE, '300' =&gt; sprintf(_MINUTES, 5), '1800' =&gt; sprintf(_MINUTES, 30), '3600' =&gt; _HOUR, '18000' =&gt; sprintf(_HOURS, 5), '86400' =&gt; _DAY, '259200' =&gt; sprintf(_DAYS, 3), '604800' =&gt; _WEEK);
+                 if (count($modules) &gt; 0) {
+@@ -229,7 +229,7 @@
+             header('Location: admin.php?fct=preferences');
+             exit();
+         }
+-        $config =&amp; $config_handler-&gt;getConfigs(new Criteria('conf_modid', $mod));
++        $config = $config_handler-&gt;getConfigs(new Criteria('conf_modid', $mod));
+         $count = count($config);
+         if ($count &lt; 1) {
+             redirect_header('admin.php?fct=preferences', 1);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000085.html">[Xoops4-svn] r92 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates
+</A></li>
+	<LI>Next message: <A HREF="000087.html">[Xoops4-svn] r94 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

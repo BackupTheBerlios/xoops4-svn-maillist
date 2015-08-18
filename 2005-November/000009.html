@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r16 - in XoopsCore/branches/2.3.x/2.3-main: . XOOPS XOOPS-data XOOPS-data/Application Support XOOPS-data/Caches htdocs htdocs/include upgrade
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r16%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20.%20XOOPS%20XOOPS-data%20XOOPS-data/Application%20Support%20XOOPS-data/Caches%20htdocs%20htdocs/include%20upgrade&In-Reply-To=%3C200511210827.jAL8RLQs010570%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000008.html">
+   <LINK REL="Next"  HREF="000010.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r16 - in XoopsCore/branches/2.3.x/2.3-main: . XOOPS XOOPS-data XOOPS-data/Application Support XOOPS-data/Caches htdocs htdocs/include upgrade</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r16%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20.%20XOOPS%20XOOPS-data%20XOOPS-data/Application%20Support%20XOOPS-data/Caches%20htdocs%20htdocs/include%20upgrade&In-Reply-To=%3C200511210827.jAL8RLQs010570%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r16 - in XoopsCore/branches/2.3.x/2.3-main: . XOOPS XOOPS-data XOOPS-data/Application Support XOOPS-data/Caches htdocs htdocs/include upgrade">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Nov 21 09:27:21 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000008.html">[Xoops4-svn] r15 - in XoopsCore/branches/2.3.x/2.3-main: docs htdocs htdocs/class htdocs/class/smarty htdocs/class/smarty/plugins htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000010.html">[Xoops4-svn] r17 - XoopsCore/branches/tasks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-21 09:27:16 +0100 (Mon, 21 Nov 2005)
+New Revision: 16
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/Application Support/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/Application Support/net_php_Smarty/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/Caches/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/Caches/net_php_Smarty/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/
+   XoopsCore/branches/2.3.x/2.3-main/upgrade/
+   XoopsCore/branches/2.3.x/2.3-main/upgrade/2.0.x-to-2.3.0/
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php
+Log:
+Committing preliminary changes for this branch.
+Added to mainfile.dist.php:
+XOOPS_PATH (Library folder)
+XOOPS_VAR_PATH (Writable data folder)
+You need to manually change those 2 new constants after installation, and make ALL the folders inside XOOPS_VAR_PATH writable.
+
+common.php has also been updated so compiled templates are written in XOOPS-data/Application Support/net_php_Smarty/
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php	2005-11-20 04:41:49 UTC (rev 15)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php	2005-11-21 08:27:16 UTC (rev 16)
+@@ -54,11 +54,14 @@
+     define(&quot;XOOPS_MATCH_END&quot;,1);
+     define(&quot;XOOPS_MATCH_EQUAL&quot;,2);
+     define(&quot;XOOPS_MATCH_CONTAIN&quot;,3);
+-    define(&quot;SMARTY_DIR&quot;, XOOPS_ROOT_PATH.&quot;/class/smarty/&quot;);
+-    define(&quot;XOOPS_CACHE_PATH&quot;, XOOPS_ROOT_PATH.&quot;/cache&quot;);
++
+     define(&quot;XOOPS_UPLOAD_PATH&quot;, XOOPS_ROOT_PATH.&quot;/uploads&quot;);
+     define(&quot;XOOPS_THEME_PATH&quot;, XOOPS_ROOT_PATH.&quot;/themes&quot;);
+-    define(&quot;XOOPS_COMPILE_PATH&quot;, XOOPS_ROOT_PATH.&quot;/templates_c&quot;);
++
++    define( &quot;SMARTY_DIR&quot;, XOOPS_ROOT_PATH . &quot;/class/smarty/&quot; );
++    define( &quot;XOOPS_CACHE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Caches&quot; );
++    define( &quot;XOOPS_COMPILE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Application Support/net_php_Smarty&quot; );
++
+     define(&quot;XOOPS_THEME_URL&quot;, XOOPS_URL.&quot;/themes&quot;);
+     define(&quot;XOOPS_UPLOAD_URL&quot;, XOOPS_URL.&quot;/uploads&quot;);
+     set_magic_quotes_runtime(0);
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php	2005-11-20 04:41:49 UTC (rev 15)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php	2005-11-21 08:27:16 UTC (rev 16)
+@@ -28,14 +28,13 @@
+ if ( !defined(&quot;XOOPS_MAINFILE_INCLUDED&quot;) ) {
+ 	define(&quot;XOOPS_MAINFILE_INCLUDED&quot;,1);
+ 
+-	// Physical path to your XOOPS directory
+-	// Physical path to your main XOOPS directory WITHOUT trailing slash
+-	// Example: define('XOOPS_ROOT_PATH', '/path/to/xoops/directory');
+-	define('XOOPS_ROOT_PATH', '');
++	// Physical path to the XOOPS library directory WITHOUT trailing slash
++	define('XOOPS_PATH', '');
+ 
+-	// XOOPS Physical Path
+-	// Physical path to your main XOOPS directory WITHOUT trailing slash
+-	// Example: define('XOOPS_ROOT_PATH', '/path/to/xoops/directory');
++	// Physical path to the XOOPS datafiles (writable) directory WITHOUT trailing slash
++	define('XOOPS_VAR_PATH', '');
++
++	// Physical path to the XOOPS documents (served) directory WITHOUT trailing slash
+ 	define('XOOPS_ROOT_PATH', '');
+ 
+ 	// XOOPS Virtual Path (URL)
+@@ -43,27 +42,6 @@
+ 	// Example: define('XOOPS_URL', '<A HREF="http://url_to_xoops_directory">http://url_to_xoops_directory</A>');
+ 	define('XOOPS_URL', '<A HREF="http://">http://</A>');
+ 
+-	define('XOOPS_CHECK_PATH', 0);
+-	// Protect against external scripts execution if safe mode is not enabled
+-	if ( XOOPS_CHECK_PATH &amp;&amp; !@ini_get('safe_mode') ) {
+-		if ( function_exists('debug_backtrace') ) {
+-			$xoopsScriptPath = debug_backtrace();
+-			if ( !count($xoopsScriptPath) ) {
+-			 	die(&quot;XOOPS path check: this file cannot be requested directly&quot;);
+-			}
+-			$xoopsScriptPath = $xoopsScriptPath[0]['file'];
+-		} else {
+-			$xoopsScriptPath = isset($_SERVER['PATH_TRANSLATED']) ? $_SERVER['PATH_TRANSLATED'] :  $_SERVER['SCRIPT_FILENAME'];
+-		}
+-		if ( DIRECTORY_SEPARATOR != '/' ) {
+-			// IIS6 may double the \ chars
+-			$xoopsScriptPath = str_replace( strpos( $xoopsScriptPath, '\\\\', 2 ) ? '\\\\' : DIRECTORY_SEPARATOR, '/', $xoopsScriptPath);
+-		}
+-		if ( strcasecmp( substr($xoopsScriptPath, 0, strlen(XOOPS_ROOT_PATH)), str_replace( DIRECTORY_SEPARATOR, '/', XOOPS_ROOT_PATH)) ) {
+-		 	exit(&quot;XOOPS path check: Script is not inside XOOPS_ROOT_PATH and cannot run.&quot;);
+-		}
+-	}
+-
+ 	// Database
+ 	// Choose the database to be used
+ 	define('XOOPS_DB_TYPE', 'mysql');
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000008.html">[Xoops4-svn] r15 - in XoopsCore/branches/2.3.x/2.3-main: docs htdocs htdocs/class htdocs/class/smarty htdocs/class/smarty/plugins htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000010.html">[Xoops4-svn] r17 - XoopsCore/branches/tasks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

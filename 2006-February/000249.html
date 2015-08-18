@@ -1,0 +1,644 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r257 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . Forms
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r257%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm%3A%20.%20Forms&In-Reply-To=%3C200602191912.k1JJCBnp006288%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000248.html">
+   <LINK REL="Next"  HREF="000250.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r257 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . Forms</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r257%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm%3A%20.%20Forms&In-Reply-To=%3C200602191912.k1JJCBnp006288%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r257 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . Forms">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 20:12:11 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000248.html">[Xoops4-svn] r256 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience: . ConfigurationPanel.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000250.html">[Xoops4-svn] r258 - in XoopsCore/branches/tasks/123542-admin/XOOPS: . Preferences Preferences/ByHost
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#249">[ date ]</a>
+              <a href="thread.html#249">[ thread ]</a>
+              <a href="subject.html#249">[ subject ]</a>
+              <a href="author.html#249">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 20:11:59 +0100 (Sun, 19 Feb 2006)
+New Revision: 257
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/element.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/form.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/range.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/select.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/text.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/textarea.php
+Log:
+Added the 1st draft of the new forms framework (modelled against XForms, but able to render elements as html too)... it's not finished but basically working. Also: data validation is not implemented yet, but the point is that validation will be handled by other classes: form elements are UI elements (view), data validation is about &quot;data&quot; (model)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/element.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/element.php	2006-02-19 19:08:52 UTC (rev 256)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/element.php	2006-02-19 19:11:59 UTC (rev 257)
+@@ -0,0 +1,109 @@
++&lt;?php
++/**
++ * xoops_pyro_FormElement main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++
++
++XOS::import( 'xoops_opal_Widget' );
++
++/**
++ * Base class for form elements
++ * 
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormElement extends xoops_opal_Widget {
++	/**
++	 * This element label
++	 * @var string
++	 */
++	var $label = '';
++	/**
++	 * Name of this element when rendered as within an HTML form
++	 * @var string
++	 */
++	var $name = '';
++	/**
++	 * Pointer to the data this element references (if any)
++	 * @var mixed
++	 */
++	var $value = null;
++	/**
++	 * Path to the data this element references
++	 * @var string
++	 */
++	var $refPath = '';
++	/**
++	 * Pointer to the form that owns this element
++	 * @var mixed
++	 */
++	var $form = null;
++	/**
++	 * If this element should be rendered as an HTML form element or as an XForms element
++	 * @var boolean
++	 */
++	var $renderAsHtml = true;
++	
++	function xoInit( $options = array(), $attributes = array() ) {
++		if ( $this-&gt;refPath &amp;&amp; !$this-&gt;name ) {
++			$this-&gt;name = $this-&gt;refPath;
++		}
++		return parent::xoInit( $options, $attributes );
++	}
++	
++	/**
++	 * Convenience method to attach a data variable to this element
++	 * @param mixed $var Pointer to the variable this element should be referencing
++	 * @param string $path Path to the attached variable
++	 * @param string $name Name to use when rendering this element as HTML (if empty, will be created from $path)
++	 */
++	function attachVar( &amp;$var, $path, $name = '' ) {
++		$this-&gt;value =&amp; $var;
++		$this-&gt;ref = $path;
++		$this-&gt;name = empty($name) ? $path : $name;
++		return $var;
++	}
++	
++	/**
++	 * Render this element label
++	 * @return string
++	 */
++	function renderLabel() {
++		if ( $this-&gt;label ) {
++			if ( $this-&gt;elementId ) {
++				return &quot;&lt;label for=\&quot;$this-&gt;elementId\&quot;&gt;$this-&gt;label&lt;/label&gt;&quot;;
++			}
++			return &quot;&lt;label&gt;$this-&gt;label&lt;/label&gt;&quot;;
++		}
++		return '';
++	}
++
++	function renderControl() {
++		return '';
++	}
++
++	function renderStringProperty( $matches ) {
++		if ( $matches[1] == 'label' ) {
++			return $this-&gt;renderLabel();
++		} elseif ( $matches[1] == 'control' ) {
++			return $this-&gt;renderControl();
++		}
++		return parent::renderStringProperty( $matches );
++	}
++
++	
++	
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/element.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/form.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/form.php	2006-02-19 19:08:52 UTC (rev 256)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/form.php	2006-02-19 19:11:59 UTC (rev 257)
+@@ -0,0 +1,90 @@
++&lt;?php
++/**
++ * xoops_pyro_Form component main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++
++XOS::import( 'xoops_opal_Widget' );
++
++/**
++ * Pyro form widget
++ * 
++ * The form widgets have been modelled after the XForms specification.
++ * When rendered as HTML form elements, some of the features (like support for multiple submission locations)
++ * are emulated using javascript, so you should restrict yourself to the features set supported
++ * by HTML forms if you don't want your forms to rely on client scripting.
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_Form extends xoops_opal_Widget {
++	
++	/**
++	 * The different locations where this form can be submitted
++	 * @var array
++	 */
++	var $submissions = array();
++	/**
++	 * Default submission id (used when rendering as HTML)
++	 * @var string
++	 */
++	var $defaultSubmission = '';
++	
++	var $tagName = 'form';
++	var $renderAsHtml = true;
++	
++	function xoInit( $options = array(), $attributes = array() ) {
++	  	$attributes = array_merge( array( 'method' =&gt; 'post', 'action' =&gt; $_SERVER['REQUEST_URI'] ), $attributes );
++		parent::xoInit( $options, $attributes );
++
++		//$this-&gt;xoElements =&amp; $GLOBALS['xoops2']-&gt;create( 'xoops.form.group' );
++		//$this-&gt;elements =&amp; $this-&gt;xoElements-&gt;elements;
++		return true;
++	}
++	
++	/**
++	 * Add a submission URI to this form
++	 * 
++	 * As XForms, pyro forms let you specify several submission locations. When a form accepting more than
++	 * one submission location is rendered as HTML, this functionality will be emulated by adding javascript
++	 * event handlers to the submit buttons. Thus, you should not add more than one submission location if 
++	 * you want your form to work with Javascript disabled.
++	 * 
++	 * The submission method should be specified using valid XForms submission methods:
++	 * - get (transformed to get in HTML)
++	 * - urlencoded-post (post + application/x-www-form-urlencoded in HTML)
++	 * - form-post-data (post + multipart/form-data in HTML)
++	 *
++	 * @param string $id ID of this submission
++	 * @param string $action Location to submit this form data to
++	 * @param string $method Method used
++	 */
++	function addSubmission( $id, $action = '', $method = 'get' ) {
++		if ( empty( $this-&gt;submissions ) ) {
++			$this-&gt;defaultSubmission = $id;
++		}
++		$this-&gt;submissions[$id] = array( empty($action) ? $_SERVER['REQUEST_URI'] : $action, $method );
++	}
++	
++	
++	function addElement( &amp;$elt ) {
++		$elt-&gt;ownerForm =&amp; $this;
++		$this-&gt;elements[] =&amp; $elt;
++	}
++
++	function renderdTag() {
++		
++	}
++	
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/form.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/range.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/range.php	2006-02-19 19:08:52 UTC (rev 256)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/range.php	2006-02-19 19:11:59 UTC (rev 257)
+@@ -0,0 +1,80 @@
++&lt;?php
++/**
++ * xoops_pyro_FormRange main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++
++
++XOS::import( 'xoops_pyro_FormElement' );
++
++/**
++ * Form element widget for the XForms 'range' element
++ * 
++ * When rendered as an XForms element, this widget will display a range control and
++ * degrade gracefully to a select element when using HTML.
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormRange extends xoops_pyro_FormElement {
++
++	var $tagName = 'range';
++	
++	/**
++	 * Minimal value that can be chosen with this control
++	 * @var integer
++	 */
++	var $start = 0;
++	/**
++	 * Maximal value that can be chosen with this control
++	 * @var integer
++	 */
++	var $end = 100;
++	/**
++	 * Increment between two choices
++	 * @var integer
++	 */
++	var $step = 10;
++	
++	var $attributes = array();
++
++	function renderControl() {
++		$attributes = $this-&gt;attributes;
++		if ( $this-&gt;renderAsHtml ) {
++			if ( $this-&gt;name ) {
++				$attributes['name'] = $this-&gt;name;
++			}
++			$attributes['size'] = 1;
++			$str = $this-&gt;renderTag( 'select', $attributes );
++			$val = $this-&gt;start;
++			if ( !$this-&gt;step ) {
++				$this-&gt;step = 1;
++			}
++			while ( $val &lt;= $this-&gt;end ) {
++				$str.= '&lt;option value=&quot;' . $val . '&quot;';
++				if ( isset($this-&gt;value) &amp;&amp; $this-&gt;value == $val ) {
++					$str .= ' selected=&quot;selected&quot;';
++				}
++				$str .= &quot;&gt;$val&lt;/option&gt;&quot;;
++				$val += $this-&gt;step;
++			}
++			return $str . '&lt;/select&gt;';
++		} else {
++			if ( $this-&gt;refPath ) {
++				$attributes['ref'] = $this-&gt;refPath;
++			}
++			return $this-&gt;renderTag( $this-&gt;tagName, $attributes ) . $this-&gt;renderLabel() . &quot;&lt;/$this-&gt;tagName&gt;&quot;;
++		}
++	}
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/range.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/select.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/select.php	2006-02-19 19:08:52 UTC (rev 256)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/select.php	2006-02-19 19:11:59 UTC (rev 257)
+@@ -0,0 +1,89 @@
++&lt;?php
++/**
++ * xoops_pyro_FormSelect main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++
++
++XOS::import( 'xoops_pyro_FormElement' );
++
++/**
++ * Form widget for the XForms 'select' element
++ * 
++ * When rendered as an XForms element, this widget will display a range control and
++ * degrade gracefully to a select element when using HTML.
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormSelect extends xoops_pyro_FormElement {
++
++	var $tagName = 'select';
++	
++	var $appearance = 'minimal';
++	
++
++	function renderControl() {
++		if ( $this-&gt;renderAsHtml ) {
++			if ( $this-&gt;appearance != 'full' ) {
++				if ( $this-&gt;name ) {
++					$attributes['name'] = $this-&gt;name;
++				}
++				$attributes['size'] = ( $this-&gt;appearance == 'minimal' ) ? 1 : max( 1, count( $this-&gt;options ) );
++				$str = $this-&gt;renderTag( 'select', $attributes );
++				foreach ( $this-&gt;options as $val =&gt; $label ) {
++					$str .= '&lt;option value=&quot;' . htmlspecialchars( $val, ENT_QUOTES ) . '&quot;';
++					if ( isset( $this-&gt;value ) &amp;&amp; $this-&gt;value == $val ) {
++						$str .= ' selected=&quot;selected&quot;';
++					}
++					$str .= '&gt;' . htmlspecialchars( $label ) . '&lt;/option&gt;';
++				}
++				return $str . '&lt;/select&gt;';
++			} else {
++				$str = '';
++				$optionType = is_a( $this, 'xoops_pyro_FormSelect1' ) ? 'radio' : 'checkbox';
++				$name = $this-&gt;name ? ( ' name=&quot;' . htmlspecialchars( $this-&gt;name, ENT_QUOTES ) . '&quot;' ) : '';
++				foreach ( $this-&gt;options as $val =&gt; $label ) {
++					$str .= '&lt;div class=&quot;xoops_pyro_FormSelect-option&quot;&gt;';
++					$str .= &quot;&lt;input type=\&quot;$optionType\&quot;$name value=\&quot;&quot; . htmlspecialchars( $val, ENT_QUOTES ) . '&quot;';
++					if ( isset( $this-&gt;value ) &amp;&amp; $this-&gt;value == $val ) {
++						$str .= ' checked=&quot;checked&quot;';
++					}
++					$str .= ' /&gt;' . $label . '&lt;/div&gt;';
++				}
++				return $str;
++			}
++		}
++		return $this-&gt;renderTag() . $this-&gt;renderLabel() . &quot;&lt;/$this-&gt;tagName&gt;&quot;;
++	}
++
++}
++
++/**
++ * Form widget for the XForms 'select1' element
++ * 
++ * When rendered as an XForms element, this widget will display a range control and
++ * degrade gracefully to a select element when using HTML.
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormSelect1 extends xoops_pyro_FormSelect {
++
++	var $tagName = 'select1';
++	
++	var $appearance = 'minimal';
++
++}
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/select.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/text.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/text.php	2006-02-19 19:08:52 UTC (rev 256)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/text.php	2006-02-19 19:11:59 UTC (rev 257)
+@@ -0,0 +1,64 @@
++&lt;?php
++/**
++ * xoops_pyro_FormText main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++
++
++XOS::import( 'xoops_pyro_FormElement' );
++
++/**
++ * Form widget for the XForms 'input' element
++ * 
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormText extends xoops_pyro_FormElement {
++
++	var $tagName = 'input';
++
++	var $attributes = array();
++
++	function renderControl() {
++		$attrs = $this-&gt;attributes;
++		if ( $this-&gt;renderAsHtml ) {
++			$attrs['type'] = 'text';
++			$attrs['value'] = $this-&gt;value;
++			if ( $this-&gt;name ) {
++				$attrs['name'] = $this-&gt;name;
++			}
++			return $this-&gt;renderTag( 'input', $attrs, true );
++		} else {
++			if ( $this-&gt;refPath ) {
++				$attrs['ref'] = $this-&gt;refPath;
++			}
++			return $this-&gt;renderTag( $this-&gt;tagName, $attrs ) . $this-&gt;renderLabel() . &quot;&lt;/$this-&gt;tagName&gt;&quot;;
++		}
++	}
++
++}
++/**
++ * Form widget for the XForms 'secret' element
++ * 
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormSecret extends xoops_pyro_FormText {
++
++	var $attributes = array( 'type' =&gt; 'password' );
++
++}
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/text.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/textarea.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/textarea.php	2006-02-19 19:08:52 UTC (rev 256)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/textarea.php	2006-02-19 19:11:59 UTC (rev 257)
+@@ -0,0 +1,46 @@
++&lt;?php
++/**
++ * xoops_pyro_FormText main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++
++XOS::import( 'xoops_pyro_FormElement' );
++
++/**
++ * Form widget for the XForms 'textarea' element
++ * 
++ * @package		xoops_pyro
++ * @subpackage 	xoops_pyro_Forms
++ */
++class xoops_pyro_FormTextarea extends xoops_pyro_FormElement {
++
++	var $tagName = 'textarea';
++
++	function renderControl() {
++		$attrs = $this-&gt;attributes;
++		if ( $this-&gt;renderAsHtml ) {
++			if ( $this-&gt;name ) {
++				$attrs['name'] = $this-&gt;name;
++			}
++			return $this-&gt;renderTag( 'textarea', $attrs ) . htmlspecialchars( $this-&gt;value ) . '&lt;/textarea&gt;';
++		} else {
++			if ( $this-&gt;refPath ) {
++				$attrs['ref'] = $this-&gt;refPath;
++			}
++			return $this-&gt;renderTag( $this-&gt;tagName, $attrs ) . $this-&gt;renderLabel() . &quot;&lt;/$this-&gt;tagName&gt;&quot;;
++		}
++	}
++
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/Forms/textarea.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000248.html">[Xoops4-svn] r256 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience: . ConfigurationPanel.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000250.html">[Xoops4-svn] r258 - in XoopsCore/branches/tasks/123542-admin/XOOPS: . Preferences Preferences/ByHost
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#249">[ date ]</a>
+              <a href="thread.html#249">[ thread ]</a>
+              <a href="subject.html#249">[ subject ]</a>
+              <a href="author.html#249">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

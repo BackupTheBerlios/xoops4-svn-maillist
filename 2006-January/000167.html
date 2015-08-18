@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r175 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r175%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include&In-Reply-To=%3C200601211240.k0LCeTTU007806%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000164.html">
+   <LINK REL="Next"  HREF="000168.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r175 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r175%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include&In-Reply-To=%3C200601211240.k0LCeTTU007806%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r175 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 21 13:40:29 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000164.html">[Xoops4-svn] r174 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class
+</A></li>
+        <LI>Next message: <A HREF="000168.html">[Xoops4-svn] r176 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS XOOPS/Boot XOOPS/StartupItems XOOPS/StartupItems/site-closed htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#167">[ date ]</a>
+              <a href="thread.html#167">[ thread ]</a>
+              <a href="subject.html#167">[ subject ]</a>
+              <a href="author.html#167">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-21 13:40:27 +0100 (Sat, 21 Jan 2006)
+New Revision: 175
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/cp_header.php
+Log:
+Changed cp_header.php so admin pages always show the fake redirection screen
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/cp_header.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/cp_header.php	2006-01-21 12:39:01 UTC (rev 174)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/cp_header.php	2006-01-21 12:40:27 UTC (rev 175)
+@@ -7,6 +7,7 @@
+ error_reporting(0);
+ include_once '../../../mainfile.php';
+ include_once XOOPS_ROOT_PATH . &quot;/include/cp_functions.php&quot;;
++
+ $moduleperm_handler = &amp; xoops_gethandler( 'groupperm' );
+ if ( $xoopsUser ) {
+     $url_arr = explode('/',strstr($xoopsRequestUri,'/modules/'));
+@@ -22,6 +23,10 @@
+     redirect_header( XOOPS_URL . &quot;/user.php&quot;, 1, _NOPERM );
+     exit();
+ }
++
++global $xoops;
++$_SESSION[$xoops-&gt;services['http']-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] = true;
++
+ // set config values for this module
+ if ( $xoopsModule-&gt;getVar( 'hasconfig' ) == 1 || $xoopsModule-&gt;getVar( 'hascomments' ) == 1 ) {
+     $config_handler = &amp; xoops_gethandler( 'config' );
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000164.html">[Xoops4-svn] r174 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class
+</A></li>
+	<LI>Next message: <A HREF="000168.html">[Xoops4-svn] r176 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS XOOPS/Boot XOOPS/StartupItems XOOPS/StartupItems/site-closed htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#167">[ date ]</a>
+              <a href="thread.html#167">[ thread ]</a>
+              <a href="subject.html#167">[ subject ]</a>
+              <a href="author.html#167">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

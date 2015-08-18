@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r163 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r163%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom&In-Reply-To=%3C200601200857.k0K8vxR3024121%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000154.html">
+   <LINK REL="Next"  HREF="000156.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r163 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r163%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom&In-Reply-To=%3C200601200857.k0K8vxR3024121%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r163 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 09:57:59 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000154.html">[Xoops4-svn] r162 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000156.html">[Xoops4-svn] r164 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#155">[ date ]</a>
+              <a href="thread.html#155">[ thread ]</a>
+              <a href="subject.html#155">[ subject ]</a>
+              <a href="author.html#155">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 09:57:58 +0100 (Fri, 20 Jan 2006)
+New Revision: 163
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php
+Log:
+Removed dumb 'I want to do too fast' mistakes
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php	2006-01-20 08:56:27 UTC (rev 162)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php	2006-01-20 08:57:58 UTC (rev 163)
+@@ -35,9 +35,10 @@
+ 			$password = md5( $password );
+ 		}
+ 		$db =&amp; XOS::create( 'xoops_db_Database' );
+-		$stmt = $db-&gt;prepare( &quot;SELECT COUNT(*) FROM `users` WHERE `uname`=:login AND `pass`=:pwd&quot; );
+-		$stmt-&gt;bindValue( ':login', $login );
+-		$stmt-&gt;bindValue( ':pass', $pass );
++		$table = $db-&gt;prefix( 'users' );
++		$stmt = $db-&gt;prepare( &quot;SELECT COUNT(*) FROM `$table` WHERE `uname`=:login AND `pass`=:password&quot; );
++		$stmt-&gt;bindValue( ':login', $login, PDO_PARAM_STR );
++		$stmt-&gt;bindValue( ':password', $password, PDO_PARAM_STR );
+ 		if ( $stmt-&gt;execute() ) {
+ 			list( $count ) = $stmt-&gt;fetch( PDO_FETCH_NUM );
+ 			$stmt-&gt;closeCursor();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000154.html">[Xoops4-svn] r162 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000156.html">[Xoops4-svn] r164 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#155">[ date ]</a>
+              <a href="thread.html#155">[ thread ]</a>
+              <a href="subject.html#155">[ subject ]</a>
+              <a href="author.html#155">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

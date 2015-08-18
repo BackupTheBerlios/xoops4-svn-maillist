@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r222 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r222%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom&In-Reply-To=%3C200602130302.k1D32d1S013934%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000213.html">
+   <LINK REL="Next"  HREF="000215.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r222 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r222%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom&In-Reply-To=%3C200602130302.k1D32d1S013934%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r222 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 04:02:39 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000213.html">[Xoops4-svn] r221 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000215.html">[Xoops4-svn] r223 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#214">[ date ]</a>
+              <a href="thread.html#214">[ thread ]</a>
+              <a href="subject.html#214">[ subject ]</a>
+              <a href="author.html#214">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 04:02:20 +0100 (Mon, 13 Feb 2006)
+New Revision: 222
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/auth.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/xo-info.php
+Log:
+Documentation fixes
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/auth.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/auth.php	2006-02-13 03:00:44 UTC (rev 221)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/auth.php	2006-02-13 03:02:20 UTC (rev 222)
+@@ -84,9 +84,9 @@
+ 	/**
+ 	 * Checks user credentials validity
+ 	 *
+-	 * @var string	login		User login
+-	 * @var string	password	User password (optionally encrypted)
+-	 * @var string	hash		Name of the function used to hash the password (if any)
++	 * @param string	login		User login
++	 * @param string	password	User password (optionally encrypted)
++	 * @param string	hash		Name of the function used to hash the password (if any)
+ 	 * @return mixed False if authentication failed, true if it worked, or the user login if different from the specified one
+ 	 */
+ 	function checkCredentials( $login, $password, $hash = '' ) {
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/xo-info.php	2006-02-13 03:00:44 UTC (rev 221)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Authentication.xofrom/xo-info.php	2006-02-13 03:02:20 UTC (rev 222)
+@@ -1,18 +1,17 @@
+ &lt;?php
+ /**
+-* xoops_auth framework bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @category		CoreServices
+-* @package		xoops_auth
+-* @version		$Id$
+-*/
++ * xoops_auth framework bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_auth
++ * @version		$Id$
++ */
+ 
+ return array(
+ 	'xoBundleDisplayName'			=&gt; 'XOOPS Authentication framework',
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000213.html">[Xoops4-svn] r221 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000215.html">[Xoops4-svn] r223 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#214">[ date ]</a>
+              <a href="thread.html#214">[ thread ]</a>
+              <a href="subject.html#214">[ subject ]</a>
+              <a href="author.html#214">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r214 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r214%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200601310438.k0V4cv2i032061%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000205.html">
+   <LINK REL="Next"  HREF="000207.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r214 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r214%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200601310438.k0V4cv2i032061%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r214 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Tue Jan 31 05:38:57 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000205.html">[Xoops4-svn] r213 - XoopsCore/branches/tasks
+</A></li>
+        <LI>Next message: <A HREF="000207.html">[Xoops4-svn] r215 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro: . Smarty.xoobj/plugins TreeWidget.xoobj TreeWidget.xoobj/www
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#206">[ date ]</a>
+              <a href="thread.html#206">[ thread ]</a>
+              <a href="subject.html#206">[ subject ]</a>
+              <a href="author.html#206">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-31 05:38:55 +0100 (Tue, 31 Jan 2006)
+New Revision: 214
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+Log:
+Modified the theme to ensure the page and content zones are rendered before the canvas (this allows widgets inserted into the content to modify the page metas, adding their own stylesheet and javascript files if necessary)
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-30 02:56:03 UTC (rev 213)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-31 04:38:55 UTC (rev 214)
+@@ -226,18 +226,56 @@
+ 		$this-&gt;template-&gt;assign( $vars );
+ 		$this-&gt;renderZone( 'canvas' );
+ 		$this-&gt;renderCount++;
+-		
+ 	}
+ 	
+ 	/**
+ 	 * Render the specified page part
+ 	 * 
+ 	 * @param string $zone
+-	 */	
++	 */
+ 	function renderZone( $zone ) {
++		switch ( $zone ) {
++		case 'canvas':
++			$this-&gt;renderCanvas();
++			break;
++		case 'page':
++			$this-&gt;renderPage();
++			echo $this-&gt;pageContent;
++			break;
++		case 'content':
++			$this-&gt;renderContent();
++		}
++	}
++	
++	function renderCanvas() {
++		$this-&gt;renderPage();
++		$this-&gt;template-&gt;display( $this-&gt;getZoneTemplate( 'canvas' ) );
++	}
++
++	function renderPage() {
++		ob_start();
++		if ( $tpl = $this-&gt;getZoneTemplate( 'page' ) ) {
++			$this-&gt;template-&gt;display( $tpl );
++		} else {
++			$this-&gt;renderContent();
++		}
++		$this-&gt;pageContent = ob_get_contents();
++		ob_end_clean();
++	}
++
++	function renderContent() {
++		if ( $tpl = $this-&gt;getZoneTemplate( 'content' ) ) {
++			$this-&gt;template-&gt;display( $tpl );
++		}
++		if ( !empty($this-&gt;content) ) {
++			echo $this-&gt;content;
++		}
++	}
++	
++	function getZoneTemplate( $zone ) {
+ 		global $xoops;
+-
+ 		$zones = array( 'canvas' =&gt; 0, 'page' =&gt; 1, 'content' =&gt; 2 );
++		$tpl = '';
+ 		if ( isset( $zones[$zone] ) ) {
+ 			$tpl = $zone . 'Template';
+ 			$tpl = $this-&gt;$tpl;
+@@ -247,15 +285,12 @@
+ 				} elseif ( !strpos( $tpl, ':' ) ) {
+ 					$tpl = 'xotpl:' . $tpl;
+ 				}
+-				$this-&gt;template-&gt;display( $tpl );
+-			} elseif ( $zone != 'content' ) {
+-				$this-&gt;renderZone( $zones[$zone] + 1 );
+ 			}
+-			if ( !empty($this-&gt;content) &amp;&amp; $zone == 'content' &amp;&amp; $this-&gt;themeAPI != '2.0' ) {
+-				echo $this-&gt;content;
+-			}
+-		}	
++		}
++		return $tpl;
+ 	}
++	
++	
+ 
+ 	function renderAttributes( $coll ) {
+ 		$str = '';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000205.html">[Xoops4-svn] r213 - XoopsCore/branches/tasks
+</A></li>
+	<LI>Next message: <A HREF="000207.html">[Xoops4-svn] r215 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro: . Smarty.xoobj/plugins TreeWidget.xoobj TreeWidget.xoobj/www
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#206">[ date ]</a>
+              <a href="thread.html#206">[ thread ]</a>
+              <a href="subject.html#206">[ subject ]</a>
+              <a href="author.html#206">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

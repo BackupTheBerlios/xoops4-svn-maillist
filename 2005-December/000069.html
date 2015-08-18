@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r76 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r76%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20&In-Reply-To=%3C200512032058.jB3KwVIS023891%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000068.html">
+   <LINK REL="Next"  HREF="000070.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r76 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r76%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20&In-Reply-To=%3C200512032058.jB3KwVIS023891%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r76 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Dec  3 21:58:31 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000068.html">[Xoops4-svn] r75 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000070.html">[Xoops4-svn] r77 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-03 21:58:31 +0100 (Sat, 03 Dec 2005)
+New Revision: 76
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html
+Log:
+Fixed the blocks templates path
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html	2005-12-03 14:26:17 UTC (rev 75)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html	2005-12-03 20:58:31 UTC (rev 76)
+@@ -38,7 +38,7 @@
+       &lt;td id=&quot;leftcolumn&quot;&gt;
+         &lt;!-- Start left blocks loop --&gt;
+         &lt;{foreach item=block from=$xoops_lblocks}&gt;
+-          &lt;{include file=&quot;default/theme_blockleft.html&quot;}&gt;
++          &lt;{include file=&quot;xoops20/theme_blockleft.html&quot;}&gt;
+         &lt;{/foreach}&gt;
+         &lt;!-- End left blocks loop --&gt;
+ 
+@@ -55,7 +55,7 @@
+ 
+             &lt;!-- Start center-center blocks loop --&gt;
+             &lt;{foreach item=block from=$xoops_ccblocks}&gt;
+-              &lt;{include file=&quot;default/theme_blockcenter_c.html&quot;}&gt;
++              &lt;{include file=&quot;xoops20/theme_blockcenter_c.html&quot;}&gt;
+             &lt;{/foreach}&gt;
+             &lt;!-- End center-center blocks loop --&gt;
+ 
+@@ -66,7 +66,7 @@
+ 
+             &lt;!-- Start center-left blocks loop --&gt;
+               &lt;{foreach item=block from=$xoops_clblocks}&gt;
+-                &lt;{include file=&quot;default/theme_blockcenter_l.html&quot;}&gt;
++                &lt;{include file=&quot;xoops20/theme_blockcenter_l.html&quot;}&gt;
+               &lt;{/foreach}&gt;
+             &lt;!-- End center-left blocks loop --&gt;
+ 
+@@ -74,7 +74,7 @@
+ 
+             &lt;!-- Start center-right blocks loop --&gt;
+               &lt;{foreach item=block from=$xoops_crblocks}&gt;
+-                &lt;{include file=&quot;default/theme_blockcenter_r.html&quot;}&gt;
++                &lt;{include file=&quot;xoops20/theme_blockcenter_r.html&quot;}&gt;
+               &lt;{/foreach}&gt;
+             &lt;!-- End center-right blocks loop --&gt;
+ 
+@@ -95,7 +95,7 @@
+       &lt;td id=&quot;rightcolumn&quot;&gt;
+         &lt;!-- Start right blocks loop --&gt;
+         &lt;{foreach item=block from=$xoops_rblocks}&gt;
+-          &lt;{include file=&quot;default/theme_blockright.html&quot;}&gt;
++          &lt;{include file=&quot;xoops20/theme_blockright.html&quot;}&gt;
+         &lt;{/foreach}&gt;
+         &lt;!-- End right blocks loop --&gt;
+       &lt;/td&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000068.html">[Xoops4-svn] r75 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000070.html">[Xoops4-svn] r77 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

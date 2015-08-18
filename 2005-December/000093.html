@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r101 - XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r101%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin&In-Reply-To=%3C200512190129.jBJ1TxTA002253%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000092.html">
+   <LINK REL="Next"  HREF="000094.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r101 - XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r101%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin&In-Reply-To=%3C200512190129.jBJ1TxTA002253%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r101 - XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Dec 19 02:29:59 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000092.html">[Xoops4-svn] r100 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+        <LI>Next message: <A HREF="000094.html">[Xoops4-svn] r102 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-19 02:29:53 +0100 (Mon, 19 Dec 2005)
+New Revision: 101
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php
+Log:
+Ensured the db: resource handler cache is cleared on module install/update/uninstall
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php	2005-12-13 04:35:42 UTC (rev 100)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php	2005-12-19 01:29:53 UTC (rev 101)
+@@ -186,6 +186,11 @@
+ if ($op == 'install_ok') {
+     $ret = array();
+     $ret[] = xoops_module_install($module);
++
++	// Clear the db: resource handler cache
++    global $xoops;
++    @unlink( $xoops-&gt;path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ) );
++    
+     $contents = xoops_module_get_admin_menu();
+     if (!xoops_module_write_admin_menu($contents)) {
+         $ret[] = &quot;&lt;p&gt;&quot;._MD_AM_FAILWRITE.&quot;&lt;/p&gt;&quot;;
+@@ -219,6 +224,11 @@
+ if ($op == 'uninstall_ok') {
+     $ret = array();
+     $ret[] = xoops_module_uninstall($module);
++
++    // Clear the db: resource handler cache
++    global $xoops;
++    @unlink( $xoops-&gt;path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ) );
++    
+     $contents = xoops_module_get_admin_menu();
+     if (!xoops_module_write_admin_menu($contents)) {
+         $ret[] = &quot;&lt;p&gt;&quot;._MD_AM_FAILWRITE.&quot;&lt;/p&gt;&quot;;
+@@ -271,6 +281,10 @@
+         $msgs[] = 'Module data updated.';
+         $msgs[] = '@TODO-2.3: Delete cached output from the templates cache on module ins/upd/uninst... :-)';
+ 
++		// Clear the db: resource handler cache
++	    global $xoops;
++	    @unlink( $xoops-&gt;path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ) );
++      
+         $contents = xoops_module_get_admin_menu();
+         if (!xoops_module_write_admin_menu($contents)) {
+             $msgs[] = '&lt;p&gt;&lt;span style=&quot;color:#ff0000;&quot;&gt;'._MD_AM_FAILWRITE.'&lt;/span&gt;&lt;/p&gt;';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000092.html">[Xoops4-svn] r100 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+	<LI>Next message: <A HREF="000094.html">[Xoops4-svn] r102 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

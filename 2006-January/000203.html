@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r211 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm htdocs htdocs/modules/sysutils/identification
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r211%20-%20in%20XoopsCore/branches/tasks/123353-authentication%3A%20XOOPS/Boot%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm%20htdocs%20htdocs/modules/sysutils/identification&In-Reply-To=%3C200601300214.k0U2EriL031240%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000202.html">
+   <LINK REL="Next"  HREF="000204.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r211 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm htdocs htdocs/modules/sysutils/identification</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r211%20-%20in%20XoopsCore/branches/tasks/123353-authentication%3A%20XOOPS/Boot%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm%20htdocs%20htdocs/modules/sysutils/identification&In-Reply-To=%3C200601300214.k0U2EriL031240%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r211 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm htdocs htdocs/modules/sysutils/identification">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Jan 30 03:14:53 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000202.html">[Xoops4-svn] r210 - in XoopsCore/branches/tasks/123353-authentication/htdocs: modules/sysutils/identification themes/default
+</A></li>
+        <LI>Next message: <A HREF="000204.html">[Xoops4-svn] r212 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs htdocs/include htdocs/modules htdocs/themes/default htdocs/themes/default/img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#203">[ date ]</a>
+              <a href="thread.html#203">[ thread ]</a>
+              <a href="subject.html#203">[ subject ]</a>
+              <a href="author.html#203">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-30 03:14:47 +0100 (Mon, 30 Jan 2006)
+New Revision: 211
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/kernel.php
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/user.php
+Log:
+Gave the kernel the possibility to perform sub-requests (although it might be move to a separate class) and updated the legacy login/logout entry points in user.php, so they now call the identification module
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/kernel.php	2006-01-29 21:45:41 UTC (rev 210)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/kernel.php	2006-01-30 02:14:47 UTC (rev 211)
+@@ -425,7 +425,54 @@
+ 	function url( $url ) {
+ 		return $this-&gt;path( $url, true );
+ 	}
++	/**
++	* Performs a virtual sub-request
++	*
++	* This will call the page specified in $url as if it was normally requested, giving the possibility to
++	* customize the content of the $_REQUEST and $_SERVER variables the sub-request will receive.&lt;br /&gt;
++	* NOTE: For this to work correctly, the called page must use &lt;b&gt;return&lt;/b&gt; to end processing if necessary
++	* - NOT exit() or die() -, also it must use $_REQUEST to get its parameters, not $_POST or $_GET (but that
++	* is how a well-coded page should be done anyway).
++	*
++	* @param	array	$request	Values to be passed to the sub-request as its $_REQUEST var
++	* @param	array	$server		Values to add/change in the $_SERVER var
++	* @return	mixed	The value returned by the requested page (or false if an error occured)
++	*/
++	function virtual( $url, $request = array(), $server = array() ) {
++		// Extract the query parameters specified via the url string and add them to $_REQUEST
++		$parsed = parse_url( $url );
++		if ( isset($parsed['query']) ) {
++			$args=array();
++			parse_str( $parsed['query'], $args );
++			if ( !empty($args) ) {
++				$request = array_merge( $request, $args );
++			}
++			if ( !isset($server['REQUEST_URI']) ) {
++				//$server['REQUEST_URI'] = $parsed['path'];
++			}
++		}
++		list( $moduleName, $moduleLocation ) = explode( '#', $url, 2 );
++		if ( !$subModule = $this-&gt;loadModule( $moduleName ) ) {
++			trigger_error( &quot;Cannot perform virtual request to unknown module $moduleName&quot;, E_USER_WARNING );
++			return false;
++		}
++		if ( substr( $moduleLocation, 0, 1 ) == '/' ) {
++			$subModule-&gt;currentLocation = $subModule-&gt;findLocationName( $moduleLocation );
++		} else {
++			$subModule-&gt;currentLocation = $moduleLocation;
++		}
++		$path = $this-&gt;path( $subModule-&gt;xoBundleRoot . $subModule-&gt;moduleLocations[ $subModule-&gt;currentLocation ]['scriptFile'] );
+ 
++		$backup = array( $this-&gt;isVirtual, $this-&gt;currentModule, $_REQUEST, $_SERVER );
++		$cwd = getcwd();
++		list( $this-&gt;isVirtual, $this-&gt;currentModule, $_REQUEST, $_SERVER ) = array( true, $subModule, $request, array_merge( $_SERVER, $server ) );
++		chdir( dirname( $path ) );
++		$ret = include $path;
++		list( $this-&gt;isVirtual, $this-&gt;currentModule, $_REQUEST, $_SERVER ) = $backup;
++		chdir( $cwd );
++		return $ret;
++	}
++
+ } // class xoops_kernel_Xoops2
+ 
+ /**
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php	2006-01-29 21:45:41 UTC (rev 210)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php	2006-01-30 02:14:47 UTC (rev 211)
+@@ -62,11 +62,7 @@
+ 		if ( $inst &amp;&amp; empty( $bundleId ) ) {
+ 			$moduleRoot = substr( $inst-&gt;xoBundleRoot, 4 );
+ 			$scriptFile = substr( strstr( $_SERVER['SCRIPT_NAME'], $moduleRoot ), strlen( $moduleRoot ) );
+-			foreach ( $inst-&gt;moduleLocations as $k =&gt; $loc ) {
+-				if ( $scriptFile == $loc['scriptFile'] ) {
+-					$inst-&gt;currentLocation = $k;
+-				}				
+-			}
++			$inst-&gt;currentLocation = $inst-&gt;findLocationName( $scriptFile );
+ 		}
+ 		return $inst;
+ 	}
+@@ -96,7 +92,17 @@
+ 		return true;
+ 	}	
+ 
++	function findLocationName( $relpath ) {
++		foreach ( $this-&gt;moduleLocations as $k =&gt; $loc ) {
++			if ( $relpath == $loc['scriptFile'] ) {
++				return $k;
++			}				
++		}
++		return '';
++	}
+ 	
++	
++	
+ 	function requestParameters( $source = 'R' ) {
+ 		$loc =&amp; $this-&gt;moduleLocations[ $this-&gt;currentLocation ];
+ 		return isset( $loc['parameters'] ) ? $this-&gt;requestValues( $loc['parameters'], $source ) : array();
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-29 21:45:41 UTC (rev 210)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-30 02:14:47 UTC (rev 211)
+@@ -5,7 +5,6 @@
+ 	global $xoops;
+ 
+ 	$app =&amp; $xoops-&gt;currentModule;
+-	//var_export($app);
+ 	// Read the request params defined in xo-info.php (use default if the var isnt found)
+ 	// sanitize them, and create corresponding global vars
+ 	extract( $app-&gt;requestParameters(), EXTR_OVERWRITE );
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php	2006-01-29 21:45:41 UTC (rev 210)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php	2006-01-30 02:14:47 UTC (rev 211)
+@@ -3,7 +3,6 @@
+ 	require_once '../../../mainfile.php';
+ 
+ 	global $xoops;
+-	$app =&amp; $xoops-&gt;loadModule();
+ 
+ 	if ( !$xoops-&gt;currentUser ) {
+ 		return $xoops-&gt;services['http']-&gt;sendResponse( 303, '', $xoops-&gt;url( 'mod_xoops_Identification#login' ) );
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/user.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/user.php	2006-01-29 21:45:41 UTC (rev 210)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/user.php	2006-01-30 02:14:47 UTC (rev 211)
+@@ -36,6 +36,25 @@
+     $op = trim($_GET['op']);
+ }
+ 
++global $xoops, $xoopsUser;
++
++switch ( $op ) {
++case 'login':
++	$response = $xoops-&gt;virtual( 'mod_xoops_Identification#login', array(
++		'login' =&gt; @$_REQUEST['uname'],
++		'password' =&gt; @$_REQUEST['pass'],
++		'xoops_redirect' =&gt; @$_REQUEST['xoops_redirect'],
++	) );
++	return $xoops-&gt;services['http']-&gt;sendResponse( is_array( $response ) ? $response : 200 );
++case 'logout':
++	if ( $xoopsUser ) {
++		return $xoops-&gt;services['http']-&gt;sendResponse( $xoops-&gt;virtual( 'mod_xoops_Identification#logout' ) );
++	} else {
++		return $xoops-&gt;services['http']-&gt;sendResponse( 303, '', $xoops-&gt;url( 'mod_xoops_Identification#login' ) );
++	}
++}
++
++
+ if ($op == 'main') {
+     if ( !$xoopsUser ) {
+         $xoopsOption['template_main'] = 'system_userform.html';
+@@ -62,28 +81,6 @@
+     exit();
+ }
+ 
+-if ($op == 'login') {
+-    include_once XOOPS_ROOT_PATH.'/include/checklogin.php';
+-    exit();
+-}
+-
+-if ($op == 'logout') {
+-    $message = '';
+-    $_SESSION = array();
+-    session_destroy();
+-    if ($xoopsConfig['use_mysession'] &amp;&amp; $xoopsConfig['session_name'] != '') {
+-        setcookie($xoopsConfig['session_name'], '', time()- 3600, '/',  '', 0);
+-    }
+-    // clear entry from online users table
+-    if (is_object($xoopsUser)) {
+-        $online_handler =&amp; xoops_gethandler('online');
+-        $online_handler-&gt;destroy($xoopsUser-&gt;getVar('uid'));
+-    }
+-    $message = _US_LOGGEDOUT.'&lt;br /&gt;'._US_THANKYOUFORVISIT;
+-    redirect_header('index.php', 1, $message);
+-    exit();
+-}
+-
+ if ($op == 'actv') {
+     $id = intval($_GET['id']);
+     $actkey = trim($_GET['actkey']);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000202.html">[Xoops4-svn] r210 - in XoopsCore/branches/tasks/123353-authentication/htdocs: modules/sysutils/identification themes/default
+</A></li>
+	<LI>Next message: <A HREF="000204.html">[Xoops4-svn] r212 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs htdocs/include htdocs/modules htdocs/themes/default htdocs/themes/default/img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#203">[ date ]</a>
+              <a href="thread.html#203">[ thread ]</a>
+              <a href="subject.html#203">[ subject ]</a>
+              <a href="author.html#203">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

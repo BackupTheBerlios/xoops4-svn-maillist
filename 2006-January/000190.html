@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r198 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r198%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601272341.k0RNf4YD012306%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000189.html">
+   <LINK REL="Next"  HREF="000191.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r198 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r198%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601272341.k0RNf4YD012306%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r198 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 28 00:41:04 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000189.html">[Xoops4-svn] r197 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000191.html">[Xoops4-svn] r199 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#190">[ date ]</a>
+              <a href="thread.html#190">[ thread ]</a>
+              <a href="subject.html#190">[ subject ]</a>
+              <a href="author.html#190">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-28 00:41:02 +0100 (Sat, 28 Jan 2006)
+New Revision: 198
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+Log:
+Enhanced the logger output buffering handling by using ob_start( callback )
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-27 23:39:30 UTC (rev 197)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-27 23:41:02 UTC (rev 198)
+@@ -48,7 +48,7 @@
+ 	var $timers = array();
+ 
+ 	function xoInit( $options = array() ) {
+-		ob_start();
++		ob_start( array( &amp;$this, 'renderEvents' ) );
+ 	 	return true;
+ 	}
+ 	/**
+@@ -66,17 +66,6 @@
+ 				$this-&gt;timers[$k]['stop'] = $now;
+ 			}
+ 		}
+-	  	$output = '';
+-
+-	 	while ( false !== ( $str = ob_get_contents() ) ) {		// Clean all open output buffers and reconstruct output :-)
+-	 		$output = $str . $output;
+-	 		ob_end_clean();
+-		}
+-		if ( $this-&gt;activated ) {
+-			$this-&gt;renderEvents( $output );
+-		} else {
+-			echo $output;
+-		}
+ 	}
+ 	/**
+ 	 * Returns the current microtime in seconds.
+@@ -130,6 +119,9 @@
+ 	 * @param string $output The content generated during the current request
+ 	 */
+ 	function renderEvents( $output ) {
++		if ( !$this-&gt;activated ) {
++			return $output;
++		}
+ 		$log = &quot;\n&lt;div class=\&quot;xo-logger-output\&quot;&gt;\n&quot;;
+ 		foreach ( $this-&gt;events as $category =&gt; $events ) {
+ 			$log .= &quot;&lt;div class=\&quot;xo-events $category\&quot;&gt;\n&quot;;
+@@ -146,9 +138,9 @@
+ 		$pattern = '&lt;!--{xo-logger-output}--&gt;';
+ 		$pos = strpos( $output, $pattern );
+ 		if ( $pos !== false ) {
+-			echo substr( $output, 0, $pos ) . $log . substr( $output, $pos + strlen( $pattern ) );
++			return substr( $output, 0, $pos ) . $log . substr( $output, $pos + strlen( $pattern ) );
+ 		} else {
+-			echo $output . $log;
++			return $output . $log;
+ 		}
+ 	}	
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000189.html">[Xoops4-svn] r197 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000191.html">[Xoops4-svn] r199 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#190">[ date ]</a>
+              <a href="thread.html#190">[ thread ]</a>
+              <a href="subject.html#190">[ subject ]</a>
+              <a href="author.html#190">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

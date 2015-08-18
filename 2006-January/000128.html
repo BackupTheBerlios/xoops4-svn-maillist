@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r136%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation%3A%20.%20Http.xofrm%20Http.xofrm/session.xoobj&In-Reply-To=%3C200601190252.k0J2qGeu007036%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000127.html">
+   <LINK REL="Next"  HREF="000129.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r136%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation%3A%20.%20Http.xofrm%20Http.xofrm/session.xoobj&In-Reply-To=%3C200601190252.k0J2qGeu007036%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 03:52:16 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000127.html">[Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000129.html">[Xoops4-svn] r137 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#128">[ date ]</a>
+              <a href="thread.html#128">[ thread ]</a>
+              <a href="subject.html#128">[ subject ]</a>
+              <a href="author.html#128">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 03:52:11 +0100 (Thu, 19 Jan 2006)
+New Revision: 136
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php
+Log:
+Added the default session component.
+
+This component uses the configuration defined in PHP, and automatically initialize the save handler in one is specified. Only additional feature: it reads a variable defined in the session, so cache limiting headers can be set individually by each user.
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-18 13:52:49 UTC (rev 135)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-19 02:52:11 UTC (rev 136)
+@@ -0,0 +1,170 @@
++&lt;?php
++/**
++ * xoops_http_SessionService main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @subpackage	xoops_http_Session
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++/**
++ * xoops_http_SessionService main class
++ * 
++ * The default session service provides basic session management functionality.
++ * It uses the settings defined in the PHP configuration files, and thus is not really
++ * user-configurable (you must use xoops_http_CustomSessionService for that).
++ * 
++ * Only cache limiting has been enhanced: this component allows to configure this setting
++ * on a user basis (if the 'cacheLimiter' variable is stored in the session, it will be used)
++ */
++class xoops_http_SessionService {
++	/**
++	* Save handler to use for reading/writing session data
++	* @var mixed
++	*/
++	var $saveHandler = '';
++	/**
++	 * Identifier of the current session
++	 * @var string
++	 */
++	var $sessionId = 0;
++	/**
++	 * Default cache limiting policy (if different from the one defined in php.ini
++	 * @var string
++	 */
++	var $cacheLimiter = '';
++	/**
++	 * Default cache lifetime for content
++	 * @var integer
++	 */
++	var $cacheLifetime = '';
++	
++	/**
++	* Initialize the session service
++	*/
++	function xoInit( $options = array() ) {
++	 	global $xoops;
++
++		if ( $this-&gt;saveHandler &amp;&amp; !is_object( $this-&gt;saveHandler ) ) {
++			if ( ! ( $this-&gt;saveHandler = XOS::create( $this-&gt;saveHandler ) ) ) {
++				trigger_error( &quot;Failed to initialize the session save handler: session cannot start.&quot;, E_USER_WARNING );
++				return false;
++			}
++		}
++		if ( $this-&gt;saveHandler ) {
++	    	session_set_save_handler(
++	    		array( &amp;$this-&gt;saveHandler, 'open' ), array( &amp;$this-&gt;saveHandler, 'close'),
++	    		array( &amp;$this-&gt;saveHandler, 'read'), array( &amp;$this-&gt;saveHandler, 'write'),
++	    		array( &amp;$this-&gt;saveHandler, 'destroy'), array( &amp;$this-&gt;saveHandler, 'gc')
++	    	);
++		}
++		return true;
++	}
++
++	/**
++	* Create a new session
++	*/
++	function start() {
++		if ( isset($_SESSION) ) {
++		  	return true;
++		}
++		if ( !empty($this-&gt;sessionId) ) {
++			session_id( $this-&gt;sessionId );
++		}
++		if ( !$this-&gt;cacheLimiter ) {
++			$this-&gt;cacheLimiter = session_cache_limiter();
++		}
++		session_cache_limiter( 'none' );
++		session_start();
++		$this-&gt;sessionId = session_id();
++		// Do this here to allow user-dependent cacheLimiter setting
++		if ( @$var = $this-&gt;getObjectVar( $this, 'cacheLimiter' ) ) {
++			$this-&gt;cacheLimiter = $var;
++		}
++		$this-&gt;resetCacheLimiting( $this-&gt;cacheLimiter, 60 * $this-&gt;cacheLifetime );
++		return $this-&gt;sessionId;
++	}
++	/**
++	* Destroy the current session
++	*/
++	function destroy() {
++		$_SESSION = array();
++		session_destroy();
++	}
++	/**
++	* Set a named session variable
++	*/
++	function setObjectVar( $owner, $key, $value ) {
++		if ( !isset($_SESSION) ) {
++			return null;
++		}
++		if ( is_object($owner) ) {
++			$owner = $owner-&gt;xoBundleIdentifier;
++		}
++		return $_SESSION[$owner][$key] = $value;
++	}
++	/**
++	* Get the value of a named session variable
++	*/
++	function getObjectVar( $owner, $key ) {
++		if ( is_object($owner) ) {
++			$owner = $owner-&gt;xoBundleIdentifier;
++		}
++		return @$_SESSION[$owner][$key];
++	}
++	/**
++	 * Resend the cache limiting headers
++	 */
++	function resetCacheLimiting( $policy, $cacheLifetime = 0, $lastModified = null ) {
++		if ( !isset( $lastModified ) ) {
++			$lastModified = time();
++		}
++		switch ( $policy ) {
++		case 'none':
++			break;
++		case 'no-cache':
++			header( 'Expires: ' . $this-&gt;date( time() - 3600 ) );
++			header( 'Cache-Control: no-store,no-cache,must-revalidate,post-check=0,pre-check=0' );
++			break;
++		case 'private':
++			header( 'Expires: ' . $this-&gt;date( time() - 3600 ) );
++		case 'private_no_expire':
++			header( &quot;Cache-Control: private,max-age=$cacheLifetime,pre-check=$cacheLifetime&quot; );
++			break;
++		case 'public':
++		default:
++			header( 'Expires: ' . $this-&gt;date( time() + $cacheLifetime ) );
++			header( &quot;Cache-Control: public,max-age=$cacheLifetime&quot; );
++			header( &quot;Last-Modified: &quot; . $this-&gt;date( $lastModified ) );
++			break;
++		}
++	}
++	/**
++	 * Return an RFC compliant (RFC822 or RFC850) date string from a timestamp
++	 *
++	 * @param interger $time
++	 * @return string
++	 */	
++	function date( $time = null ) {
++        return gmdate(
++        	( ini_get('y2k_compliance') ? 'D, d M Y' : 'l, d-M-y' ) .' H:i:s',
++        	isset($time) ? $time : time()
++        ) . ' GMT';
++    }
++
++}
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php	2006-01-18 13:52:49 UTC (rev 135)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php	2006-01-19 02:52:11 UTC (rev 136)
+@@ -0,0 +1,41 @@
++&lt;?php
++/**
++* xoops_http session component bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_http
++* @package		xoops_http_Session
++* @version		$Id$
++*/
++
++return array(
++	'xoBundleDisplayName' =&gt; 'XOOPS Session management component',
++	'xoBundleIdentifier' =&gt; 'xoops_http_Session',
++	'xoClassPath' =&gt; '/session.php',
++	'xoFactory' =&gt; 'xoops_http_SessionFactory',
++	'xoServices' =&gt; array(
++		'xoops_http_SessionService' =&gt; array(
++			'xoBundleDisplayName' =&gt; 'XOOPS default session service (using php.ini settings)',
++			'xoClassPath' =&gt; '/session.php',
++		),
++		'xoops_http_CustomSessionService' =&gt; array(
++			'xoBundleDisplayName' =&gt; 'XOOPS custom session service (using custom settings)',
++			'xoClassPath' =&gt; '/session-custom.php',
++		),
++		'xoops_http_DatabaseSessionHandler' =&gt; array(
++			'xoBundleDisplayName' =&gt; 'XOOPS database session handler',
++			'xoClassPath' =&gt; '/handler-db.php',
++		),
++	),
++	
++	
++	
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php	2006-01-18 13:52:49 UTC (rev 135)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php	2006-01-19 02:52:11 UTC (rev 136)
+@@ -0,0 +1,29 @@
++&lt;?php
++/**
++* xoops_http framework bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_http
++* @version		$Id$
++*/
++
++// xoBundleVersion: x.y.zRn  with R=release type (a:cvs snapshot, b:alpha, c:beta, d: RC, e: final)
++// We must be able to compare versions by comparing this string
++
++return array(
++	'xoBundleDisplayName'			=&gt; 'Xoops HTTP framework',
++	'xoBundleIdentifier'			=&gt; 'xoops_http',
++
++	'xoServices' =&gt; array(
++		'xoops_http_HttpHandler'	=&gt; array ( 'xoBundleRoot' =&gt; '/http.xoobj' ),
++		'xoops_http_SessionService'	=&gt; array ( 'xoBundleRoot' =&gt; '/session.xoobj' ),
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000127.html">[Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000129.html">[Xoops4-svn] r137 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#128">[ date ]</a>
+              <a href="thread.html#128">[ thread ]</a>
+              <a href="subject.html#128">[ subject ]</a>
+              <a href="author.html#128">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

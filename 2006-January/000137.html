@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r145 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r145%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj&In-Reply-To=%3C200601190625.k0J6PUMH020004%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000136.html">
+   <LINK REL="Next"  HREF="000138.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r145 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r145%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj&In-Reply-To=%3C200601190625.k0J6PUMH020004%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r145 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 07:25:30 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000136.html">[Xoops4-svn] r144 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000138.html">[Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#137">[ date ]</a>
+              <a href="thread.html#137">[ thread ]</a>
+              <a href="subject.html#137">[ subject ]</a>
+              <a href="author.html#137">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 07:25:27 +0100 (Thu, 19 Jan 2006)
+New Revision: 145
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+Log:
+Modified the session service to use the db handler by default (as it was in 2.0)
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-19 06:22:03 UTC (rev 144)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-19 06:25:27 UTC (rev 145)
+@@ -34,7 +34,7 @@
+ 	* Save handler to use for reading/writing session data
+ 	* @var mixed
+ 	*/
+-	var $saveHandler = '';
++	var $saveHandler = 'xoops_http_DatabaseSessionHandler';
+ 	/**
+ 	 * Identifier of the current session
+ 	 * @var string
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000136.html">[Xoops4-svn] r144 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000138.html">[Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#137">[ date ]</a>
+              <a href="thread.html#137">[ thread ]</a>
+              <a href="subject.html#137">[ subject ]</a>
+              <a href="author.html#137">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r200 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification: . images templates
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r200%20-%20in%20XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification%3A%20.%20images%20templates&In-Reply-To=%3C200601272345.k0RNjLHf016922%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000191.html">
+   <LINK REL="Next"  HREF="000193.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r200 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification: . images templates</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r200%20-%20in%20XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification%3A%20.%20images%20templates&In-Reply-To=%3C200601272345.k0RNjLHf016922%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r200 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification: . images templates">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 28 00:45:21 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000191.html">[Xoops4-svn] r199 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000193.html">[Xoops4-svn] r201 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#192">[ date ]</a>
+              <a href="thread.html#192">[ thread ]</a>
+              <a href="subject.html#192">[ subject ]</a>
+              <a href="author.html#192">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-28 00:45:18 +0100 (Sat, 28 Jan 2006)
+New Revision: 200
+
+Added:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+Removed:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-bg.png
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-credentials-bg.png
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php
+Log:
+Further work on the login module (login and logout both work)
+
+Deleted: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-bg.png
+===================================================================
+(Binary files differ)
+
+Deleted: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/images/login_win-credentials-bg.png
+===================================================================
+(Binary files differ)
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-27 23:43:10 UTC (rev 199)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-27 23:45:18 UTC (rev 200)
+@@ -1,33 +1,39 @@
+ &lt;?php
+ 
+-
+-
+ 	require_once '../../../mainfile.php';
+ 
+ 	global $xoops;
+ 
+-	$app =&amp; $xoops-&gt;loadModule();
++	$app =&amp; $xoops-&gt;currentModule;
+ 	
+ 	// Read the request params defined in xo-info.php (use default if the var isnt found)
+ 	// sanitize them, and create corresponding global vars
+ 	extract( $app-&gt;requestParameters(), EXTR_OVERWRITE );
++
++	if ( empty( $xoops_redirect ) ) {
++		$xoops_redirect = $xoops-&gt;path( '/www/', true );
++	}
+ 	
+ 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+ 		// Check request parameters: if something is wrong, send an HTTP 'bad request' response
+ 		if ( empty($login) ) {
+-			return $xoops-&gt;services['http']-&gt;sendResponse( 400, XOT_('You must supply a login name'), $_SERVER['REQUEST_URI'] );
+-		}
+-		$auth =&amp; $xoops-&gt;loadService( 'auth' );
+-		if ( $auth-&gt;login( $login, $password, '' ) ) {
+-			$xoops-&gt;services['session']-&gt;start();
+-			return $xoops-&gt;services['http']-&gt;sendResponse( 303, XOT_('Thank you for logging in,') . &quot; $login&quot;, $xoops_redirect );
++			return $xoops-&gt;services['http']-&gt;sendResponse( 400, XO_('You must supply a login name'), $_SERVER['REQUEST_URI'] );
+ 		} else {
+-			return $xoops-&gt;services['http']-&gt;sendResponse( 403, XOT_('Incorrect login'), $_SERVER['REQUEST_URI'] );
++			$auth =&amp; $xoops-&gt;loadService( 'auth' );
++			if ( $login = $auth-&gt;checkCredentials( $login, $password, '' ) ) {
++				$xoops-&gt;acceptUser( $login, true );
++			    // Perform some maintenance of notification records
++			    $notification_handler =&amp; xoops_gethandler('notification');
++			    $notification_handler-&gt;doLoginMaintenance($user-&gt;getVar('uid'));
++				return $xoops-&gt;services['http']-&gt;sendResponse( 303, sprintf( XO_('Thank you for logging in, %s'), $login ), $xoops_redirect );
++			} else {
++				return $xoops-&gt;services['http']-&gt;sendResponse( 403, XO_('Incorrect login'), $_SERVER['REQUEST_URI'] );
++			}
+ 		}
+ 	}
+ 
+ 	$theme =&amp; $xoops-&gt;loadService( 'theme' );
+-	
++
+ 	$outputVars = array(
+ 		'login' =&gt; $login,
+ 		'password' =&gt; '',
+@@ -35,5 +41,4 @@
+ 	$theme-&gt;addStylesheet( 'mod_xoops_Identification#style.css' );
+ 	$theme-&gt;render( null, null, 'mod_xoops_Identification#templates/page-login.xotpl', $outputVars );
+ 
+-
+ ?&gt;
+\ No newline at end of file
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php	2006-01-27 23:43:10 UTC (rev 199)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php	2006-01-27 23:45:18 UTC (rev 200)
+@@ -0,0 +1,21 @@
++&lt;?php
++
++	require_once '../../../mainfile.php';
++
++	global $xoops;
++	$app =&amp; $xoops-&gt;loadModule();
++
++	if ( !$xoops-&gt;currentUser ) {
++		return $xoops-&gt;services['http']-&gt;sendResponse( 303, '', $xoops-&gt;url( 'mod_xoops_Identification#login' ) );
++	}
++	
++	$xoops-&gt;services['session']-&gt;destroy();
++
++	// clear entry from online users table
++	global $xoopsUser;
++	$online_handler =&amp; xoops_gethandler('online');
++	$online_handler-&gt;destroy($xoopsUser-&gt;getVar('uid'));
++
++	return $xoops-&gt;services['http']-&gt;sendResponse( 200, XO_('You are now logged out. Thanks for your visit'), $xoops-&gt;url( '/www/' ) );
++	
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css	2006-01-27 23:43:10 UTC (rev 199)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css	2006-01-27 23:45:18 UTC (rev 200)
+@@ -1,19 +1,22 @@
+ 
+-#xo-content .login_form  {
++#xo-content #login_window  {
+ 	position:		relative;
+ 	max-width:		480px;
+ 	margin:			1em auto;
+ 	border:			1px solid #000000;
+-	background:		url( images/login_win-bg.png );
++	-moz-border-radius:	12px;
++	border-radius:	12px 12px;
++	background:		#f8f8f8;
+ }
+-#xo-content .login_form .safety_indicator {
++
++#xo-content #login_window .safety_indicator {
+ 	position:		absolute;
+ 	top:			4px;
+ 	right:			4px;
+ }
+ 
+ 
+-#xo-content .login_form  h2 {
++#xo-content #login_window  h2 {
+ 	margin:			.5em;
+ 	padding:		130px 0px 0px;
+ 	background:		url( images/login_win-logo.png ) no-repeat center top;
+@@ -23,8 +26,9 @@
+ #xo-content .login_form  .credentials {
+ 	margin:			.5em 1em;
+ 	padding:		1em;
+-	background:		url( images/login_win-credentials-bg.png );
+-	line-height:	1.5em;
++	background:		#ccc;
++	-moz-border-radius:	8px;
++	border-radius:	8px 8px;
+ }
+ 
+ #xo-content .login_form  .credentials label {
+@@ -32,7 +36,6 @@
+ 	display:		inline-block;
+ 	width:			10em;
+ 	margin:			1px;
+-
+ }
+ 
+ #xo-content .login_form  .credentials input {
+@@ -60,5 +63,6 @@
+ }
+ .helper_links a.password_recovery {
+ 	text-align:		right;
++	margin-left:	50%;
+ 	margin-top:		-1.2em;
+ }
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl	2006-01-27 23:43:10 UTC (rev 199)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/templates/page-login.xotpl	2006-01-27 23:45:18 UTC (rev 200)
+@@ -1,16 +1,17 @@
+ 
+-
+-&lt;form method=&quot;post&quot; action=&quot;([xoAppUrl mod_xoops_Identification#login])&quot; class=&quot;login_form&quot;&gt;
++&lt;div id=&quot;login_window&quot;&gt;
+ 	&lt;h2 class=&quot;site_title&quot;&gt;My new XOOPS website&lt;/h2&gt;
+-	&lt;div class=&quot;credentials&quot;&gt;
+-		&lt;label for=&quot;login-form-login&quot;&gt;Login&lt;/label&gt;
+-		&lt;input type=&quot;text&quot; name=&quot;login&quot; id=&quot;login-form-login&quot; value=&quot;([$login])&quot; /&gt;&lt;br /&gt;
+-		&lt;label for=&quot;login-form-password&quot;&gt;Password&lt;/label&gt;
+-		&lt;input type=&quot;text&quot; name=&quot;password&quot; id=&quot;login-form-password&quot; value=&quot;([$password])&quot; /&gt;&lt;br /&gt;
+-	&lt;/div&gt;
+-	&lt;div class=&quot;actions&quot;&gt;
+-		&lt;button type=&quot;submit&quot;&gt;Login&lt;/button&gt;
+-	&lt;/div&gt;
++	&lt;form method=&quot;post&quot; action=&quot;([xoAppUrl mod_xoops_Identification#login])&quot; class=&quot;login_form&quot;&gt;
++		&lt;div class=&quot;credentials&quot;&gt;
++			&lt;label for=&quot;login_form-login&quot;&gt;Login&lt;/label&gt;
++			&lt;input type=&quot;text&quot; name=&quot;login&quot; id=&quot;login_form-login&quot; value=&quot;([$login])&quot; /&gt;&lt;br /&gt;
++			&lt;label for=&quot;login_form-password&quot;&gt;Password&lt;/label&gt;
++			&lt;input type=&quot;password&quot; name=&quot;password&quot; id=&quot;login_form-password&quot; value=&quot;([$password])&quot; /&gt;&lt;br /&gt;
++		&lt;/div&gt;
++		&lt;div class=&quot;actions&quot;&gt;
++			&lt;button type=&quot;submit&quot;&gt;Login&lt;/button&gt;
++		&lt;/div&gt;
++	&lt;/form&gt;
+ 	&lt;div class=&quot;helper_links&quot;&gt;
+ 		&lt;a href=&quot;#&quot; class=&quot;registration_link&quot;&gt;Not registered yet ?&lt;/a&gt;
+ 		&lt;a href=&quot;#&quot; class=&quot;password_recovery&quot;&gt;Lost your password ?&lt;/a&gt;
+@@ -20,4 +21,4 @@
+ 			title=&quot;This form is using encryption. Your password won't be transmitted.&quot;
+ 			data=&quot;([xoImgUrl mod_xoops_Identification#images/login_win-secure.png])&quot;&gt;&lt;/object&gt;
+ 	([/if])
+-&lt;/form&gt;
++&lt;/div&gt;
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php	2006-01-27 23:43:10 UTC (rev 199)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/xo-info.php	2006-01-27 23:45:18 UTC (rev 200)
+@@ -29,7 +29,7 @@
+ 			'parameters' =&gt; array(
+ 				'login' =&gt; array( '', XO_TYPE_STRING ),
+ 				'password' =&gt; array( '', XO_TYPE_STRING ),
+-				'xoops_redirect' =&gt; array( '/www/', XO_TYPE_STRING ),
++				'xoops_redirect' =&gt; array( '', XO_TYPE_STRING ),
+ 			),
+ 		),
+ 		'logout' =&gt; array(
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000191.html">[Xoops4-svn] r199 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000193.html">[Xoops4-svn] r201 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#192">[ date ]</a>
+              <a href="thread.html#192">[ thread ]</a>
+              <a href="subject.html#192">[ subject ]</a>
+              <a href="author.html#192">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

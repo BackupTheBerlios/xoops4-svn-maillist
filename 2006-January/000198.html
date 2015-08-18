@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r206 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r206%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601290101.k0T11rNX005984%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000197.html">
+   <LINK REL="Next"  HREF="000199.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r206 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r206%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601290101.k0T11rNX005984%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r206 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Jan 29 02:01:53 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000197.html">[Xoops4-svn] r205 - XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification
+</A></li>
+        <LI>Next message: <A HREF="000199.html">[Xoops4-svn] r207 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#198">[ date ]</a>
+              <a href="thread.html#198">[ thread ]</a>
+              <a href="subject.html#198">[ subject ]</a>
+              <a href="author.html#198">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-29 02:01:48 +0100 (Sun, 29 Jan 2006)
+New Revision: 206
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+Log:
+Made the new user class workable
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php	2006-01-29 00:59:51 UTC (rev 205)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php	2006-01-29 01:01:48 UTC (rev 206)
+@@ -10,27 +10,21 @@
+ 
+ class xoops_kernel_User {
+ 	
++	var $userId = 0;
++
+ 	var $level = XO_LEVEL_ANONYMOUS;
+-	var $groups = array( XO_GROUP_ANONYMOUS );
++	var $groups = array( XOOPS_GROUP_ANONYMOUS );
+ 	
+-	var $name = 'anonymous';
++	var $login = 'anonymous';
+ 	var $password = '';
+ 	
++	var $email = '';
+ 	
+-	
++	var $fullName = '';
++
+ }
+ 
+ 
+ 
+ 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000197.html">[Xoops4-svn] r205 - XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification
+</A></li>
+	<LI>Next message: <A HREF="000199.html">[Xoops4-svn] r207 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#198">[ date ]</a>
+              <a href="thread.html#198">[ thread ]</a>
+              <a href="subject.html#198">[ subject ]</a>
+              <a href="author.html#198">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

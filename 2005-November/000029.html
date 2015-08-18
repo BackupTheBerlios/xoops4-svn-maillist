@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r36%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs&In-Reply-To=%3C200511251418.jAPEIsr3024407%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000028.html">
+   <LINK REL="Next"  HREF="000030.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r36%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs&In-Reply-To=%3C200511251418.jAPEIsr3024407%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Nov 25 15:18:54 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000028.html">[Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+        <LI>Next message: <A HREF="000030.html">[Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-25 15:18:52 +0100 (Fri, 25 Nov 2005)
+New Revision: 36
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php
+Log:
+Removed XOOPS 1.3 compatibility code from footer.php
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php	2005-11-25 12:36:30 UTC (rev 35)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php	2005-11-25 14:18:52 UTC (rev 36)
+@@ -30,19 +30,7 @@
+ if ( !defined(&quot;XOOPS_FOOTER_INCLUDED&quot;) ) {
+ 	define(&quot;XOOPS_FOOTER_INCLUDED&quot;,1);
+ 	$xoopsLogger-&gt;stopTime();
+-	if ($xoopsOption['theme_use_smarty'] == 0) {
+-		// the old way
+-		$footer = $xoopsConfigMetaFooter['footer'].'&lt;br /&gt;&lt;div style=&quot;text-align:center&quot;&gt;Powered by XOOPS &copy; 2002 &lt;a href=&quot;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&quot; target=&quot;_blank&quot;&gt;The XOOPS Project&lt;/a&gt;&lt;/div&gt;';
+-		if (isset($xoopsOption['template_main'])) {
+-			$xoopsTpl-&gt;xoops_setCaching(0);
+-			$xoopsTpl-&gt;display('db:'.$xoopsOption['template_main']);
+-		}
+-		if (!isset($xoopsOption['show_rblock'])) {
+-			$xoopsOption['show_rblock'] = 0;
+-		}
+-		themefooter($xoopsOption['show_rblock'], $footer);
+-		xoops_footer();
+-	} else {
++
+ 		// RMV-NOTIFY
+ 		include_once XOOPS_ROOT_PATH . '/include/notification_select.php';
+ 		if (isset($xoopsOption['template_main'])) {
+@@ -87,5 +75,5 @@
+ 		//--&gt;
+ 		&lt;/script&gt;';
+ 	}
+-}
++
+ ?&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000028.html">[Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+</A></li>
+	<LI>Next message: <A HREF="000030.html">[Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

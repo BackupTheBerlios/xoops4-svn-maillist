@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r65 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r65%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates&In-Reply-To=%3C200512021820.jB2IKIRv017737%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000057.html">
+   <LINK REL="Next"  HREF="000059.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r65 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r65%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates&In-Reply-To=%3C200512021820.jB2IKIRv017737%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r65 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Dec  2 19:20:18 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000057.html">[Xoops4-svn] r64 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000059.html">[Xoops4-svn] r66 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-02 19:20:16 +0100 (Fri, 02 Dec 2005)
+New Revision: 65
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl
+Log:
+Fixed typo in CDATA
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl	2005-12-02 18:18:16 UTC (rev 64)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl	2005-12-02 18:20:16 UTC (rev 65)
+@@ -6,17 +6,17 @@
+ 
+ ([foreach from=$xoTheme-&gt;metas.script item=attributes])
+ 	&lt;script([$xoTheme-&gt;renderAttributes($attributes)])&gt;([if !empty( $attributes._ ) ])
+-	//&lt;[!CDATA[
++	//&lt;![CDATA[
+ 	([$attributes._])
+ 	//]]&gt;([/if])&lt;/script&gt;
+ ([/foreach])
+ 
+ ([foreach from=$xoTheme-&gt;metas.stylesheet item=attributes])
+ ([if empty( $attributes._ )])
+-	&lt;link([$xoTheme-&gt;renderAttributes($attributes)]) /&gt;
++	&lt;link rel=&quot;stylesheet&quot;([$xoTheme-&gt;renderAttributes($attributes)]) /&gt;
+ ([else])
+ 	&lt;style([$xoTheme-&gt;renderAttributes($attributes)])&gt;
+-	/* &lt;[!CDATA[ */
++	/* &lt;![CDATA[ */
+ 	([$attributes._])
+ 	/* //]]&gt; */
+ 	&lt;/style&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000057.html">[Xoops4-svn] r64 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000059.html">[Xoops4-svn] r66 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

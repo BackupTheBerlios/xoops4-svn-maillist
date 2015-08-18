@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r105 - XoopsCore/branches/2.3.x/2.3-main/htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r105%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs&In-Reply-To=%3C200601022112.k02LCmSm015262%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000098.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r105 - XoopsCore/branches/2.3.x/2.3-main/htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r105%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs&In-Reply-To=%3C200601022112.k02LCmSm015262%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r105 - XoopsCore/branches/2.3.x/2.3-main/htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Jan  2 22:12:48 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000098.html">[Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-02 22:12:48 +0100 (Mon, 02 Jan 2006)
+New Revision: 105
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/footer.php
+Log:
+Fix to ensure the &quot;db:&quot; prefix is added to the specified 'template_main' tpl name only if no resource handler has already been specified
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/footer.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/footer.php	2005-12-29 09:51:14 UTC (rev 104)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/footer.php	2006-01-02 21:12:48 UTC (rev 105)
+@@ -49,7 +49,11 @@
+ 	global $xoops;
+ 	if ( !$xoops-&gt;services['theme']-&gt;renderCount ) {
+ 		if ( isset( $xoopsOption['template_main'] ) ) {
+-			$xoops-&gt;services['theme']-&gt;contentTemplate = 'db:' . $xoopsOption['template_main'];
++			if ( strpos( $xoopsOption['template_main'], ':' ) === false ) {
++				$xoops-&gt;services['theme']-&gt;contentTemplate = 'db:' . $xoopsOption['template_main'];
++			} else {
++				$xoops-&gt;services['theme']-&gt;contentTemplate = $xoopsOption['template_main'];
++			}
+ 		}
+ 		$xoops-&gt;services['theme']-&gt;template-&gt;assign( $xoopsTpl-&gt;_tpl_vars );
+ 		$xoops-&gt;services['theme']-&gt;render();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000098.html">[Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

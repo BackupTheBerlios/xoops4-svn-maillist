@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r276 - XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r276%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates&In-Reply-To=%3C200604030616.k336G50C030307%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r276 - XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r276%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates&In-Reply-To=%3C200604030616.k336G50C030307%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r276 - XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Apr  3 08:16:05 CEST 2006</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#266">[ date ]</a>
+              <a href="thread.html#266">[ thread ]</a>
+              <a href="subject.html#266">[ subject ]</a>
+              <a href="author.html#266">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-04-03 08:16:00 +0200 (Mon, 03 Apr 2006)
+New Revision: 276
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates/http-main-view.xotpl
+Log:
+Generic refactoring of the HTTP config panel, mostly according to the enhancements made to the forms framework.
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates/http-main-view.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates/http-main-view.xotpl	2006-03-30 22:22:11 UTC (rev 275)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/ConfigPanels/Http.xopanel/templates/http-main-view.xotpl	2006-04-03 06:16:00 UTC (rev 276)
+@@ -1,133 +1,99 @@
+ &lt;?xml version='1.0' encoding='iso-8859-1'?&gt;
+ &lt;XoopsTemplate&gt;
+ 	&lt;LanguageFiles /&gt;
+-	&lt;TemplateObjects&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormSelect1&quot; tplVar=&quot;enableCompression&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;enableCompression&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.enableCompression&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Enable compression&lt;/Property&gt;
+-			&lt;Property name=&quot;appearance&quot;&gt;full&lt;/Property&gt;
+-			&lt;Property name=&quot;options&quot; type=&quot;array&quot;&gt;
+-				&lt;Item key=&quot;0&quot; localized=&quot;true&quot;&gt;No&lt;/Item&gt;
+-				&lt;Item key=&quot;1&quot; localized=&quot;true&quot;&gt;Yes&lt;/Item&gt;
+-			&lt;/Property&gt;
+-		&lt;/Object&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormRange&quot; tplVar=&quot;compressionLevel&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;compressionLevel&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.compressionLevel&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Compression level&lt;/Property&gt;
+-			&lt;Property name=&quot;start&quot;&gt;1&lt;/Property&gt;
+-			&lt;Property name=&quot;end&quot;&gt;9&lt;/Property&gt;
+-			&lt;Property name=&quot;step&quot;&gt;1&lt;/Property&gt;
+-		&lt;/Object&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormSelect1&quot; tplVar=&quot;enableRedirections&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;enableRedirections&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.enableRedirections&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Redirection mode&lt;/Property&gt;
+-			&lt;Property name=&quot;appearance&quot;&gt;full&lt;/Property&gt;
+-			&lt;Property name=&quot;options&quot; type=&quot;array&quot;&gt;
+-				&lt;Item key=&quot;0&quot; localized=&quot;true&quot;&gt;Display redirection screen&lt;/Item&gt;
+-				&lt;Item key=&quot;1&quot; localized=&quot;true&quot;&gt;Use HTTP redirections&lt;/Item&gt;
+-			&lt;/Property&gt;
+-		&lt;/Object&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormText&quot; tplVar=&quot;fakeRedirectDelay&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;fakeRedirectDelay&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.fakeRedirectDelay&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Screen display duration&lt;/Property&gt;
+-		&lt;/Object&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormTextarea&quot; tplVar=&quot;fakeRedirectTemplate&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;fakeRedirectTemplate&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.fakeRedirectTemplate&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Screen template&lt;/Property&gt;
+-		&lt;/Object&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormSelect1&quot; tplVar=&quot;cacheLimiter&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;cacheLimiter&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.cacheLimiter&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Client caching policy&lt;/Property&gt;
+-			&lt;Property name=&quot;appearance&quot;&gt;minimal&lt;/Property&gt;
+-			&lt;Property name=&quot;options&quot; type=&quot;array&quot;&gt;
+-				&lt;Item key=&quot;public&quot; localized=&quot;true&quot;&gt;Allow content caching&lt;/Item&gt;
+-				&lt;Item key=&quot;private&quot; localized=&quot;true&quot;&gt;Disallow caching by public caches&lt;/Item&gt;
+-				&lt;Item key=&quot;nocache&quot; localized=&quot;true&quot;&gt;Disallow caching entirely&lt;/Item&gt;
+-			&lt;/Property&gt;
+-		&lt;/Object&gt;
+-		&lt;Object bundleId=&quot;xoops_pyro_FormText&quot; tplVar=&quot;cacheLifetime&quot;&gt;
+-			&lt;Property name=&quot;ownerForm&quot;&gt;$form&lt;/Property&gt;
+-			&lt;Property name=&quot;refPath&quot;&gt;cacheLifetime&lt;/Property&gt;
+-			&lt;Property name=&quot;value&quot;&gt;$prefs.cacheLifetime&lt;/Property&gt;
+-			&lt;Property name=&quot;label&quot; localized=&quot;true&quot;&gt;Caching duration&lt;/Property&gt;
+-		&lt;/Object&gt;
+-	&lt;/TemplateObjects&gt;
+-	&lt;TemplateData contentType=&quot;text/html&quot; default=&quot;true&quot;&gt;&lt;![CDATA[
+-	([assign var=fieldTplString value='&lt;tr class=&quot;pref-setting&quot;&gt;&lt;td&gt;{label}:&lt;/td&gt;&lt;td class=&quot;pref-control&quot;&gt;{control}&lt;/td&gt;&lt;/tr&gt;'])
+-
+-	&lt;h2&gt;HTTP handler configuration&lt;/h2&gt;
+-
+-	([$form-&gt;renderTag()|smarty:nodefaults])
+-	&lt;table&gt;
+-		&lt;caption&gt;Output compression&lt;/caption&gt;
+-		([xoWidget tplVar=$enableCompression templateString=$fieldTplString])
+-		([xoWidget tplVar=$compressionLevel templateString=$fieldTplString])
+-	&lt;/table&gt;
+-	&lt;table&gt;
+-		&lt;caption&gt;Redirections&lt;/caption&gt;
+-		([xoWidget tplVar=$enableRedirections templateString=$fieldTplString])
+-		([xoWidget tplVar=$fakeRedirectDelay templateString=$fieldTplString])
+-		([xoWidget tplVar=$fakeRedirectTemplate templateString=$fieldTplString])
+-	&lt;/table&gt;
+-	&lt;table&gt;
+-		&lt;caption&gt;Default headers&lt;/caption&gt;
+-		([xoWidget tplVar=$cacheLimiter templateString=$fieldTplString])
+-		([xoWidget tplVar=$cacheLifetime templateString=$fieldTplString])
+-	&lt;/table&gt;
+-
+-	&lt;div class=&quot;form-submits&quot;&gt;
+-		&lt;button type=&quot;submit&quot;&gt;Apply changes&lt;/button&gt;
+-	&lt;/div&gt;
+-	&lt;/form&gt;
+-
+-]]&gt;&lt;/TemplateData&gt;
++	&lt;TemplateObjects /&gt;
+ 	&lt;TemplateData contentType=&quot;application/xhtml+xml&quot;&gt;&lt;![CDATA[
+-
++	([xoLoadExtension xoops_pyro])
++	([xoPyroFieldsTemplate '{label}&lt;div class=&quot;pref-control&quot;&gt;{control}&lt;/div&gt;'])
++	
+ 	&lt;h2&gt;HTTP handler configuration xhtml&lt;/h2&gt;
+ 
+-	([assign var=fieldTplString value='&lt;div class=&quot;pref-setting&quot;&gt;{label}&lt;div class=&quot;pref-control&quot;&gt;{control}&lt;/div&gt;&lt;/div&gt;'])
+-
+-	([$form-&gt;renderTag()|smarty:nodefaults])
+-
++	([xoForm $form])
+ 	&lt;fieldset&gt;
+ 		&lt;legend&gt;Output compression&lt;/legend&gt;
+-		([xoWidget tplVar=$enableCompression templateString=$fieldTplString])
+ 
+-		([xoWidget tplVar=$compressionLevel templateString=$fieldTplString])
++		([xoSelect1 ref='enableCompression'	label=_(&quot;Enable compression&quot;)
++			options__0=_('No') options__1=_('Yes')
++			appearance=full
++		])
++		([xoRange ref='compressionLevel' label=_(&quot;Compression level&quot;)
++			start=1 end=9 step=1
++		])
+ 	&lt;/fieldset&gt;
+ 
+ 	&lt;fieldset&gt;
+ 		&lt;legend&gt;Redirections&lt;/legend&gt;
+-		([xoWidget tplVar=$enableRedirections templateString=$fieldTplString])
+ 
+-		([xoWidget tplVar=$fakeRedirectDelay templateString=$fieldTplString])
+-
+-		([xoWidget tplVar=$fakeRedirectTemplate templateString=$fieldTplString])
++		([xoSelect1 ref='enableRedirections' label=_(&quot;Redirection mode&quot;)
++			options__0=_('Display redirection screen') options__1=_('Use HTTP redirections')
++			appearance=full
++		])
++		([xoInput ref='fakeRedirectDelay' label=_(&quot;Screen display duration&quot;)
++			hint=_(&quot;How long the screen will be displayed before redirecting the user&quot;)
++		])
++		([xoTextArea ref='fakeRedirectTemplate' label=_(&quot;Screen template&quot;)
++			allowEditor=0
++		])
+ 	&lt;/fieldset&gt;
+ 
+ 	&lt;fieldset&gt;
+ 		&lt;legend&gt;Default headers&lt;/legend&gt;
+-		([xoWidget tplVar=$cacheLimiter templateString=$fieldTplString])
+-
+-		([xoWidget tplVar=$cacheLifetime templateString=$fieldTplString])
++		([xoSelect1 ref='cacheLimiter' label=_(&quot;Client caching policy&quot;)
++			options__public=_('Allow content caching')
++			options__private=_('Disallow caching by public caches')
++			options__nocache=_('Disallow caching entirely')
++		])
++		([xoInput ref='cacheLifetime' label=_(&quot;Caching duration&quot;) ])
+ 	&lt;/fieldset&gt;
+ 	
+ 	&lt;div class=&quot;form-submits&quot;&gt;
+ 		&lt;button type=&quot;submit&quot;&gt;Apply changes&lt;/button&gt;
+ 	&lt;/div&gt;
+-	&lt;/form&gt;
++	([/xoForm])
+ 
+ ]]&gt;&lt;/TemplateData&gt;
++&lt;TemplateData contentType=&quot;text/html&quot; default=&quot;true&quot;&gt;&lt;![CDATA[
++	([xoLoadExtension xoops_pyro])
++	([xoPyroFieldsTemplate '&lt;div class=&quot;pref-setting&quot;&gt;{label}&lt;div class=&quot;pref-control&quot;&gt;{control}&lt;/div&gt;&lt;/div&gt;'])
++
++	&lt;h2&gt;HTTP handler configuration&lt;/h2&gt;
++
++	([xoForm $form])
++	&lt;table&gt;
++		&lt;caption&gt;Output compression&lt;/caption&gt;
++		([xoSelect1 ref='enableCompression'	label=_(&quot;Enable compression&quot;)
++			options__0=_('No') options__1=_('Yes')
++			appearance=full
++		])
++		([xoRange ref='compressionLevel' label=_(&quot;Compression level&quot;)
++			start=1 end=9 step=1
++		])
++	&lt;/table&gt;
++	&lt;table&gt;
++		&lt;caption&gt;Redirections&lt;/caption&gt;
++		([xoSelect1 ref='enableRedirections' label=_(&quot;Redirection mode&quot;)
++			options__0=_('Display redirection screen') options__1=_('Use HTTP redirections')
++			appearance=full
++		])
++		([xoInput ref='fakeRedirectDelay' label=_(&quot;Screen display duration&quot;) ])
++		([xoTextArea ref='fakeRedirectTemplate' label=_(&quot;Screen template&quot;)
++			allowEditor=0
++		])
++	&lt;/table&gt;
++	&lt;table&gt;
++		&lt;caption&gt;Default headers&lt;/caption&gt;
++		([xoSelect1 ref='cacheLimiter' label=_(&quot;Client caching policy&quot;)
++			options__public=_('Allow content caching')
++			options__private=_('Disallow caching by public caches')
++			options__nocache=_('Disallow caching entirely')
++		])
++		([xoInput ref='cacheLifetime' label=_(&quot;Caching duration&quot;) ])
++	&lt;/table&gt;
++
++	&lt;div class=&quot;form-submits&quot;&gt;
++		&lt;button type=&quot;submit&quot;&gt;Apply changes&lt;/button&gt;
++	&lt;/div&gt;
++	([/xoForm])
++]]&gt;
++&lt;/TemplateData&gt;	
+ &lt;/XoopsTemplate&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#266">[ date ]</a>
+              <a href="thread.html#266">[ thread ]</a>
+              <a href="subject.html#266">[ subject ]</a>
+              <a href="author.html#266">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

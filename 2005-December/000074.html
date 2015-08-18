@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r81 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r81%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class&In-Reply-To=%3C200512040159.jB41xuoR032138%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000073.html">
+   <LINK REL="Next"  HREF="000075.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r81 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r81%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class&In-Reply-To=%3C200512040159.jB41xuoR032138%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r81 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Dec  4 02:59:56 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000073.html">[Xoops4-svn] r80 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install: . sql
+</A></li>
+        <LI>Next message: <A HREF="000075.html">[Xoops4-svn] r82 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: admin/modulesadmin admin/preferences include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-04 02:59:50 +0100 (Sun, 04 Dec 2005)
+New Revision: 81
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php
+Log:
+Removed traces of the old templates sets system from the installer
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php	2005-12-04 01:58:42 UTC (rev 80)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php	2005-12-04 01:59:50 UTC (rev 81)
+@@ -78,20 +78,10 @@
+ }
+ 
+ /**
+- * Useless... just kept for compatibility, just in case
++ * Those have been removed. Please tell us if your module use them
+  **/
+ function xoops_template_create ($resource_type, $resource_name, &amp;$template_source, &amp;$template_timestamp, &amp;$smarty_obj) {
+-	if ( $resource_type == 'db' ) {
+-		$file_handler =&amp; xoops_gethandler('tplfile');
+-		$tpl =&amp; $file_handler-&gt;find('default', null, null, null, $resource_name, true);
+-		if (count($tpl) &gt; 0 &amp;&amp; is_object($tpl[0])) {
+-			$template_source = $tpl[0]-&gt;getSource();
+-			$template_timestamp = $tpl[0]-&gt;getLastModified();
+-			return true;
+-		}
+-	} else {
+-	}
+-	return false;
++	trigger_error( &quot;Function removed&quot;, E_USER_ERROR );
+ }
+ 
+ /**
+@@ -101,22 +91,8 @@
+  * @param   boolean $clear_old
+  * @return  boolean
+  **/
+-function xoops_template_touch($tpl_id, $clear_old = true)
+-{
+-	$tpl = new XoopsTpl();
+-	$tpl-&gt;force_compile = true;
+-	$tplfile_handler =&amp; xoops_gethandler('tplfile');
+-	$tplfile =&amp; $tplfile_handler-&gt;get($tpl_id);
+-	if ( is_object($tplfile) ) {
+-		$file = $tplfile-&gt;getVar('tpl_file');
+-		if ($clear_old) {
+-			$tpl-&gt;clear_cache('db:'.$file);
+-			$tpl-&gt;clear_compiled_tpl('db:'.$file);
+-		}
+-		$tpl-&gt;fetch('db:'.$file);
+-		return true;
+-	}
+-	return false;
++function xoops_template_touch($tpl_id, $clear_old = true) {
++	trigger_error( &quot;Function removed&quot;, E_USER_ERROR );
+ }
+ 
+ /**
+@@ -125,18 +101,7 @@
+  * @param   int $mid    Module ID
+  * @return 
+  **/
+-function xoops_template_clear_module_cache($mid)
+-{
+-	$block_arr =&amp; XoopsBlock::getByModule($mid);
+-	$count = count($block_arr);
+-	if ($count &gt; 0) {
+-		$xoopsTpl = new XoopsTpl();	
+-		$xoopsTpl-&gt;xoops_setCaching(2);
+-		for ($i = 0; $i &lt; $count; $i++) {
+-			if ($block_arr[$i]-&gt;getVar('template') != '') {
+-				$xoopsTpl-&gt;clear_cache('db:'.$block_arr[$i]-&gt;getVar('template'), 'blk_'.$block_arr[$i]-&gt;getVar('bid'));
+-			}
+-		}
+-	}
++function xoops_template_clear_module_cache($mid) {
++	trigger_error( &quot;Function removed&quot;, E_USER_ERROR );
+ }
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000073.html">[Xoops4-svn] r80 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install: . sql
+</A></li>
+	<LI>Next message: <A HREF="000075.html">[Xoops4-svn] r82 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: admin/modulesadmin admin/preferences include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

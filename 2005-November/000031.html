@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r38 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r38%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty&In-Reply-To=%3C200511270901.jAR913QJ003450%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000030.html">
+   <LINK REL="Next"  HREF="000032.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r38 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r38%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty&In-Reply-To=%3C200511270901.jAR913QJ003450%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r38 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Nov 27 10:01:03 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000030.html">[Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+        <LI>Next message: <A HREF="000032.html">[Xoops4-svn] r39 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-27 10:00:31 +0100 (Sun, 27 Nov 2005)
+New Revision: 38
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/Smarty.class.php
+Log:
+Made a little Smarty hack to ensure compiler functions can also have access to the smarty class instance, and not only the compiler instances as now.
+I don't like having a hacked Smarty here, so I'll send that to the Smarty author to ask him if he can't enable this by default.
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/Smarty.class.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/Smarty.class.php	2005-11-25 16:26:34 UTC (rev 37)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty/Smarty.class.php	2005-11-27 09:00:31 UTC (rev 38)
+@@ -1474,6 +1474,9 @@
+         $smarty_compiler-&gt;compile_id        = $this-&gt;_compile_id;
+         $smarty_compiler-&gt;_config            = $this-&gt;_config;
+         $smarty_compiler-&gt;request_use_auto_globals  = $this-&gt;request_use_auto_globals;
++		// --- XOOPS HACK: Ensure compiler plug-ins have access to this Smarty instance too
++		$smarty_compiler-&gt;template_engine =&amp; $this;
++		// --- XOOPS HACK
+ 
+         if (isset($cache_include_path) &amp;&amp; isset($this-&gt;_cache_serials[$cache_include_path])) {
+             $smarty_compiler-&gt;_cache_serial = $this-&gt;_cache_serials[$cache_include_path];
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000030.html">[Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+</A></li>
+	<LI>Next message: <A HREF="000032.html">[Xoops4-svn] r39 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

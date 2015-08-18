@@ -1,0 +1,501 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r37%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove%3A%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs&In-Reply-To=%3C200511251626.jAPGQYJ4001359%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000029.html">
+   <LINK REL="Next"  HREF="000031.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r37%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove%3A%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs&In-Reply-To=%3C200511251626.jAPGQYJ4001359%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r37 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Nov 25 17:26:34 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000029.html">[Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+        <LI>Next message: <A HREF="000031.html">[Xoops4-svn] r38 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#30">[ date ]</a>
+              <a href="thread.html#30">[ thread ]</a>
+              <a href="subject.html#30">[ subject ]</a>
+              <a href="author.html#30">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-25 17:26:34 +0100 (Fri, 25 Nov 2005)
+New Revision: 37
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/xo-info.php
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+Log:
+Added the first version of the new theme engine.
+
+BC is working: the engine can display 2.3+ themes and 2.0 themes without problems.
+See the xoops_pyro_Theme component inline comments, and the new default theme for better understanding (I'll add this new theme a little later).
+
+NB: Caching has been broken (the old crappy code was just too messy to be moved correctly). I'll fix that.
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php	2005-11-25 14:18:52 UTC (rev 36)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php	2005-11-25 16:26:34 UTC (rev 37)
+@@ -0,0 +1,16 @@
++&lt;?php
++
++	$this-&gt;canvasTemplate	= './theme.html';
++	$this-&gt;pageTemplate		= '';
++	
++	// XOOPS 2.0 themes need the content to be rendered and assigned to the var 'xoops_contents'
++	ob_start();
++	$this-&gt;renderZone( 'content' );
++	$this-&gt;content .= ob_get_contents();
++	ob_end_clean();
++	
++	$this-&gt;template-&gt;assign( 'xoops_contents', $this-&gt;content );
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2005-11-25 14:18:52 UTC (rev 36)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2005-11-25 16:26:34 UTC (rev 37)
+@@ -0,0 +1,231 @@
++&lt;?php
++/**
++* xoops_pyro_Theme component class file
++*
++* @copyright	The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @package      xoops_pyro
++* @subpackage   xoops_pyro_Theme
++* @author       Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since        2.3.0
++* @version		$Id$
++*/
++
++/**
++* xoops_pyro_ThemeFactory
++*
++* @author 		Skalpa Keo
++* @package		xoops_pyro
++* @subpackage	xoops_pyro_ThemeFactory
++* @since        2.3.0
++*/
++class xoops_pyro_ThemeFactory {
++	/**
++	 * Currently enabled themes (if empty, all the themes in themes/ are allowed)
++	 * 
++	 * @var array
++	 */
++	var $allowedThemes = array();
++	/**
++	 * Default theme to instanciate if none specified
++	 * 
++	 * @var string
++	 */
++	var $defaultTheme = 'default-web';
++
++	/**
++	 * Instanciate the specified theme
++	 */
++	function &amp;createInstance( $options = array(), $initArgs = array() ) {
++		if ( @empty( $options['folderName'] ) ) {
++			$options['folderName'] = $this-&gt;defaultTheme;
++		} elseif ( !empty( $this-&gt;allowedThemes ) &amp;&amp; !in_array( $options['folderName'], $this-&gt;allowedThemes ) ) {
++			$options['folderName'] = $this-&gt;defaultTheme;
++		}
++		$inst =&amp; XOS::createInstanceOf( &quot;xoops_pyro_Theme&quot;, $options, $initArgs );
++		return $inst;
++	}
++
++	/**
++	 * List the available themes
++	 *
++	 * @param	boolean $allowed Whether to return the allowed themes, or all of them
++	 *  @return	array
++	 */
++	function enumerate( $allowed = true ) {
++		global $xoops;
++		$themes = array();
++		if ( $dh = opendir( $xoops2-&gt;path('/themes/') ) ) {
++			while ( $file = readdir($dh) ) {
++				if ( $file{0} != '.' &amp;&amp; $file != 'CVS' ) {
++					$themes[] = $file;
++				}
++			}
++			closedir( $dh );
++		}
++		if ( !empty($this-&gt;allowedThemes) &amp;&amp; $allowed ) {
++			return array_intersect( $themes, $this-&gt;allowedThemes );
++		}
++		return $themes;
++	}
++
++}
++
++class xoops_pyro_Theme {
++   /**
++    * The name of this theme
++    * @var string
++    */
++	var $folderName = '';
++   /**
++    * Physical path of this theme folder
++    * @var string
++    */
++	var $path = '';
++	var $url = '';
++   /**
++   * Whether or not the theme engine should include output generated by php
++   * @var string
++   */
++	var $bufferOutput = true;
++	/**
++	* Default content-type of pages generated by this theme
++	* @var string
++	*/
++	var $contentType = 'text/html';
++	/**
++	* Page-level template to use (relative to templates/page/)
++	* @var string
++	*/
++	var $canvasTemplate = '';
++	/**
++	* Page-level template to use (relative to templates/page/)
++	* @var string
++	*/
++	var $pageTemplate = '';
++	/**
++	* The file to fetch from the theme
++	* @var string
++	*/
++	var $contentTemplate = '';
++	/**
++	* Text content to display right after the contentTemplate output
++	* @var string
++	*/
++	var $content = '';
++	/**
++	* The API version supported by this theme (used to achieve BC)
++	* @var string
++	*/
++	var $themeAPI = '2.3';
++	
++	var $renderCount = 0;
++	/**
++	 * Pointer to the theme template engine
++	 *
++	 * @var object
++	 */
++	var $template = false;
++   /**#@-*/
++
++	function xoInit( $options = array() ) {
++		global $xoops;
++
++		$this-&gt;path	= $xoops-&gt;path( '/themes/' . $this-&gt;folderName );
++
++		$this-&gt;template =&amp; XOS::create( 'xoops_template_Smarty' );
++		$this-&gt;template-&gt;currentTheme =&amp; $this;
++		$this-&gt;template-&gt;compile_id = $this-&gt;folderName;
++
++		if ( $info = @include &quot;$this-&gt;path/xo-info.php&quot; ) {
++			XOS::apply( $this, $info );
++		} else {
++			$this-&gt;themeAPI = '2.0';
++		}
++		if ( $this-&gt;bufferOutput ) {
++			ob_start();
++		}
++		return true;
++	}
++
++	/**
++	 * Render the page
++	 *
++	 * The theme engine builds pages from 3 templates: canvas, page and content.
++	 * 
++	 * The canvas template is the outermost one. It is the one containing the html container
++	 * elements (html,head,body), the header, footer and the left and right columns.
++	 * 
++	 * Standard themes should be delivered with the following canvas templates:
++	 * - canvas-default.xotpl: The &quot;normal&quot; template, used by most pages on a site
++	 * - canvas-dialog.xotpl: A lightweight canvas, without left and right columns, used by popups
++	 * - canvas-email.xotpl: The canvas used by e-mails
++	 * 
++	 * The page template is the container for center blocks and the content. Themes don't have to
++	 * include several page templates, but applications may have their own page template that is
++	 * used instead of the default one (i.e: the XOOPS Management module).
++	 * 
++	 * A module can call this method directly and specify what templates the theme engine must use.
++	 * If render() hasn't been called before, the theme defaults will be used for the canvas and
++	 * page template (and xoopsOption['template_main'] for the content).
++	 * 
++	 * @param string $canvasTpl		The canvas template, if different from the theme default
++	 * @param string $pageTpl		The page template, if different from the theme default
++	 * @param string $contentTpl	The content template
++	 * @param array	 $vars			Template variables to send to the template engine
++	 */
++	function render( $canvasTpl = null, $pageTpl = null, $contentTpl = null, $vars = array() ) {
++		global $xoops;
++
++		if ( !$this-&gt;renderCount &amp;&amp; $this-&gt;bufferOutput ) {
++			$this-&gt;content .= ob_get_contents();
++			ob_end_clean();
++		}
++		if ( $this-&gt;themeAPI != '2.3' ) {
++			include $xoops-&gt;path( $this-&gt;xoBundleRoot . '/render-' . $this-&gt;themeAPI . '.php' );
++		}
++		if ( !empty($canvasTpl) ) {
++			$this-&gt;canvasTemplate = $canvasTpl;
++		}
++		if ( !empty($pageTpl) ) {
++			$this-&gt;pageTemplate = $pageTpl;
++		}
++		if ( !empty($contentTpl) ) {
++			$this-&gt;contentTemplate = $contentTpl;
++		}
++		$vars['xoops']		=&amp; $xoops;
++		$vars['xoTheme']	=&amp; $this;
++		$this-&gt;template-&gt;assign( $vars );
++		$this-&gt;renderZone( 'canvas' );
++		$this-&gt;renderCount++;
++		
++	}
++	
++	/**
++	 * Render the specified page part
++	 * 
++	 * @param string $zone
++	 */	
++	function renderZone( $zone ) {
++		$zones = array( 'canvas' =&gt; 0, 'page' =&gt; 1, 'content' =&gt; 2 );
++		if ( isset( $zones[$zone] ) ) {
++			$tpl = $zone . 'Template';
++			$tpl = $this-&gt;$tpl;
++			if ( !empty( $tpl ) ) {
++				if ( $tpl{0} == '.' ) {
++					$tpl = $this-&gt;path . substr( $tpl, 1 );
++				}
++				$this-&gt;template-&gt;display( $tpl );
++				if ( !empty($this-&gt;content) &amp;&amp; $zone == 'content' ) {
++					echo $this-&gt;content;
++				}
++			} elseif ( $zone != 'content' ) {
++				$this-&gt;renderZone( $zones[$zone] + 1 );
++			}
++		}	
++	}
++
++}
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/xo-info.php	2005-11-25 14:18:52 UTC (rev 36)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/xo-info.php	2005-11-25 16:26:34 UTC (rev 37)
+@@ -0,0 +1,27 @@
++&lt;?php
++/**
++* xoops_pyro_Theme bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @since        2.3.0
++* @version		$Id$
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++*/
++
++return array(
++	'xoBundleDisplayName' =&gt; 'XOOPS Theme component',
++	'xoBundleIdentifier' =&gt; 'xoops_pyro_Theme',
++	'xoClassPath' =&gt; '/theme.php',
++	'xoFactory' =&gt; 'xoops_pyro_ThemeFactory',
++	'xoServices' =&gt; array(
++		'xoops_pyro_ThemeFactory' =&gt; array(
++			'xoClassPath' =&gt; '/theme.php',
++		),
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php	2005-11-25 14:18:52 UTC (rev 36)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/footer.php	2005-11-25 16:26:34 UTC (rev 37)
+@@ -24,40 +24,37 @@
+ //  along with this program; if not, write to the Free Software              //
+ //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+ //  ------------------------------------------------------------------------ //
+-if (!defined(&quot;XOOPS_ROOT_PATH&quot;)) {
+-    die(&quot;XOOPS root path not defined&quot;);
+-}
+-if ( !defined(&quot;XOOPS_FOOTER_INCLUDED&quot;) ) {
+-	define(&quot;XOOPS_FOOTER_INCLUDED&quot;,1);
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_ROOT_PATH') )			die();
++
++if ( defined( 'XOOPS_FOOTER_INCLUDED' ) )	return;
++
++
++	define( 'XOOPS_FOOTER_INCLUDED', 1 );
+ 	$xoopsLogger-&gt;stopTime();
+ 
+-		// RMV-NOTIFY
+-		include_once XOOPS_ROOT_PATH . '/include/notification_select.php';
+-		if (isset($xoopsOption['template_main'])) {
+-			if (isset($xoopsCachedTemplateId)) {
+-				$xoopsTpl-&gt;assign('xoops_contents', $xoopsTpl-&gt;fetch('db:'.$xoopsOption['template_main'], $xoopsCachedTemplateId));
+-			} else {
+-				$xoopsTpl-&gt;assign('xoops_contents', $xoopsTpl-&gt;fetch('db:'.$xoopsOption['template_main']));
+-			}
+-		} else {
+-			if (isset($xoopsCachedTemplate)) {
+-				$xoopsTpl-&gt;assign('dummy_content', ob_get_contents());
+-				$xoopsTpl-&gt;assign('xoops_contents', $xoopsTpl-&gt;fetch($xoopsCachedTemplate, $xoopsCachedTemplateId));
+-			} else {
+-				$xoopsTpl-&gt;assign('xoops_contents', ob_get_contents());
+-			}
+-			ob_end_clean();
++	// RMV-NOTIFY
++	include_once XOOPS_ROOT_PATH . '/include/notification_select.php';
++	
++	if (!headers_sent()) {
++		header('Content-Type:text/html; charset='._CHARSET);
++		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
++		//header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
++		header('Cache-Control: private, no-cache');
++		header('Pragma: no-cache');
++	}
++	
++	global $xoops;
++	if ( !$xoops-&gt;services['theme']-&gt;renderCount ) {
++		if ( isset( $xoopsOption['template_main'] ) ) {
++			$xoops-&gt;services['theme']-&gt;contentTemplate = 'db:' . $xoopsOption['template_main'];
+ 		}
+-		if (!headers_sent()) {
+-			header('Content-Type:text/html; charset='._CHARSET);
+-			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+-			//header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+-			header('Cache-Control: private, no-cache');
+-			header('Pragma: no-cache');
+-		}
+-		$xoopsTpl-&gt;xoops_setCaching(0);
+-		$xoopsTpl-&gt;display($xoopsConfig['theme_set'].'/theme.html');
++		$xoops-&gt;services['theme']-&gt;template-&gt;assign( $xoopsTpl-&gt;_tpl_vars );
++		$xoops-&gt;services['theme']-&gt;render();
+ 	}
++		
+ 	if ($xoopsConfig['debug_mode'] == 2 &amp;&amp; $xoopsUserIsAdmin) {
+ 		echo '&lt;script type=&quot;text/javascript&quot;&gt;
+ 		&lt;!--//
+@@ -76,4 +73,5 @@
+ 		&lt;/script&gt;';
+ 	}
+ 
++
+ ?&gt;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-11-25 14:18:52 UTC (rev 36)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-11-25 16:26:34 UTC (rev 37)
+@@ -27,8 +27,16 @@
+ if (!defined(&quot;XOOPS_ROOT_PATH&quot;)) {
+     die(&quot;XOOPS root path not defined&quot;);
+ }
+-include_once XOOPS_ROOT_PATH.'/class/xoopsblock.php';
+ 
++	global $xoops;
++	$xoops-&gt;loadService( 'theme', 'xoops_pyro_Theme', array( 'folderName' =&gt; $xoopsConfig['theme_set'] ) );
++	
++	//var_export( $xoops-&gt;services['theme'] );
++
++
++
++	include_once XOOPS_ROOT_PATH.'/class/xoopsblock.php';
++
+     $xoopsOption['theme_use_smarty'] = 1;
+     // include Smarty template engine and initialize it
+     require_once XOOPS_ROOT_PATH.'/class/template.php';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000029.html">[Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+	<LI>Next message: <A HREF="000031.html">[Xoops4-svn] r38 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#30">[ date ]</a>
+              <a href="thread.html#30">[ thread ]</a>
+              <a href="subject.html#30">[ subject ]</a>
+              <a href="author.html#30">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

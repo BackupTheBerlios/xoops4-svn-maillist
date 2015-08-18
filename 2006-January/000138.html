@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r146%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup%3A%20XOOPS/Boot%20htdocs/include%20htdocs/kernel&In-Reply-To=%3C200601190634.k0J6Y4m7022722%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000137.html">
+   <LINK REL="Next"  HREF="000139.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r146%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup%3A%20XOOPS/Boot%20htdocs/include%20htdocs/kernel&In-Reply-To=%3C200601190634.k0J6Y4m7022722%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 07:34:04 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000137.html">[Xoops4-svn] r145 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000139.html">[Xoops4-svn] r147 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#138">[ date ]</a>
+              <a href="thread.html#138">[ thread ]</a>
+              <a href="subject.html#138">[ subject ]</a>
+              <a href="author.html#138">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 07:34:03 +0100 (Thu, 19 Jan 2006)
+New Revision: 146
+
+Removed:
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/kernel/session.php
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/rc.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php
+Log:
+Removed the old session class and code from common.php: the session service is now initialized in the startup-sequence file ( Boot/rc.php )
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/rc.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/rc.php	2006-01-19 06:25:27 UTC (rev 145)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/rc.php	2006-01-19 06:34:03 UTC (rev 146)
+@@ -18,10 +18,10 @@
+  */
+ if ( !defined( 'XO_MODE_DEV' ) ) exit();
+ 
++if ( isset( $_SERVER['SERVER_NAME'] ) ) {
++	$this-&gt;loadService( 'session' );
++}
+ 
+ 
+ 
+-
+-
+-
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php	2006-01-19 06:25:27 UTC (rev 145)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php	2006-01-19 06:34:03 UTC (rev 146)
+@@ -65,9 +65,7 @@
+     define( &quot;XOOPS_COMPILE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Application Support/xoops_template_Smarty&quot; );
+ 
+ 	// ----- END: Already refactored stuff just kept for compat purposes -----
+-
+     
+-    
+     define(&quot;XOOPS_THEME_URL&quot;, XOOPS_URL.&quot;/themes&quot;);
+     define(&quot;XOOPS_UPLOAD_URL&quot;, XOOPS_URL.&quot;/uploads&quot;);
+     set_magic_quotes_runtime(0);
+@@ -166,38 +164,22 @@
+     $xoopsRequestUri = $_SERVER[ 'REQUEST_URI' ];       // Deprecated (use the corrected $_SERVER variable now)
+     /**#@-*/
+ 
+-    // ############## Login a user with a valid session ##############
+     $xoopsUser = '';
+     $xoopsUserIsAdmin = false;
+     $member_handler =&amp; xoops_gethandler('member');
+-    $sess_handler =&amp; xoops_gethandler('session');
+-    if ($xoopsConfig['use_ssl'] &amp;&amp; isset($_POST[$xoopsConfig['sslpost_name']]) &amp;&amp; $_POST[$xoopsConfig['sslpost_name']] != '') {
+-        session_id($_POST[$xoopsConfig['sslpost_name']]);
+-    } elseif ($xoopsConfig['use_mysession'] &amp;&amp; $xoopsConfig['session_name'] != '') {
+-        if (isset($_COOKIE[$xoopsConfig['session_name']])) {
+-            session_id($_COOKIE[$xoopsConfig['session_name']]);
+-        } else {
+-            // no custom session cookie set, destroy session if any
+-            $_SESSION = array();
+-            //session_destroy();
+-        }
+-        if (function_exists('session_cache_expire')) {
+-            session_cache_expire($xoopsConfig['session_expire']);
+-        }
+-    }
+-    session_set_save_handler(array(&amp;$sess_handler, 'open'), array(&amp;$sess_handler, 'close'), array(&amp;$sess_handler, 'read'), array(&amp;$sess_handler, 'write'), array(&amp;$sess_handler, 'destroy'), array(&amp;$sess_handler, 'gc'));
+-    session_start();
+ 
+-    if (!empty($_SESSION['xoopsUserId'])) {
+-        $xoopsUser =&amp; $member_handler-&gt;getUser($_SESSION['xoopsUserId']);
++	// NB: SSL login has been temporarily disabled until the birth of the user-login module
++	// Code kept here for reference:	
++    //if ($xoopsConfig['use_ssl'] &amp;&amp; isset($_POST[$xoopsConfig['sslpost_name']]) &amp;&amp; $_POST[$xoopsConfig['sslpost_name']] != '') {
++	//session_id($_POST[$xoopsConfig['sslpost_name']]);
++
++    if ( !empty( $_SESSION['xoopsUserId'] ) ) {
++        $xoopsUser =&amp; $member_handler-&gt;getUser( $_SESSION['xoopsUserId'] );
+         if (!is_object($xoopsUser)) {
+             $xoopsUser = '';
+             $_SESSION = array();
+         } else {
+-            if ($xoopsConfig['use_mysession'] &amp;&amp; $xoopsConfig['session_name'] != '') {
+-                setcookie($xoopsConfig['session_name'], session_id(), time()+(60*$xoopsConfig['session_expire']), '/',  '', 0);
+-            }
+-            $xoopsUser-&gt;setGroups($_SESSION['xoopsUserGroups']);
++            $xoopsUser-&gt;setGroups( $_SESSION['xoopsUserGroups'] );
+             $xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin();
+         }
+     }
+
+Deleted: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/kernel/session.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/kernel/session.php	2006-01-19 06:25:27 UTC (rev 145)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/kernel/session.php	2006-01-19 06:34:03 UTC (rev 146)
+@@ -1,161 +0,0 @@
+-&lt;?php
+-// $Id$
+-//  ------------------------------------------------------------------------ //
+-//                XOOPS - PHP Content Management System                      //
+-//                    Copyright (c) 2000 XOOPS.org                           //
+-//                       &lt;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&gt;                             //
+-//  ------------------------------------------------------------------------ //
+-//  This program is free software; you can redistribute it and/or modify     //
+-//  it under the terms of the GNU General Public License as published by     //
+-//  the Free Software Foundation; either version 2 of the License, or        //
+-//  (at your option) any later version.                                      //
+-//                                                                           //
+-//  You may not change or alter any portion of this comment or credits       //
+-//  of supporting developers from this source code or any supporting         //
+-//  source code which is considered copyrighted (c) material of the          //
+-//  original comment or credit authors.                                      //
+-//                                                                           //
+-//  This program is distributed in the hope that it will be useful,          //
+-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
+-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
+-//  GNU General Public License for more details.                             //
+-//                                                                           //
+-//  You should have received a copy of the GNU General Public License        //
+-//  along with this program; if not, write to the Free Software              //
+-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+-//  ------------------------------------------------------------------------ //
+-// Author: Kazumi Ono (AKA onokazu)                                          //
+-// URL: <A HREF="http://www.myweb.ne.jp/,">http://www.myweb.ne.jp/,</A> <A HREF="http://www.xoops.org/,">http://www.xoops.org/,</A> <A HREF="http://jp.xoops.org/">http://jp.xoops.org/</A> //
+-// Project: The XOOPS Project                                                //
+-// ------------------------------------------------------------------------- //
+-/**
+- * @package     kernel
+- * 
+- * @author	    Kazumi Ono	&lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright	copyright (c) 2000-2003 XOOPS.org
+- */
+-
+-
+-/**
+- * Handler for a session
+- * @package     kernel
+- * 
+- * @author	    Kazumi Ono	&lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright	copyright (c) 2000-2003 XOOPS.org
+- */
+-class XoopsSessionHandler
+-{
+-
+-    /**
+-     * Database connection
+-     * 
+-     * @var	object
+-     * @access	private
+-     */
+-    var $db;
+-
+-    /**
+-     * Constructor
+-     * 
+-     * @param	object  &amp;$mf    reference to a XoopsManagerFactory
+-     * 
+-     */
+-    function XoopsSessionHandler(&amp;$db)
+-    {
+-        $this-&gt;db =&amp; $db;
+-    }
+-
+-    /**
+-     * Open a session
+-     * 
+-     * @param	string  $save_path
+-     * @param	string  $session_name
+-     * 
+-     * @return	bool
+-     */
+-    function open($save_path, $session_name)
+-	{
+-        return true;
+-    }
+-
+-    /**
+-     * Close a session
+-     * 
+-     * @return	bool
+-     */
+-    function close()
+-	{
+-        return true;
+-    }
+-
+-    /**
+-     * Read a session from the database
+-     * 
+-     * @param	string  &amp;sess_id    ID of the session
+-     * 
+-     * @return	array   Session data
+-     */
+-    function read($sess_id)
+-	{
+-        $sql = sprintf('SELECT sess_data FROM %s WHERE sess_id = %s', $this-&gt;db-&gt;prefix('session'), $this-&gt;db-&gt;quoteString($sess_id));
+-        if (false != $result = $this-&gt;db-&gt;query($sql)) {
+-            if (list($sess_data) = $this-&gt;db-&gt;fetchRow($result)) {
+-                return $sess_data;
+-            }
+-        }
+-        return '';
+-    }
+-
+-    /**
+-     * Write a session to the database
+-     * 
+-     * @param   string  $sess_id
+-     * @param   string  $sess_data
+-     * 
+-     * @return  bool    
+-     **/
+-    function write($sess_id, $sess_data)
+-	{
+-		$sess_id = $this-&gt;db-&gt;quoteString($sess_id);
+-		list($count) = $this-&gt;db-&gt;fetchRow($this-&gt;db-&gt;query(&quot;SELECT COUNT(*) FROM &quot;.$this-&gt;db-&gt;prefix('session').&quot; WHERE sess_id=&quot;.$sess_id));
+-        if ( $count &gt; 0 ) {
+-			$sql = sprintf('UPDATE %s SET sess_updated = %u, sess_data = %s WHERE sess_id = %s', $this-&gt;db-&gt;prefix('session'), time(), $this-&gt;db-&gt;quoteString($sess_data), $sess_id);
+-        } else {
+-			$sql = sprintf('INSERT INTO %s (sess_id, sess_updated, sess_ip, sess_data) VALUES (%s, %u, %s, %s)', $this-&gt;db-&gt;prefix('session'), $sess_id, time(), $this-&gt;db-&gt;quoteString($_SERVER['REMOTE_ADDR']), $this-&gt;db-&gt;quoteString($sess_data));
+-        }
+-		if (!$this-&gt;db-&gt;queryF($sql)) {
+-            return false;
+-        }
+-		return true;
+-    }
+-
+-    /**
+-     * Destroy a session
+-     * 
+-     * @param   string  $sess_id
+-     * 
+-     * @return  bool
+-     **/
+-    function destroy($sess_id)
+-    {
+-		$sql = sprintf('DELETE FROM %s WHERE sess_id = %s', $this-&gt;db-&gt;prefix('session'), $this-&gt;db-&gt;quoteString($sess_id));
+-        if ( !$result = $this-&gt;db-&gt;queryF($sql) ) {
+-            return false;
+-        }
+-        return true;
+-    }
+-
+-    /**
+-     * Garbage Collector
+-     * 
+-     * @param   int $expire Time in seconds until a session expires
+-	 * @return  bool
+-     **/
+-    function gc($expire)
+-    {
+-        $mintime = time() - intval($expire);
+-		$sql = sprintf('DELETE FROM %s WHERE sess_updated &lt; %u', $this-&gt;db-&gt;prefix('session'), $mintime);
+-        return $this-&gt;db-&gt;queryF($sql);
+-    }
+-}
+-?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000137.html">[Xoops4-svn] r145 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000139.html">[Xoops4-svn] r147 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#138">[ date ]</a>
+              <a href="thread.html#138">[ thread ]</a>
+              <a href="subject.html#138">[ subject ]</a>
+              <a href="author.html#138">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

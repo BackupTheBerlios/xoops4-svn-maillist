@@ -1,0 +1,461 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r149 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r149%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601191130.k0JBU2MC009138%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000140.html">
+   <LINK REL="Next"  HREF="000142.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r149 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r149%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601191130.k0JBU2MC009138%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r149 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 12:30:02 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000140.html">[Xoops4-svn] r148 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000142.html">[Xoops4-svn] r150 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#141">[ date ]</a>
+              <a href="thread.html#141">[ thread ]</a>
+              <a href="subject.html#141">[ subject ]</a>
+              <a href="author.html#141">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 12:30:00 +0100 (Thu, 19 Jan 2006)
+New Revision: 149
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+Log:
+Implemented enough PDO compatibility stuff to start making the mysql driver usable.
+
+Should work:
+- Named and question mark parameters
+- Columns bindings
+- Almost all fetch modes (except for cursors, columns, and lazy mode which falls back to obj)
+
+There are still a few methods missing, and well as attributes management, but it's a good start ;-).
+
+Also, this will need some serious testing before it's finished, because of the lame documentation provided with PDO (not only must this driver 'work', it should mimic the native PDO extension for the features it implements).
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php	2006-01-19 11:19:05 UTC (rev 148)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php	2006-01-19 11:30:00 UTC (rev 149)
+@@ -21,6 +21,38 @@
+ 
+ XOS::import( 'xoops_db_Database' );
+ 
++if ( !defined( 'PDO_PARAM_INT' ) ) {
++	define( 'PDO_PARAM_NULL', 0 );
++	define( 'PDO_PARAM_INT', 1 );
++	define( 'PDO_PARAM_STR', 2 );
++	define( 'PDO_PARAM_LOB', 3 );
++	define( 'PDO_PARAM_STMT', 4 );
++	define( 'PDO_PARAM_BOOL', 5 );
++
++	define( 'PDO_FETCH_LAZY', 1);
++	define( 'PDO_FETCH_ASSOC', 2);
++	define( 'PDO_FETCH_NUM', 3);
++	define( 'PDO_FETCH_BOTH', 4);
++	define( 'PDO_FETCH_OBJ', 5);
++	define( 'PDO_FETCH_BOUND', 6);
++	define( 'PDO_FETCH_COLUMN', 7);
++	define( 'PDO_FETCH_CLASS', 8);
++	define( 'PDO_FETCH_INTO', 9);
++	define( 'PDO_FETCH_FUNC', 10);
++	define( 'PDO_FETCH_NAMED', 11);
++	define( 'PDO_FETCH_GROUP', 0x10000 );
++	define( 'PDO_FETCH_UNIQUE', 0x30000 );
++	define( 'PDO_FETCH_CLASSTYPE', 0x40000 );
++	define( 'PDO_FETCH_SERIALIZE', 0x80000 );
++	
++	// PDO class attributes
++	define( 'PDO_ATTR_PERSISTENT', 12 );
++	define( 'PDO_ATTR_STATEMENT_CLASS', 13 );
++	define( 'PDO_MYSQL_ATTR_USE_BUFFERED_QUERY', 1000 );
++}
++
++
++
+ /**
+  * Legacy xoops_db_Database driver main class
+  */
+@@ -32,6 +64,17 @@
+ 	var $conn = false;
+ 
+ 	/**
++	 * This instance attributes
++	 * @var array
++	 * @access protected
++	 */
++	var $attributes = array(
++		PDO_ATTR_PERSISTENT =&gt; 0,
++		PDO_ATTR_STATEMENT_CLASS =&gt; array( 'xoops_db_Statement_mysql', array() ),
++		PDO_MYSQL_ATTR_USE_BUFFERED_QUERY =&gt; false,
++	);
++	
++	/**
+ 	 * connect to the database
+ 	 * 
+      * @param bool $selectdb select the database now ?
+@@ -54,10 +97,54 @@
+ 		return true;
+ 	}
+ 	// --------- PDO implementation ---------
++	/**
++	 * Initiates a transaction
++	 *
++	 * NB: This driver doesn't support transactions and always stays in autocommit mode
++	 * @return boolean
++	 */	
++	function beginTransation() {
++		return true;
++	}
++	/**
++	 * Commits a transaction
++	 *
++	 * NB: This driver doesn't support transactions and always stays in autocommit mode
++	 * @return boolean
++	 */	
++	function commit() {
++		return true;
++	}
++	/**
++	 * Fetch extended error information associated with the last operation on the database handle 
++	 * 
++	 * &lt;p&gt;errorInfo() returns an array of error information about the last operation performed 
++	 * by this database handle. The array consists of the following fields:&lt;br /&gt;
++	 * 0: SQLSTATE error code (a five-character alphanumeric identifier defined in the ANSI SQL standard).&lt;br /&gt;
++	 * 1: Driver-specific error code
++	 * 2: Driver-specific error message&lt;/p&gt;
++	 * 
++	 * &lt;p class=&quot;note&quot;&gt;This implementation doesn't support SQLSTATE (it will always be HY000)&lt;/p&gt;
++	 */
+ 	function errorInfo() {
+ 		return array( 'HY000', @mysql_errno( $this-&gt;conn ), @mysql_error( $this-&gt;conn ) );
+ 	}	
+-
++	/**
++	 * Fetch the SQLSTATE associated with the last operation on the database handle 
++	 */
++	function errorCode() {
++		return 'HY000';
++	}
++	/**
++	 * Execute an SQL statement and return the number of affected rows
++	 * 
++	 * PDO::exec() does not return results from a SELECT statement. For a SELECT statement that 
++	 * you only need to issue once during your program, consider issuing PDO::query().
++	 * For a statement that you need to issue multiple times, prepare a PDOStatement object 
++	 * with PDO::prepare() and issue the statement with PDOStatement::execute().
++	 * 
++	 * @param string $statement The SQL statement to prepare and execute
++	 */
+ 	function exec( $statement ) {
+ 		if ( $this-&gt;allowWebChanges ) {
+ 			return mysql_query( $statement, $this-&gt;conn ) ? mysql_affected_rows( $this-&gt;conn ) : false;
+@@ -66,33 +153,256 @@
+ 			return false;
+ 		}
+ 	}
+-	
++	/**
++	 * Returns the ID of the last inserted row
++	 */
+ 	function lastInsertId( $name = '' ) {
+ 		return mysql_insert_id( $this-&gt;conn );
+ 	}
+-	
++	/**
++	 * Prepares a statement for execution and returns a statement object
++	 * 
++	 * &lt;p&gt;
++	 * Prepares an SQL statement to be executed by the PDOStatement::execute() method.
++	 * The SQL statement can contain zero or more named (:name) or question mark (?) 
++	 * parameter markers for which real values will be substituted when the statement 
++	 * is executed. You cannot use both named and question mark parameter markers within 
++	 * the same SQL statement; pick one or the other parameter style.
++	 * &lt;/p&gt;
++	 * @param string $statement This must be a valid SQL statement for the target database server.
++	 * @param array $driverOptions This array holds one or more key=&gt;value pairs to set attribute values for the PDOStatement object that this method returns.
++	 * @return object A PDOStatement object, if the database server successfully prepares the statement.
++	 */
++	function prepare( $statement, $driverOptions = false ) {
++		return XOS::create( 'xoops_db_Statement_mysql', array(
++			'db' =&gt; &amp;$this,
++			'query' =&gt; $statement,
++			'driverOptions' =&gt; $driverOptions
++		) );	
++	}
++	/**
++	 * Executes an SQL statement, returning a result set as a PDOStatement object
++	 * 
++	 *&lt;p&gt; PDO::query() executes an SQL statement in a single function call, returning 
++	 * the result set (if any) returned by the statement as a PDOStatement object.&lt;/p&gt;
++	 * &lt;p&gt;For a query that you need to issue multiple times, you will realize better 
++	 * performance if you prepare a PDOStatement object using PDO::prepare() and issue 
++	 * the statement with multiple calls to PDOStatement::execute().&lt;/p&gt;
++	 * &lt;p&gt;If you do not fetch all of the data in a result set before issuing your next call
++	 * to PDO::query(), your call may fail. Call PDOStatement::closeCursor() to release the 
++	 * database resources associated with the PDOStatement object before issuing your next 
++	 * call to PDO::query().&lt;/p&gt;
++	 * @param string $statement The valid SQL statement to prepare and execute.
++	 * @return object
++	 */
++	function query( $statement ) {
++		$stmt = XOS::create( 'xoops_db_Statement_mysql', array(
++			'db' =&gt; &amp;$this,
++			'query' =&gt; $statement,
++			'driverOptions' =&gt; $driverOptions
++		) );
++		if ( $stmt ) {
++			$stmt-&gt;execute();
++			return $stmt;
++		}
++		return false;
++	}
++	/**
++	 * Quotes a string for use in a query.
++	 * 
++	 * PDO::quote() places quotes around the input string (if required) and escapes special 
++	 * characters within the input string, using a quoting style appropriate to the underlying driver. 
++	 */
+ 	function quote( $string ) {
+ 		return &quot;'&quot; . mysql_real_escape_string( $string, $this-&gt;conn ) . &quot;'&quot;;
+ 	}
++	/**
++	 * Rolls back a transaction
++	 */
++	function commit() {
++		return true;
++	}
+ 
++	
+ }
+ 
+ 
+ class xoops_db_Statement_mysql {
+ 
+-	var $boundColumns = array();	
+-	var $boundParams = array();
+-	var $boundValues = array();
++	var $query = '';
++	var $preparedQuery = '';
++
++	var $db = false;
++	var $result = false;
+ 	
++	/**
++	 * Internal lookup table for parameters bindings
++	 * @var array
++	 * @access protected
++	 */
++	var $paramBindings = array();
++	/**
++	 * Internal lookup table for columns bindings
++	 * @var array
++	 * @access protected
++	 */
++	var $columnBindings = array();
++	/**
++	 * Current fetch mode
++	 *
++	 * @var int
++	 * @access protected
++	 */
++	var $fetchMode;
++	/**
++	 * Class / instance for PDO_FETCH_CLASS / PDO_FETCH_INTO
++	 * @access protected
++	 */
++	var $fetchTarget = false;
+ 	
++	function xoInit( $options = array() ) {
++		if ( strpos( $this-&gt;query, '?' ) !== false ) {
++			$this-&gt;preparedQuery = preg_replace( '/(\\?)/', '\\{__p$1\\}', $this-&gt;query );
++		} else {
++			$this-&gt;preparedQuery = preg_replace( '/:([a-zA-Z_]*)/', '\\{$1\\}', $this-&gt;query );
++		}
++		return true;
++	}
++	
++	/**
++	 * Bind a column to a PHP variable
++	 *
++	 * @param mixed $column
++	 * @param mixed $variable
++	 * @param int $type
++	 */
+ 	function bindColumn( $column, &amp;$variable, $type ) {
+-		$this-&gt;boundColumns[$column] = array( &amp;$variable, $type );
++		$this-&gt;columnBindings[ intval($column) ? (int)$column : substr($column, 1) ] = array( &amp;$variable, $type );
+ 	}
++	/**
++	 * Binds a parameter to the specified variable name
++	 * @param mixed $param
++	 * @param mixed $variable
++	 * @param int $type
++	 * @param int $length
++	 * @param mixed $options
++	 */
+ 	function bindParam( $param, &amp;$variable, $type = 0, $length = 0, $options = array() ) {
+-		$this-&gt;boundParams[$param] = array( &amp;$variable, $type, $length, $options );	
++		$param = intval($param) ? &quot;__p$param&quot; : substr($param,1);
++		$this-&gt;paramBindings[$param] = array( &amp;$variable, $type, $length, $options );
+ 	}
++	/**
++	 * Bind a value to a parameter
++	 * @param mixed $param
++	 * @param mixed $value
++	 * @param int $type
++	 */
+ 	function bindValue( $param, $value, $type ) {
++		$param = intval($param) ? &quot;__p$param&quot; : substr($param,1);
++		$this-&gt;paramBindings[$param] = array( $value, $type );
+ 	}
++	/**
++	 * Returns the number of columns in the result set
++	 * @return integer
++	 */
++	function columnCount() {
++		return $this-&gt;result ? mysql_num_fields( $this-&gt;result ) : 0;
++	}
++	/**
++	 * Executes a prepared statement
++	 */
++	function execute( $params = array() ) {
++		$search = array();
++		$replace = array();
++		foreach ( $this-&gt;paramBindings as $k =&gt; $v ) {
++			$search[] = '{' . $k . '}';
++			$replace[] = $this-&gt;castValue( $v[0], $v[1] );
++		}
++		$sql = str_replace( $search, $replace, $this-&gt;preparedQuery );
++		$this-&gt;result = mysql_query( $sql, $this-&gt;db-&gt;conn );
++		return (bool)$this-&gt;result;
++	}
++	
++	function fetch( $mode = null, $orientation = null, $offset = null ) {
++		if ( !$this-&gt;result ) {
++			return false;
++		}
++		if ( !$mode ) {
++			$mode = $this-&gt;fetchMode;
++		}
++		switch ( $mode ) {
++		case PDO_FETCH_ASSOC:
++			return mysql_fetch_array( $this-&gt;result, MYSQL_ASSOC );
++		case PDO_FETCH_BOTH:
++			return mysql_fetch_array( $this-&gt;result, MYSQL_BOTH );
++		case PDO_FETCH_NUM:
++			return mysql_fetch_array( $this-&gt;result, MYSQL_NUM );
++		case PDO_FETCH_LAZY:
++		case PDO_FETCH_OBJ:
++			if ( $props = mysql_fetch_array( $this-&gt;result, MYSQL_ASSOC ) ) {
++				$target = new stdClass();
++				XOS::apply( $target, $props );
++				return $target;
++			}
++			return false;
++		case PDO_FETCH_INTO:
++			if ( $props = mysql_fetch_array( $this-&gt;result, MYSQL_ASSOC ) ) {
++				XOS::apply( $this-&gt;fetchTarget, $props );
++				return $this-&gt;fetchTarget;
++			}
++			return false;
++		case PDO_FETCH_CLASS:
++			if ( $props = mysql_fetch_array( $this-&gt;result, MYSQL_ASSOC ) ) {
++				return XOS::create( $this-&gt;fetchTarget, $props );
++			}
++			return false;
++		case PDO_FETCH_CLASS | PDO_FETCH_CLASSTYPE:
++			if ( $props = mysql_fetch_array( $this-&gt;result, MYSQL_ASSOC ) ) {
++				$classType = array_shift( $props );
++				return XOS::create( $classType, $props );
++			}
++			return false;
++		case PDO_FETCH_BOUND:
++			if ( $row = mysql_fetch_array( $this-&gt;result, MYSQL_BOTH ) ) {
++				foreach ( $this-&gt;columnBindings as $k =&gt; $col ) {
++					$col[0] = $this-&gt;castValue(  is_int($k) ? $row[$k-1] : $row[$k], $col[1] );
++				}
++				return true;
++			}
++			return false;
++		}
++	}
++
++	function setFetchMode( $mode, $param = null ) {
++		$this-&gt;fetchMode = $mode;
++		if ( $mode == PDO_FETCH_CLASS || $mode == PDO_FETCH_INTO ) {
++			$this-&gt;fetchTarget = $param;
++		}
++	}
++
++	/**
++	 * Cast a variable according to a PDO_PARAM_* type
++	 *
++	 * @param mixed $val The variable whom type must be set
++	 * @param int $type A PDO_PARAM_* data type
++	 * @return mixed
++	 * @access protected
++	 */
++	function castValue( $val, $type = PDO_PARAM_INT ) {
++		switch ( $type ) {
++		case PDO_PARAM_BOOL:
++			return $val ? 1 : 0;
++		case PDO_PARAM_STR:
++			return $this-&gt;db-&gt;quote( $val );
++		case PDO_PARAM_INT:
++		default:
++			return intval( $val );
++		}
++	}
++
++	
++	
++	
+ }
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000140.html">[Xoops4-svn] r148 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000142.html">[Xoops4-svn] r150 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#141">[ date ]</a>
+              <a href="thread.html#141">[ thread ]</a>
+              <a href="subject.html#141">[ subject ]</a>
+              <a href="author.html#141">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

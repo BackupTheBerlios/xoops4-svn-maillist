@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r108 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r108%20-%20XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj&In-Reply-To=%3C200601121741.k0CHfEJo027612%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000099.html">
+   <LINK REL="Next"  HREF="000101.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r108 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r108%20-%20XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj&In-Reply-To=%3C200601121741.k0CHfEJo027612%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r108 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 12 18:41:14 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000099.html">[Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+</A></li>
+        <LI>Next message: <A HREF="000101.html">[Xoops4-svn] r109 - in XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/xoops-devteam: . img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#100">[ date ]</a>
+              <a href="thread.html#100">[ thread ]</a>
+              <a href="subject.html#100">[ subject ]</a>
+              <a href="author.html#100">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-12 18:41:10 +0100 (Thu, 12 Jan 2006)
+New Revision: 108
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+Log:
+Fixed the blocks building routine to ensure blocks get all the xoops_xxx template vars correctly
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2006-01-03 00:32:08 UTC (rev 107)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2006-01-12 17:41:10 UTC (rev 108)
+@@ -16,6 +16,7 @@
+ if ( !defined( 'XOOPS_PATH' ) )	exit();
+ 
+ include_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
++include_once XOOPS_ROOT_PATH . '/class/template.php';
+ 
+ /**
+  * xoops_logos_PageBuilder main class
+@@ -99,11 +100,12 @@
+ 		global $xoopsLogger;
+ 		
+ 		$bcachetime = intval( $xobject-&gt;getVar('bcachetime') );
++		$template =&amp; new XoopsTpl();
+         if (empty($bcachetime)) {
+-            $this-&gt;theme-&gt;template-&gt;caching = 0;
++            $template-&gt;caching = 0;
+         } else {
+-            $this-&gt;theme-&gt;template-&gt;caching = 2;
+-            $this-&gt;theme-&gt;template-&gt;cache_lifetime = $bcachetime;
++            $template-&gt;caching = 2;
++            $template-&gt;cache_lifetime = $bcachetime;
+         }
+ 		if ( '' != ( $tplName = $xobject-&gt;getVar('template') ) ) {
+ 			$tplName = &quot;xotpl:modules/{$block['module']}/templates/blocks/$tplName&quot;;
+@@ -117,12 +119,11 @@
+             if ( ! ( $bresult = $xobject-&gt;buildBlock() ) ) {
+                 return false;
+             }
+-			$this-&gt;theme-&gt;template-&gt;assign( 'block', $bresult );
+-            $block['content'] = $this-&gt;theme-&gt;template-&gt;fetch( $tplName, $cacheid );
+-            $this-&gt;theme-&gt;template-&gt;clear_assign('block');
++			$template-&gt;assign( 'block', $bresult );
++            $block['content'] = $template-&gt;fetch( $tplName, $cacheid );
+         } else {
+             $xoopsLogger-&gt;addBlock( $xobject-&gt;getVar('name'), true, $bcachetime );
+-            $block['content'] = $this-&gt;theme-&gt;template-&gt;fetch( $tplName, $cacheid );
++            $block['content'] = $template-&gt;fetch( $tplName, $cacheid );
+         }
+         return $block;
+ 	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000099.html">[Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+</A></li>
+	<LI>Next message: <A HREF="000101.html">[Xoops4-svn] r109 - in XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/xoops-devteam: . img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#100">[ date ]</a>
+              <a href="thread.html#100">[ thread ]</a>
+              <a href="subject.html#100">[ subject ]</a>
+              <a href="author.html#100">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

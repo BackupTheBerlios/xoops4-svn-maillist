@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r60 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class/database kernel
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r60%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs%3A%20class/database%20kernel&In-Reply-To=%3C200512021420.jB2EKM62026621%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000052.html">
+   <LINK REL="Next"  HREF="000054.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r60 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class/database kernel</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r60%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs%3A%20class/database%20kernel&In-Reply-To=%3C200512021420.jB2EKM62026621%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r60 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class/database kernel">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Dec  2 15:20:22 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000052.html">[Xoops4-svn] r59 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . blocks templates templates/blocks
+</A></li>
+        <LI>Next message: <A HREF="000054.html">[Xoops4-svn] r61 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-02 15:20:11 +0100 (Fri, 02 Dec 2005)
+New Revision: 60
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php
+Log:
+Merged the latest refs fixes
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php	2005-12-02 14:15:26 UTC (rev 59)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php	2005-12-02 14:20:11 UTC (rev 60)
+@@ -236,7 +236,7 @@
+ 			}
+ 			$sql = $sql. ' LIMIT '.(int)$start.', '.(int)$limit;
+ 		}
+-		$result =&amp; mysql_query($sql, $this-&gt;conn);
++		$result = mysql_query($sql, $this-&gt;conn);
+ 		if ( $result ) {
+ 			$this-&gt;logger-&gt;addQuery($sql);
+ 			return $result;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php	2005-12-02 14:15:26 UTC (rev 59)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php	2005-12-02 14:20:11 UTC (rev 60)
+@@ -207,7 +207,7 @@
+      * 
+      * @return	array   array of {@link XoopsConfig}s 
+      */
+-    function getConfigsByCat($category, $module = 0)
++    function &amp;getConfigsByCat($category, $module = 0)
+     {
+         static $_cachedConfigs;
+ 		if (!empty($_cachedConfigs[$module][$category])) {
+@@ -218,14 +218,14 @@
+         	if (!empty($category)) {
+             	$criteria-&gt;add(new Criteria('conf_catid', intval($category)));
+         	}
+-        	$configs =&amp; $this-&gt;getConfigs($criteria, true);
++        	$configs = $this-&gt;getConfigs($criteria, true);
+ 			if (is_array($configs)) {
+             	foreach (array_keys($configs) as $i) {
+                 	$ret[$configs[$i]-&gt;getVar('conf_name')] = $configs[$i]-&gt;getConfValueForOutput();
+             	}
+         	}
+-			$_cachedConfigs[$module][$category] =&amp; $ret;
+-        	return $ret;
++			$_cachedConfigs[$module][$category] = $ret;
++        	return $_cachedConfigs[$module][$category];
+ 		}
+     }
+ 
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php	2005-12-02 14:15:26 UTC (rev 59)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php	2005-12-02 14:20:11 UTC (rev 60)
+@@ -374,7 +374,7 @@
+ 		} else {
+ 			$criteria-&gt;add(new Criteria('gperm_groupid', intval($gperm_groupid)));
+ 		}
+-		$perms =&amp; $this-&gt;getObjects($criteria, true);
++		$perms = $this-&gt;getObjects($criteria, true);
+ 		foreach (array_keys($perms) as $i) {
+ 			$ret[] = $perms[$i]-&gt;getVar('gperm_itemid');
+ 		}
+@@ -396,7 +396,7 @@
+ 		$criteria = new CriteriaCompo(new Criteria('gperm_name', $gperm_name));
+ 		$criteria-&gt;add(new Criteria('gperm_itemid', intval($gperm_itemid)));
+ 		$criteria-&gt;add(new Criteria('gperm_modid', intval($gperm_modid)));
+-		$perms =&amp; $this-&gt;getObjects($criteria, true);
++		$perms = $this-&gt;getObjects($criteria, true);
+ 		foreach (array_keys($perms) as $i) {
+ 			$ret[] = $perms[$i]-&gt;getVar('gperm_groupid');
+ 		}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000052.html">[Xoops4-svn] r59 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . blocks templates templates/blocks
+</A></li>
+	<LI>Next message: <A HREF="000054.html">[Xoops4-svn] r61 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

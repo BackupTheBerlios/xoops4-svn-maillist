@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r102 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r102%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel&In-Reply-To=%3C200512202357.jBKNvPI2010984%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000093.html">
+   <LINK REL="Next"  HREF="000095.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r102 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r102%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel&In-Reply-To=%3C200512202357.jBKNvPI2010984%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r102 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel">skalpa at berlios.de
+       </A><BR>
+    <I>Wed Dec 21 00:57:25 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000093.html">[Xoops4-svn] r101 - XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin
+</A></li>
+        <LI>Next message: <A HREF="000095.html">[Xoops4-svn] r103 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#94">[ date ]</a>
+              <a href="thread.html#94">[ thread ]</a>
+              <a href="subject.html#94">[ subject ]</a>
+              <a href="author.html#94">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-21 00:57:24 +0100 (Wed, 21 Dec 2005)
+New Revision: 102
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php
+Log:
+Adding the XoopsPersistableObjectHandler class from 2.2.3
+
+Added: XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php	2005-12-19 01:29:53 UTC (rev 101)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php	2005-12-20 23:57:24 UTC (rev 102)
+@@ -0,0 +1,421 @@
++&lt;?php
++// $Id$
++
++/**
++* Persistable Object Handler class.  
++* This class is responsible for providing data access mechanisms to the data source 
++* of derived class objects.
++*
++* @author  Jan Keller Pedersen &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">mithrandir at xoops.org</A>&gt; - IDG Danmark A/S &lt;www.idg.dk&gt;
++* @copyright copyright (c) 2000-2004 XOOPS.org
++* @package Kernel
++*/
++
++class XoopsPersistableObjectHandler extends XoopsObjectHandler {
++
++    /**#@+
++    * Information about the class, the handler is managing
++    *
++    * @var string
++    */
++    var $table;
++    var $keyName;
++    var $className;
++    var $identifierName;
++    /**#@-*/
++
++    /**
++    * Constructor - called from child classes
++    * @param object     $db         {@link XoopsDatabase} object
++    * @param string     $tablename  Name of database table
++    * @param string     $classname  Name of Class, this handler is managing
++    * @param string     $keyname    Name of the property, holding the key
++    *
++    * @return void
++    */
++    function XoopsPersistableObjectHandler(&amp;$db, $tablename, $classname, $keyname, $idenfierName = false) {
++        $this-&gt;XoopsObjectHandler($db);
++        $this-&gt;table = $db-&gt;prefix($tablename);
++        $this-&gt;keyName = $keyname;
++        $this-&gt;className = $classname;
++        if ($idenfierName != false) {
++            $this-&gt;identifierName = $idenfierName;
++        }
++    }
++
++    /**
++     * create a new user
++     * 
++     * @param bool $isNew Flag the new objects as &quot;new&quot;?
++     *
++     * @return object
++     */
++    function &amp;create($isNew = true) {
++        $obj =&amp; new $this-&gt;className();
++        if ($isNew === true) {
++            $obj-&gt;setNew();
++        }
++        return $obj;
++    }
++
++    /**
++     * retrieve an object
++     * 
++     * @param mixed $id ID of the object - or array of ids for joint keys. Joint keys MUST be given in the same order as in the constructor
++     * @param bool $as_object whether to return an object or an array
++     * @return mixed reference to the object, FALSE if failed
++     */
++    function &amp;get($id, $as_object = true) {
++        if (is_array($this-&gt;keyName)) {
++            $criteria = new CriteriaCompo();
++            for ($i = 0; $i &lt; count($this-&gt;keyName); $i++) {
++                $criteria-&gt;add(new Criteria($this-&gt;keyName[$i], intval($id[$i])));
++            }
++        }
++        else {
++            $criteria = new Criteria($this-&gt;keyName, intval($id));
++        }
++        $criteria-&gt;setLimit(1);
++        $obj_array = $this-&gt;getObjects($criteria, false, $as_object);
++        if (count($obj_array) != 1) {
++            return $this-&gt;create();
++        }
++        return $obj_array[0];
++    }
++
++    /**
++     * retrieve objects from the database
++     * 
++     * @param object $criteria {@link CriteriaElement} conditions to be met
++     * @param bool $id_as_key use the ID as key for the array?
++     * @param bool $as_object return an array of objects?
++     *
++     * @return array
++     */
++    function getObjects($criteria = null, $id_as_key = false, $as_object = true)
++    {
++        $ret = array();
++        $limit = $start = 0;
++        $sql = 'SELECT * FROM '.$this-&gt;table;
++        if (isset($criteria) &amp;&amp; is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria-&gt;renderWhere();
++            if ($criteria-&gt;getSort() != '') {
++                $sql .= ' ORDER BY '.$criteria-&gt;getSort().' '.$criteria-&gt;getOrder();
++            }
++            $limit = $criteria-&gt;getLimit();
++            $start = $criteria-&gt;getStart();
++        }
++        $result = $this-&gt;db-&gt;query($sql, $limit, $start);
++        if (!$result) {
++            return $ret;
++        }
++
++        return $this-&gt;convertResultSet($result, $id_as_key, $as_object);
++    }
++
++    /**
++     * Convert a database resultset to a returnable array
++     *
++     * @param object $result database resultset
++     * @param bool $id_as_key - should NOT be used with joint keys
++     * @param bool $as_object
++     *
++     * @return array
++     */
++    function convertResultSet($result, $id_as_key = false, $as_object = true) {
++        $ret = array();
++        while ($myrow = $this-&gt;db-&gt;fetchArray($result)) {
++            $obj =&amp; $this-&gt;create(false);
++            $obj-&gt;assignVars($myrow);
++            if (!$id_as_key) {
++                if ($as_object) {
++                    $ret[] =&amp; $obj;
++                }
++                else {
++                    $row = array();
++                    $vars = $obj-&gt;getVars();
++                    foreach (array_keys($vars) as $i) {
++                        $row[$i] = $obj-&gt;getVar($i);
++                    }
++                    $ret[] = $row;
++                }
++            } else {
++                if ($as_object) {
++                    $ret[$myrow[$this-&gt;keyName]] =&amp; $obj;
++                }
++                else {
++                    $row = array();
++                    $vars = $obj-&gt;getVars();
++                    foreach (array_keys($vars) as $i) {
++                        $row[$i] = $obj-&gt;getVar($i);
++                    }
++                    $ret[$myrow[$this-&gt;keyName]] = $row;
++                }
++            }
++            unset($obj);
++        }
++
++        return $ret;
++    }
++
++    /**
++    * Retrieve a list of objects as arrays - DON'T USE WITH JOINT KEYS
++    *
++    * @param object $criteria {@link CriteriaElement} conditions to be met
++    * @param int   $limit      Max number of objects to fetch
++    * @param int   $start      Which record to start at
++    *
++    * @return array
++    */
++    function getList($criteria = null, $limit = 0, $start = 0) {
++        $ret = array();
++        if ($criteria == null) {
++            $criteria = new CriteriaCompo();
++        }
++        
++        if ($criteria-&gt;getSort() == '') {
++            $criteria-&gt;setSort($this-&gt;identifierName);
++        }
++            
++        $sql = 'SELECT '.$this-&gt;keyName;
++        if(!empty($this-&gt;identifierName)){
++	        $sql .= ', '.$this-&gt;identifierName;
++        }
++        $sql .= ' FROM '.$this-&gt;table;
++        if (isset($criteria) &amp;&amp; is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria-&gt;renderWhere();
++            if ($criteria-&gt;getSort() != '') {
++                $sql .= ' ORDER BY '.$criteria-&gt;getSort().' '.$criteria-&gt;getOrder();
++            }
++            $limit = $criteria-&gt;getLimit();
++            $start = $criteria-&gt;getStart();
++        }
++        $result = $this-&gt;db-&gt;query($sql, $limit, $start);
++        if (!$result) {
++            return $ret;
++        }
++
++        $myts =&amp; MyTextSanitizer::getInstance();
++        while ($myrow = $this-&gt;db-&gt;fetchArray($result)) {
++            //identifiers should be textboxes, so sanitize them like that
++            $ret[$myrow[$this-&gt;keyName]] = empty($this-&gt;identifierName)?1:$myts-&gt;htmlSpecialChars($myrow[$this-&gt;identifierName]);
++        }
++        return $ret;
++    }
++
++    /**
++
++     * count objects matching a condition
++     * 
++     * @param object $criteria {@link CriteriaElement} to match
++     * @return int count of objects
++     */
++    function getCount($criteria = null)
++    {
++        $field = &quot;&quot;;
++        $groupby = false;
++        if (isset($criteria) &amp;&amp; is_subclass_of($criteria, 'criteriaelement')) {
++            if ($criteria-&gt;groupby != &quot;&quot;) {
++                $groupby = true;
++                $field = $criteria-&gt;groupby.&quot;, &quot;; //Not entirely secure unless you KNOW that no criteria's groupby clause is going to be mis-used
++            }
++        }
++        $sql = 'SELECT '.$field.'COUNT(*) FROM '.$this-&gt;table;
++        if (isset($criteria) &amp;&amp; is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria-&gt;renderWhere();
++            if ($criteria-&gt;groupby != &quot;&quot;) {
++                $sql .= $criteria-&gt;getGroupby();
++            }
++        }
++        $result = $this-&gt;db-&gt;query($sql);
++        if (!$result) {
++            return 0;
++        }
++        if ($groupby == false) {
++            list($count) = $this-&gt;db-&gt;fetchRow($result);
++            return $count;
++        }
++        else {
++            $ret = array();
++            while (list($id, $count) = $this-&gt;db-&gt;fetchRow($result)) {
++                $ret[$id] = $count;
++            }
++            return $ret;
++        }
++    }
++
++    /**
++     * delete an object from the database
++     * 
++     * @param object $obj reference to the object to delete
++     * @param bool $force
++     * @return bool FALSE if failed.
++     */
++    function delete(&amp;$obj, $force = false)
++    {
++        if (is_array($this-&gt;keyName)) {
++            $clause = array();
++            for ($i = 0; $i &lt; count($this-&gt;keyName); $i++) {
++	            $clause[] = $this-&gt;keyName[$i].&quot; = &quot;.$obj-&gt;getVar($this-&gt;keyName[$i]);
++            }
++            $whereclause = implode(&quot; AND &quot;, $clause);
++        }
++        else {
++            $whereclause = $this-&gt;keyName.&quot; = &quot;.$obj-&gt;getVar($this-&gt;keyName);
++        }
++        $sql = &quot;DELETE FROM &quot;.$this-&gt;table.&quot; WHERE &quot;.$whereclause;
++        if (false != $force) {
++            $result = $this-&gt;db-&gt;queryF($sql);
++        } else {
++            $result = $this-&gt;db-&gt;query($sql);
++        }
++        if (!$result) {
++            return false;
++        }
++        return true;
++    }
++
++    /**
++     * insert a new object in the database
++     * 
++     * @param object $obj reference to the object
++     * @param bool $force whether to force the query execution despite security settings
++     * @param bool $checkObject check if the object is dirty and clean the attributes
++     * @return bool FALSE if failed, TRUE if already present and unchanged or successful
++     */
++
++    function insert(&amp;$obj, $force = false, $checkObject = true)
++    {
++        if ($checkObject != false) {
++            if (!is_object($obj)) {
++                var_dump($obj);
++                return false;
++            }
++            /**
++        * @TODO: Change to if (!(class_exists($this-&gt;className) &amp;&amp; $obj instanceof $this-&gt;className)) when going fully PHP5
++        */
++            if (!is_a($obj, $this-&gt;className)) {
++                $obj-&gt;setErrors(get_class($obj).&quot; Differs from &quot;.$this-&gt;className);
++                return false;
++            }
++            if (!$obj-&gt;isDirty()) {
++                $obj-&gt;setErrors(&quot;Not dirty&quot;); //will usually not be outputted as errors are not displayed when the method returns true, but it can be helpful when troubleshooting code - Mith
++                return true;
++            }
++        }
++        if (!$obj-&gt;cleanVars()) {
++            return false;
++        }
++
++        foreach ($obj-&gt;cleanVars as $k =&gt; $v) {
++            if ($obj-&gt;vars[$k]['data_type'] == XOBJ_DTYPE_INT) {
++                $cleanvars[$k] = intval($v);
++            } elseif ( is_array( $v ) ) {
++            	$cleanvars[ $k ] = $this-&gt;db-&gt;quoteString( implode( ',', $v ) );
++            } else {
++                $cleanvars[$k] = $this-&gt;db-&gt;quoteString($v);
++            }
++        }
++        if ($obj-&gt;isNew()) {
++            if (!is_array($this-&gt;keyName)) {
++                if ($cleanvars[$this-&gt;keyName] &lt; 1) {
++                    $cleanvars[$this-&gt;keyName] = $this-&gt;db-&gt;genId($this-&gt;table.'_'.$this-&gt;keyName.'_seq');
++                }
++            }
++            $sql = &quot;INSERT INTO &quot;.$this-&gt;table.&quot; (&quot;.implode(',', array_keys($cleanvars)).&quot;) VALUES (&quot;.implode(',', array_values($cleanvars)) .&quot;)&quot;;
++        } else {
++            $sql = &quot;UPDATE &quot;.$this-&gt;table.&quot; SET&quot;;
++            foreach ($cleanvars as $key =&gt; $value) {
++                if ((!is_array($this-&gt;keyName) &amp;&amp; $key == $this-&gt;keyName) || (is_array($this-&gt;keyName) &amp;&amp; in_array($key, $this-&gt;keyName))) {
++                    continue;
++                }
++                if (isset($notfirst) ) {
++                    $sql .= &quot;,&quot;;
++                }
++                $sql .= &quot; &quot;.$key.&quot; = &quot;.$value;
++                $notfirst = true;
++            }
++            if (is_array($this-&gt;keyName)) {
++                $whereclause = &quot;&quot;;
++                for ($i = 0; $i &lt; count($this-&gt;keyName); $i++) {
++                    if ($i &gt; 0) {
++                        $whereclause .= &quot; AND &quot;;
++                    }
++                    $whereclause .= $this-&gt;keyName[$i].&quot; = &quot;.$obj-&gt;getVar($this-&gt;keyName[$i]);
++                }
++            }
++            else {
++                $whereclause = $this-&gt;keyName.&quot; = &quot;.$obj-&gt;getVar($this-&gt;keyName);
++            }
++            $sql .= &quot; WHERE &quot;.$whereclause;
++        }
++        if (false != $force) {
++            $result = $this-&gt;db-&gt;queryF($sql);
++        } else {
++            $result = $this-&gt;db-&gt;query($sql);
++        }
++        if (!$result) {
++            return false;
++        }
++        if ($obj-&gt;isNew() &amp;&amp; !is_array($this-&gt;keyName)) {
++            $obj-&gt;assignVar($this-&gt;keyName, $this-&gt;db-&gt;getInsertId());
++        }
++        return true;
++    }
++
++    /**
++     * Change a value for objects with a certain criteria
++     * 
++     * @param   string  $fieldname  Name of the field
++     * @param   string  $fieldvalue Value to write
++     * @param   object  $criteria   {@link CriteriaElement} 
++     * 
++     * @return  bool
++     **/
++    function updateAll($fieldname, $fieldvalue, $criteria = null, $force = false)
++    {
++    	$set_clause = $fieldname . ' = ';
++    	if ( is_numeric( $fieldvalue ) ) {
++    		$set_clause .=  $fieldvalue;
++    	} elseif ( is_array( $fieldvalue ) ) {
++    		$set_clause .= $this-&gt;db-&gt;quoteString( implode( ',', $fieldvalue ) );
++    	} else {
++    		$set_clause .= $this-&gt;db-&gt;quoteString( $fieldvalue );
++    	}
++        $sql = 'UPDATE '.$this-&gt;table.' SET '.$set_clause;
++        if (isset($criteria) &amp;&amp; is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria-&gt;renderWhere();
++        }
++        if (false != $force) {
++            $result = $this-&gt;db-&gt;queryF($sql);
++        } else {
++            $result = $this-&gt;db-&gt;query($sql);
++        }
++        if (!$result) {
++            return false;
++        }
++        return true;
++    }
++
++    /**
++     * delete all objects meeting the conditions
++     * 
++     * @param object $criteria {@link CriteriaElement} with conditions to meet
++     * @return bool
++     */
++
++    function deleteAll($criteria = null)
++    {
++        if (isset($criteria) &amp;&amp; is_subclass_of($criteria, 'criteriaelement')) {
++            $sql = 'DELETE FROM '.$this-&gt;table;
++            $sql .= ' '.$criteria-&gt;renderWhere();
++            if (!$this-&gt;db-&gt;query($sql)) {
++                return false;
++            }
++            $rows = $this-&gt;db-&gt;getAffectedRows();
++            return $rows &gt; 0 ? $rows : true;
++        }
++        return false;
++    }
++}
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000093.html">[Xoops4-svn] r101 - XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin
+</A></li>
+	<LI>Next message: <A HREF="000095.html">[Xoops4-svn] r103 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#94">[ date ]</a>
+              <a href="thread.html#94">[ thread ]</a>
+              <a href="subject.html#94">[ subject ]</a>
+              <a href="author.html#94">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

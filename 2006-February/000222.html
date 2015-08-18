@@ -1,0 +1,537 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r230 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj: . plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r230%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj%3A%20.%20plugins&In-Reply-To=%3C200602130414.k1D4Es5S006570%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000221.html">
+   <LINK REL="Next"  HREF="000223.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r230 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj: . plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r230%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj%3A%20.%20plugins&In-Reply-To=%3C200602130414.k1D4Es5S006570%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r230 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj: . plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 05:14:54 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000221.html">[Xoops4-svn] r229 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+        <LI>Next message: <A HREF="000223.html">[Xoops4-svn] r231 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj: . www
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#222">[ date ]</a>
+              <a href="thread.html#222">[ thread ]</a>
+              <a href="subject.html#222">[ subject ]</a>
+              <a href="author.html#222">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 05:14:46 +0100 (Mon, 13 Feb 2006)
+New Revision: 230
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/compiler.php
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/smarty.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/xo-info.php
+Log:
+Added a custom Smarty compiler class to be used by XOOPS, and started to rename the low-level rendering framework to 'opal'.
+
+Shortly: templates MAY (that means: not &quot;MUST&quot;) now be provided as XML files that will be parsed before compilation.
+The XML templates format looks like this (I've used it for the first config panels templates, so there will be examples soon):
+&lt;XoopsTemplate&gt;
+    &lt;LanguageFiles&gt;... list of strings files to be included when this tpl is used (will be implemented in alpha3 only) ...&lt;/LanguageFiles&gt;
+    &lt;TemplateObjects&gt;... list of widgets to instanciate before rendering ...&lt;/TemplateObjects&gt;
+    &lt;TemplateData contentType='text/html'&gt;
+         data used when rendering as HTML
+    &lt;/TemplateData&gt;
+    &lt;TemplateData contentType='application/xhtml+xml'&gt;
+         data used when rendering as pure XHTML
+    &lt;/TemplateData&gt;
+    &lt;TemplateData contentType='application/pdf'&gt;
+         data used when rendering as PDF (will be post-processed by the PDF generator after rendering, as in phpdoc)
+    &lt;/TemplateData&gt;
+&lt;/XoopsTemplate&gt;
+
+NB: the fact all this is integrated in the compilation mechanism means there will be no penalty during runtime :-)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/compiler.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/compiler.php	2006-02-13 03:23:58 UTC (rev 229)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/compiler.php	2006-02-13 04:14:46 UTC (rev 230)
+@@ -0,0 +1,214 @@
++&lt;?php
++/**
++ * xoops_opal_SmartyCompiler main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++require_once SMARTY_DIR . '/Smarty_Compiler.class.php';
++
++/**
++ * Opal Smarty compiler
++ *
++ * This compiler is used by the xoops_opal framework smarty implementation instead of the default one.
++ * If the template is recognized as an XML XoopsTemplate file, it will be parsed before compilation,
++ * the template data extracted from the correct TemplateData tag.
++ */
++class xoops_opal_SmartyCompiler extends Smarty_Compiler {
++	/**
++	 * Name of the currently compiled template
++	 * @var string
++	 * @access protected
++	 */
++	var $resourceName = '';	
++	/**
++	 * Language files included before the current template is rendered
++	 * @var array
++	 */
++	var $tplLangFiles = array();
++	/**
++	 * Widgets to instanciate when the current template is rendered
++	 * @var array
++	 */
++	var $tplWidgets = array();
++
++    function _compile_file($resource_name, $source_content, &amp;$compiled_content) {
++		$this-&gt;resourceName = $resource_name;
++    	if ( substr( $resource_name, 0, 6 ) == 'xotpl:' ) {
++			if ( strpos( substr( $source_content, 0, 256 ), '&lt;XoopsTemplate' ) !== false ) {
++				$this-&gt;tplLangFiles = $this-&gt;tplWidgets = array();
++				
++				$parser = xml_parser_create();
++				xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
++				xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
++				xml_parse_into_struct($parser, $source_content, $values, $tags );
++				xml_parser_free($parser);
++
++				if ( isset( $tags['Object'] ) ) {
++					$objects =&amp; $tags['Object'];
++					for ( $n = 0; $n != count($objects); $n+=2 ) {
++						$start = $objects[$n] + 1;
++						$this-&gt;parseObject( $values[ $objects[$n] ], array_slice( $values, $start, $objects[$n+1] - $start ) );
++					}
++				}
++				$tplData = null;
++				foreach ( $tags['TemplateData'] as $tag ) {
++					$tagInfo =&amp; $values[ $tag ];
++					if ( $tagInfo['attributes']['contentType'] == $this-&gt;template_engine-&gt;currentTheme-&gt;contentType ) {
++						$tplData = $tagInfo['value'];
++						break;
++					} elseif ( isset( $tagInfo['attributes']['default'] ) ) {
++						$tplData = $tagInfo['value'];
++					}
++				}
++				
++				parent::_compile_file( $resource_name, $tplData, $compiled_content );
++				$prelude = '';
++				if ( !empty($this-&gt;tplWidgets) ) {
++					$prelude = &quot;&lt;?php\n&quot;;
++					foreach ( $this-&gt;tplWidgets as $widgetDef ) {
++						$prelude .= $this-&gt;insertWidget( $widgetDef );
++					}
++					$prelude .= &quot;\n?&gt;&quot;;
++				}
++				$compiled_content = $prelude . $compiled_content;
++				return true;
++			}
++		}
++    	return parent::_compile_file( $resource_name, $source_content, $compiled_content );
++    }
++    
++	/**
++	 * Extract widget information from an XML template &lt;object&gt; tag
++	 * @access private
++	 */
++    function parseObject( $objectTag, $children ) {
++    	$object = array();
++    	if ( !isset( $objectTag['attributes']['bundleId'] ) ) {
++    		trigger_error( &quot;Error parsing $this-&gt;resourceName: invalid template object definition (missing bundleId)&quot;, E_USER_WARNING );
++    		return;
++    	}
++    	$object['bundleId'] = &quot;'&quot; . $objectTag['attributes']['bundleId'] . &quot;'&quot;;
++    	if ( isset( $objectTag['attributes']['tplVar'] ) ) {
++    		$object['assign'] = &quot;'&quot; . $objectTag['attributes']['tplVar'] . &quot;'&quot;;
++    	}
++    	foreach ( $children as $k =&gt; $prop ) {
++    		$propName = $prop['attributes']['name'];
++    		if ( $prop['tag'] == 'Property' ) {
++    			if ( $prop['type'] == 'complete' ) {
++    				$object[ $propName ] = $this-&gt;parsePropertyValue( $prop['value'] );
++    			} elseif ( $prop['type'] == 'open' ) {
++    				$arrayStart = $k;
++    				$arrayName = $propName;
++    			} elseif ( $prop['type'] == 'close' ) {
++    				$object[ $arrayName ]  = $this-&gt;parseArrayProperty( array_slice( $children, $arrayStart+1, $k - $arrayStart - 1 ) );
++    			}
++    		}
++    	}
++    	$this-&gt;tplWidgets[] = $object;
++    }
++	/**
++	 * Parses an array property content
++	 * @access private
++	 */
++    function parseArrayProperty( $tags ) {
++    	$items = array();
++    	$n = 0;
++    	foreach ( $tags as $k =&gt; $tag ) {
++    		if ( isset( $tag['attributes']['key'] ) ) {
++    			$items[] = &quot;'$k' =&gt; &quot; . $this-&gt;parsePropertyValue( $tag['value'] );
++    		} else {
++    			$items[] = &quot;$n =&gt; &quot; . $this-&gt;parsePropertyValue(  $tag['value'] );
++    		}
++    	}
++    	return 'array( ' . implode( ',', $items ) . ')';
++    }
++	/**
++	 * Parses an object property value
++	 * @access private
++	 */
++	function parsePropertyValue( $val ) {
++		if ( substr( $val, 0, 1 ) != '$' ) {
++			return $this-&gt;_expand_quoted_text( &quot;'&quot; . addslashes($val) . &quot;'&quot; );
++		}
++		return $this-&gt;_parse_var_props( $val );
++	}
++    
++    /**
++     * Generates widget insertion code
++     *
++     * This method generates the widget instanciation code to be inserted in the compiled template.
++     * It is called for each &lt;object&gt; tag encountered during compilation of XML templates, or by the xoWidget
++     * compiler plug-in.
++     * 
++     * @param array $args
++     * @return string PHP code to be inserted in the compiled template
++     */
++    function insertWidget( $args ) {
++    	global $xoops;
++    	if ( isset( $args['assign'] ) ) {
++			$targetVar = $args['assign'];
++			unset( $args['assign'] );
++		} else {
++			$targetVar = '';
++		}
++		$bundleId = $args['bundleId'];
++		unset( $args['bundleId'] );
++		$realBundleId = substr( $bundleId, 1, strlen( $bundleId ) - 2 );
++	
++		$code = &quot;\n&quot;;
++		// Get this widget stylesheet and javascript properties
++		if ( $css = XOS::classVar( $realBundleId, 'stylesheet' ) ) {
++			$css = $realBundleId . '#' . $css;
++			$attrs = array(
++				'type' =&gt; 'text/css',
++				'href' =&gt; $xoops-&gt;url( $this-&gt;template_engine-&gt;currentTheme-&gt;resourcePath( $css ) ),
++			);
++			$code .= '$this-&gt;currentTheme-&gt;setMeta( &quot;stylesheet&quot;, &quot;' . $css . '&quot;, ' . var_export( $attrs, true ) . &quot;);\n&quot;;
++		}
++		if ( $js = XOS::classVar( $realBundleId, 'javascript' ) ) {
++			$js = $realBundleId . '#' . $js;
++			$attrs = array(
++				'type' =&gt; 'text/javascript',
++				'src' =&gt; $xoops-&gt;url( $this-&gt;template_engine-&gt;currentTheme-&gt;resourcePath( $js ) ),
++			);
++			$code .= '$this-&gt;currentTheme-&gt;setMeta( &quot;script&quot;, &quot;' . $js . '&quot;, ' . var_export( $attrs, true ) . &quot;);\n&quot;;
++		}
++		$create = 'XOS::create( ' . $bundleId;
++		if ( !empty( $args ) ) {
++			$create .= &quot;, array(\n&quot;;
++			foreach ( $args as $prop =&gt; $value ) {
++				$create .= &quot;\t'$prop' =&gt; &quot; . $value . &quot;,\n&quot;;
++			}
++			$create .= ')';
++		}
++		$create .= &quot; )&quot;;
++	
++		if ( !$targetVar ) {
++			$code .= &quot;\$widget = $create;\n&quot;;
++			$code .= &quot;echo ( \$widget ? \$widget-&gt;render() : \&quot;Failed to instanciate $bundleId widget.\&quot; );\n&quot;;
++		} else {
++			$code .= &quot;\$this-&gt;_tpl_vars[$targetVar] = $create;\n&quot;;
++		}
++		return $code;
++    }
++    
++    
++    
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/compiler.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-02-13 03:23:58 UTC (rev 229)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-02-13 04:14:46 UTC (rev 230)
+@@ -18,7 +18,7 @@
+ 	global $xoops;
+ 	
+ 	$argStr = trim( $argStr );
+-
++/*
+ 	@list( $modId, $location ) = explode( '#', $argStr, 2 );
+ 	if ( isset( $location ) ) {
+ 		if ( $module = $xoops-&gt;loadModule( $modId ) ) {
+@@ -30,7 +30,8 @@
+ 	} else {
+ 		$uri = $argStr;
+ 	}
+-	
++*/
++	$uri = $argStr;
+ 	return &quot;\necho '&quot; . addslashes( $xoops-&gt;path( $uri, true ) ) . &quot;';&quot;;
+ 
+ }
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php	2006-02-13 03:23:58 UTC (rev 229)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php	2006-02-13 04:14:46 UTC (rev 230)
+@@ -14,54 +14,52 @@
+ * @version		$Id$
+ */
+ 
+-function smarty_compiler_xoWidget( $argStr, &amp;$smarty ) {
++function smarty_compiler_xoWidget( $argStr, &amp;$compiler ) {
+ 	global $xoops;
+ 	
+-	$args = $smarty-&gt;_parse_attrs( trim( $argStr ) );
+-	array_map( array( &amp;$smarty, '_expand_quoted_text' ), $args );
++	$args = $compiler-&gt;_parse_attrs( trim( $argStr ) );
++	array_map( array( &amp;$compiler, '_expand_quoted_text' ), $args );
+ 	
++	if ( isset( $args['tplVar'] ) ) {
++		$code = '';
++		foreach ( $args as $prop =&gt; $value ) {
++			if ( $prop != 'tplVar' ) {
++				$code .= $args['tplVar'] . &quot;-&gt;$prop = $value;\n&quot;;
++			}
++		}
++		return $code . &quot;echo &quot; . $args['tplVar'] . &quot;-&gt;render();&quot;;
++	}
++	
++	
+ 	if ( !isset( $args['bundleId'] ) ) {
+ 		trigger_error( &quot;Cannot insert widget: no bundleId specified&quot;, E_USER_WARNING );
+ 		return '';
+ 	}
+-	$bundleId = $args['bundleId'];
+-	unset( $args['bundleId'] );
+-
+-	$realBundleId = substr( $bundleId, 1, strlen( $bundleId ) - 2 );
+-	
+-	$code = &quot;\n&quot;;
+-	// Get this widget stylesheet and javascript properties
+-	if ( $css = XOS::classVar( $realBundleId, 'stylesheet' ) ) {
+-		$css = $realBundleId . '#' . $css;
+-		$attrs = array(
+-			'type' =&gt; 'text/css',
+-			'href' =&gt; $xoops-&gt;url( $smarty-&gt;template_engine-&gt;currentTheme-&gt;resourcePath( $css ) ),
+-		);
+-		$code .= '$this-&gt;currentTheme-&gt;setMeta( &quot;stylesheet&quot;, &quot;' . $css . '&quot;, ' . var_export( $attrs, true ) . &quot;);\n&quot;;
++	// Transform __property__key settings to an arrays
++	$arrays = array();
++	foreach ( $args as $k =&gt; $v ) {
++		if ( substr( $k, 0, 2 ) == '__' ) {
++			$prop = explode( '__', substr( $k, 2 ), 2 );
++			if ( isset( $prop[1] ) ) {
++				$arrays[ $prop[0] ][ $prop[1] ] = $v;
++			} else {
++				$arrays[ $prop[0] ][] = $v;
++			}
++			unset( $args[$k] );
++		}
+ 	}
+-	if ( $js = XOS::classVar( $realBundleId, 'javascript' ) ) {
+-		$js = $realBundleId . '#' . $js;
+-		$attrs = array(
+-			'type' =&gt; 'text/javascript',
+-			'src' =&gt; $xoops-&gt;url( $smarty-&gt;template_engine-&gt;currentTheme-&gt;resourcePath( $js ) ),
+-		);
+-		$code .= '$this-&gt;currentTheme-&gt;setMeta( &quot;script&quot;, &quot;' . $js . '&quot;, ' . var_export( $attrs, true ) . &quot;);\n&quot;;
+-	}
+-
+-
+-	$code .= '$widget = XOS::create( ' . $bundleId;
+-	if ( !empty( $args ) ) {
+-		$code .= &quot;, array(\n&quot;;
+-		foreach ( $args as $prop =&gt; $value ) {
+-			$code .= &quot;\t'$prop' =&gt; &quot; . $value . &quot;,\n&quot;;
++	if ( !empty( $arrays ) ) {
++		foreach ( $arrays as $aname =&gt; $array ) {
++			$args[$aname] = 'array(';
++			foreach ( $array as $k =&gt; $v ) {
++				$args[$aname] .= var_export($k,true) . ' =&gt; ' . $v . ', ';
++			}
++			$args[$aname] .= ')';
+ 		}
+-		$code .= ')';
+ 	}
+-	$code .= &quot; );\n&quot;;
+-	$code .= &quot;echo ( \$widget ? \$widget-&gt;render() : \&quot;Failed to instanciate $bundleId widget.\&quot; );\n&quot;;
+ 	
+-	return $code;
+-
++	return $compiler-&gt;insertWidget( $args );
++	
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/smarty.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/smarty.php	2006-02-13 03:23:58 UTC (rev 229)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/smarty.php	2006-02-13 04:14:46 UTC (rev 230)
+@@ -8,8 +8,8 @@
+  * @copyright   The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+  * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+  * @since       2.3.0
+- * @package		xoops_template
+- * @subpackage	xoops_template_Smarty
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
+  * @version		$Id$
+  * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+  */
+@@ -22,17 +22,20 @@
+  * @package		xoops_template
+  * @subpackage	xoops_template_Smarty
+  */
+-class xoops_template_Smarty extends Smarty {
++class xoops_opal_Smarty extends Smarty {
+ 	
+ 	var $left_delimiter =	'([';
+ 	var $right_delimiter =	'])';
+ 
+ 	var $template_dir		= XOOPS_THEME_PATH;
+ 	var $compile_dir		= 'var/Application Support/xoops_template_Smarty';
+-	var $cache_dir			= 'var/Caches/xoops_template_Smarty';
++	var $cache_dir			= 'var/Caches/xoops_opal_Smarty';
+ 
+ 	var $use_sub_dirs		= false;
+ 	
++
++	var $compiler_class		= 'xoops_opal_SmartyCompiler';
++	var $compiler_file		= '/compiler.php';
+ 	
+ 	var $currentFile		= '';
+ 
+@@ -44,12 +47,14 @@
+ 	var $currentTheme		= false;
+ 	
+ 
+-	function xoops_template_Smarty( $options = null ) {
++	function xoops_opal_Smarty( $options = null ) {
+ 		global $xoops;
+ 		
+ 		$this-&gt;compile_dir	= $xoops-&gt;path( $this-&gt;compile_dir );
+ 		$this-&gt;cache_dir	= $xoops-&gt;path( $this-&gt;cache_dir );
+ 
++		$this-&gt;compiler_file = str_replace( '\\', '/', dirname( __FILE__ ) ) . $this-&gt;compiler_file;
++		
+ 		if ( $xoops-&gt;xoRunMode &amp; XO_MODE_DEV_MASK ) {
+ 			$this-&gt;compile_check = true;
+ 			$this-&gt;force_compile = true;
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/xo-info.php	2006-02-13 03:23:58 UTC (rev 229)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Smarty.xoobj/xo-info.php	2006-02-13 04:14:46 UTC (rev 230)
+@@ -1,20 +1,22 @@
+ &lt;?php
+ /**
+-* xoops_template_Smarty bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @since        2.3.0
+-* @version		$Id$
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-*/
++ * xoops_template_Smarty bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since       2.3.0
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @version		$Id$
++ */
+ 
+ return array(
+ 	'xoBundleDisplayName' =&gt; 'Smarty template engine (XOOPS version)',
+-	'xoBundleIdentifier' =&gt; 'xoops_template_Smarty',
++	'xoBundleIdentifier' =&gt; 'xoops_opal_Smarty',
+ 	'xoClassPath' =&gt; '/smarty.php',
+ 	'xoServices' =&gt; array(
+ 		'Smarty' =&gt; array(
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000221.html">[Xoops4-svn] r229 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+	<LI>Next message: <A HREF="000223.html">[Xoops4-svn] r231 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj: . www
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#222">[ date ]</a>
+              <a href="thread.html#222">[ thread ]</a>
+              <a href="subject.html#222">[ subject ]</a>
+              <a href="author.html#222">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

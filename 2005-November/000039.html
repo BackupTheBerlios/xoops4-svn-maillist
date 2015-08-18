@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r46 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r46%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove%3A%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs&In-Reply-To=%3C200511271015.jARAFK8P004153%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000038.html">
+   <LINK REL="Next"  HREF="000040.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r46 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r46%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove%3A%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs&In-Reply-To=%3C200511271015.jARAFK8P004153%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r46 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Nov 27 11:15:20 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000038.html">[Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000040.html">[Xoops4-svn] r47 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default: . modules modules/system modules/system/blocks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-27 11:15:18 +0100 (Sun, 27 Nov 2005)
+New Revision: 46
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+Log:
+Moved blocks aggregation code from header.php to a custom class, and changed the 2.0 BC code accordingly
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php	2005-11-27 10:13:07 UTC (rev 45)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/render-2.0.php	2005-11-27 10:15:18 UTC (rev 46)
+@@ -3,6 +3,42 @@
+ 	$this-&gt;canvasTemplate	= './theme.html';
+ 	$this-&gt;pageTemplate		= '';
+ 	
++	
++	// Assign metas as 'xoops_meta_xxxx'
++	foreach ( $this-&gt;metas['meta'] as $name =&gt; $content ) {
++		$this-&gt;template-&gt;assign( 'xoops_meta_' . $name, $content );
++	}
++	// Assign xoops_js
++	$this-&gt;template-&gt;assign(
++		'xoops_js',
++		'//--&gt;&lt;/script&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;' .
++		$this-&gt;metas['script']['include/xoops.js']['src'] . '&quot;&gt;&lt;/script&gt;&lt;script type=&quot;text/javascript&quot;&gt;&lt;!--'
++    );
++
++	// Assign blocks vars (old-style)
++	$blocks =&amp; $this-&gt;template-&gt;get_template_vars( 'xoBlocks' );
++
++	if ( !@empty( $blocks['canvas_left'] ) ) {
++		$this-&gt;template-&gt;assign_by_ref( 'xoops_lblocks', $blocks['canvas_left'] );
++		$this-&gt;template-&gt;assign( 'xoops_showlblock', 1 );
++	}
++	if ( !@empty( $blocks['canvas_right'] ) ) {
++		$this-&gt;template-&gt;assign_by_ref( 'xoops_rblocks', $blocks['canvas_right'] );
++		$this-&gt;template-&gt;assign( 'xoops_showrblock', 1 );
++	}
++	if ( !@empty( $blocks['page_top'] ) ) {
++		$this-&gt;template-&gt;assign_by_ref( 'xoops_ccblocks', $blocks['page_top'] );
++		$this-&gt;template-&gt;assign( 'xoops_showcblock', 1 );
++	}
++	if ( !@empty( $blocks['page_topleft'] ) ) {
++		$this-&gt;template-&gt;assign_by_ref( 'xoops_clblocks', $blocks['page_topleft'] );
++		$this-&gt;template-&gt;assign( 'xoops_showcblock', 1 );
++	}
++	if ( !@empty( $blocks['page_topright'] ) ) {
++		$this-&gt;template-&gt;assign_by_ref( 'xoops_crblocks', $blocks['page_topright'] );
++		$this-&gt;template-&gt;assign( 'xoops_showcblock', 1 );
++	}
++
+ 	// XOOPS 2.0 themes need the content to be rendered and assigned to the var 'xoops_contents'
+ 	ob_start();
+ 	$this-&gt;renderZone( 'content' );
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-11-27 10:13:07 UTC (rev 45)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-11-27 10:15:18 UTC (rev 46)
+@@ -34,39 +34,49 @@
+ 	//var_export( $xoops-&gt;services['theme'] );
+ 
+ 
+-
+-	include_once XOOPS_ROOT_PATH.'/class/xoopsblock.php';
+-
+     $xoopsOption['theme_use_smarty'] = 1;
+     // include Smarty template engine and initialize it
+     require_once XOOPS_ROOT_PATH.'/class/template.php';
+     $xoopsTpl = new XoopsTpl();
++    $xoopsTpl-&gt;currentTheme =&amp; $xoops-&gt;services['theme'];
+     $xoopsTpl-&gt;xoops_setCaching(2);
+     if ($xoopsConfig['debug_mode'] == 3) {
+         $xoopsTpl-&gt;xoops_setDebugging(true);
+     }
+-    $xoopsTpl-&gt;assign(array('xoops_theme' =&gt; $xoopsConfig['theme_set'], 'xoops_imageurl' =&gt; XOOPS_THEME_URL.'/'.$xoopsConfig['theme_set'].'/', 'xoops_themecss'=&gt; xoops_getcss($xoopsConfig['theme_set']), 'xoops_requesturi' =&gt; htmlspecialchars($GLOBALS['xoopsRequestUri'], ENT_QUOTES), 'xoops_sitename' =&gt; htmlspecialchars($xoopsConfig['sitename'], ENT_QUOTES), 'xoops_slogan' =&gt; htmlspecialchars($xoopsConfig['slogan'], ENT_QUOTES)));
++    $xoopsTpl-&gt;assign(
++    	array(
++	    	'xoops_theme' =&gt; $xoopsConfig['theme_set'],
++	    	'xoops_imageurl' =&gt; XOOPS_THEME_URL.'/'.$xoopsConfig['theme_set'].'/',
++	    	'xoops_themecss'=&gt; xoops_getcss($xoopsConfig['theme_set']),
++	    	'xoops_requesturi' =&gt; htmlspecialchars($GLOBALS['xoopsRequestUri'], ENT_QUOTES),
++	    	'xoops_sitename' =&gt; htmlspecialchars($xoopsConfig['sitename'], ENT_QUOTES),
++	    	'xoops_slogan' =&gt; htmlspecialchars($xoopsConfig['slogan'], ENT_QUOTES)
++	    )
++   	);
++
++    
+     // Meta tags
+     $config_handler =&amp; xoops_gethandler('config');
+     $criteria = new CriteriaCompo(new Criteria('conf_modid', 0));
+     $criteria-&gt;add(new Criteria('conf_catid', XOOPS_CONF_METAFOOTER));
+     $config =&amp; $config_handler-&gt;getConfigs($criteria, true);
+-    foreach (array_keys($config) as $i) {
+-        // prefix each tag with 'xoops_'
+-        $xoopsTpl-&gt;assign('xoops_'.$config[$i]-&gt;getVar('conf_name'), $config[$i]-&gt;getConfValueForOutput());
++    foreach ( array_keys($config) as $i ) {
++    	if ( substr( $config[$i]-&gt;getVar('conf_name'), 0, 5 ) == 'meta_' ) {
++    		$xoops-&gt;services['theme']-&gt;setMeta( 'meta',
++    			substr( $config[$i]-&gt;getVar('conf_name'), 5 ), $config[$i]-&gt;getConfValueForOutput() );
++    	}
+     }
+     //unset($config);
+     // show banner?
++
++	$xoops-&gt;services['theme']-&gt;addScript( 'include/xoops.js' );
++
+     if ($xoopsConfig['banners'] == 1) {
+         $xoopsTpl-&gt;assign('xoops_banner', xoops_getbanner());
+     } else {
+         $xoopsTpl-&gt;assign('xoops_banner', '&nbsp;');
+     }
+-    // Weird, but need extra &lt;script&gt; tags for 2.0.x themes
+-    $xoopsTpl-&gt;assign('xoops_js', '//--&gt;&lt;/script&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;'.XOOPS_URL.'/include/xoops.js&quot;&gt;&lt;/script&gt;&lt;script type=&quot;text/javascript&quot;&gt;&lt;!--');
+     // get all blocks and assign to smarty
+-    $xoopsblock = new XoopsBlock();
+-    $block_arr = array();
+     if ($xoopsUser != '') {
+         $xoopsTpl-&gt;assign(array('xoops_isuser' =&gt; true, 'xoops_userid' =&gt; $xoopsUser-&gt;getVar('uid'), 'xoops_uname' =&gt; $xoopsUser-&gt;getVar('uname'), 'xoops_isadmin' =&gt; $xoopsUserIsAdmin));
+         $groups = $xoopsUser-&gt;getGroups();
+@@ -74,99 +84,22 @@
+         $xoopsTpl-&gt;assign(array('xoops_isuser' =&gt; false, 'xoops_isadmin' =&gt; false));
+         $groups = XOOPS_GROUP_ANONYMOUS;
+     }
+-    $toppage = false;
+     if (isset($xoopsModule) &amp;&amp; is_object($xoopsModule)) {
+         // set page title
+         $xoopsTpl-&gt;assign('xoops_pagetitle', $xoopsModule-&gt;getVar('name'));
+         $xoopsTpl-&gt;assign('xoops_dirname', $xoopsModule-&gt;getVar('dirname'));
+-        $moduleid = $xoopsModule-&gt;getVar('mid');
+-        if (preg_match(&quot;/index\.php$/i&quot;, xoops_getenv('PHP_SELF')) &amp;&amp; $xoopsConfig['startpage'] == $xoopsModule-&gt;getVar('dirname')) {
+-            $toppage = true;
+-        }
+     } else {
+         $xoopsTpl-&gt;assign('xoops_pagetitle', htmlspecialchars($xoopsConfig['slogan'], ENT_QUOTES));
+         $xoopsTpl-&gt;assign('xoops_dirname', &quot;system&quot;);
+-        $moduleid = 0;
+-        if (!empty($xoopsOption['show_cblock'])) {
+-            $toppage = true;
+-        }
+     }
+-    // Get blocks
+-    $block_arr =&amp; $xoopsblock-&gt;getAllByGroupModule($groups, $moduleid, $toppage, XOOPS_BLOCK_VISIBLE);
+ 
+-    foreach (array_keys($block_arr) as $i) {
+-        $bcachetime = $block_arr[$i]-&gt;getVar('bcachetime');
+-        if (empty($bcachetime)) {
+-            $xoopsTpl-&gt;xoops_setCaching(0);
+-        } else {
+-            $xoopsTpl-&gt;xoops_setCaching(2);
+-            $xoopsTpl-&gt;xoops_setCacheTime($bcachetime);
+-        }
+-        $btpl = $block_arr[$i]-&gt;getVar('template') != '' ? $block_arr[$i]-&gt;getVar('template') : &quot;system_block_dummy.html&quot;;
+-
+-        if (empty($bcachetime) || !$xoopsTpl-&gt;is_cached('db:'.$btpl, 'blk_'.$block_arr[$i]-&gt;getVar('bid'))) {
+-            $xoopsLogger-&gt;addBlock($block_arr[$i]-&gt;getVar('name'));
+-            $bresult =&amp; $block_arr[$i]-&gt;buildBlock();
+-            if (!$bresult) {
+-                continue;
+-            }
+-            $xoopsTpl-&gt;assign_by_ref('block', $bresult);
+-            $bcontent =&amp; $xoopsTpl-&gt;fetch('db:'.$btpl, 'blk_'.$block_arr[$i]-&gt;getVar('bid'));
+-            $xoopsTpl-&gt;clear_assign('block');
+-        } else {
+-            $xoopsLogger-&gt;addBlock($block_arr[$i]-&gt;getVar('name'), true, $bcachetime);
+-            $bcontent =&amp; $xoopsTpl-&gt;fetch('db:'.$btpl, 'blk_'.$block_arr[$i]-&gt;getVar('bid'));
+-        }
+-
+-        switch ($block_arr[$i]-&gt;getVar('side')) {
+-        case XOOPS_SIDEBLOCK_LEFT:
+-            if (!isset($show_lblock)) {
+-                $xoopsTpl-&gt;assign('xoops_showlblock', 1);
+-                $show_lblock = 1;
+-            }
+-            $xoopsTpl-&gt;append('xoops_lblocks', array('title' =&gt; $block_arr[$i]-&gt;getVar('title'), 'content' =&gt; $bcontent));
+-            break;
+-        case XOOPS_CENTERBLOCK_LEFT:
+-            if (!isset($show_cblock)) {
+-                $xoopsTpl-&gt;assign('xoops_showcblock', 1);
+-                $show_cblock = 1;
+-            }
+-            $xoopsTpl-&gt;append('xoops_clblocks', array('title' =&gt; $block_arr[$i]-&gt;getVar('title'), 'content' =&gt; $bcontent));
+-            break;
+-        case XOOPS_CENTERBLOCK_RIGHT:
+-            if (!isset($show_cblock)) {
+-                $xoopsTpl-&gt;assign('xoops_showcblock', 1);
+-                $show_cblock = 1;
+-            }
+-            $xoopsTpl-&gt;append('xoops_crblocks', array('title' =&gt; $block_arr[$i]-&gt;getVar('title'), 'content' =&gt; $bcontent));
+-            break;
+-        case XOOPS_CENTERBLOCK_CENTER:
+-            if (!isset($show_cblock)) {
+-                $xoopsTpl-&gt;assign('xoops_showcblock', 1);
+-                $show_cblock = 1;
+-            }
+-            $xoopsTpl-&gt;append('xoops_ccblocks', array('title' =&gt; $block_arr[$i]-&gt;getVar('title'), 'content' =&gt; $bcontent));
+-            break;
+-        case XOOPS_SIDEBLOCK_RIGHT:
+-            if (!isset($show_rblock)) {
+-                $xoopsTpl-&gt;assign('xoops_showrblock', 1);
+-                $show_rblock = 1;
+-            }
+-            $xoopsTpl-&gt;append('xoops_rblocks', array('title' =&gt; $block_arr[$i]-&gt;getVar('title'), 'content' =&gt; $bcontent));
+-            break;
+-        }
+-        unset($bcontent);
+-    }
+-    //unset($block_arr);
+-    if (!isset($show_rblock)) {
+-        $xoopsTpl-&gt;assign('xoops_showrblock', 0);
+-    }
+-    if (!isset($show_cblock)) {
+-        $xoopsTpl-&gt;assign('xoops_showcblock', 0);
+-    }
+-    if (!isset($show_lblock)) {
+-        $xoopsTpl-&gt;assign('xoops_showlblock', 0);
+-    }
++    /////////
++    $builder =&amp; XOS::create( 'xoops_logos_PageBuilder' );
++    $builder-&gt;retrieveBlocks();
++    
++    $builder-&gt;assignVars( $xoops-&gt;services['theme']-&gt;template );
++    
++	
+     if (xoops_getenv('REQUEST_METHOD') != 'POST' &amp;&amp; !empty($xoopsModule) &amp;&amp; !empty($xoopsConfig['module_cache'][$xoopsModule-&gt;getVar('mid')])) {
+         $xoopsTpl-&gt;xoops_setCaching(2);
+         $xoopsTpl-&gt;xoops_setCacheTime($xoopsConfig['module_cache'][$xoopsModule-&gt;getVar('mid')]);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000038.html">[Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000040.html">[Xoops4-svn] r47 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default: . modules modules/system modules/system/blocks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

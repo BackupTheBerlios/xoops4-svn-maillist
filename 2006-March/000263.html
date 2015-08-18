@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r273%20-%20XoopsCore/branches/2.2.x/2.2.5/html/class&In-Reply-To=%3C200603231403.k2NE3Vl8006978%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000262.html">
+   <LINK REL="Next"  HREF="000264.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class</H1>
+    <B>phppp at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r273%20-%20XoopsCore/branches/2.2.x/2.2.5/html/class&In-Reply-To=%3C200603231403.k2NE3Vl8006978%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class">phppp at berlios.de
+       </A><BR>
+    <I>Thu Mar 23 15:03:31 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000262.html">[Xoops4-svn] r272 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+</A></li>
+        <LI>Next message: <A HREF="000264.html">[Xoops4-svn] r274 - XoopsCore/branches/2.0.x/2.0.14/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#263">[ date ]</a>
+              <a href="thread.html#263">[ thread ]</a>
+              <a href="subject.html#263">[ subject ]</a>
+              <a href="author.html#263">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: phppp
+Date: 2006-03-23 15:02:50 +0100 (Thu, 23 Mar 2006)
+New Revision: 273
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php
+Log:
+security update for review: 
+1 Added verification with getimagesize() for uploaded file with mime type of &quot;image/***&quot; 
+2 Added multiple extension sanitizing
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php	2006-03-23 02:33:55 UTC (rev 272)
++++ XoopsCore/branches/2.2.x/2.2.5/html/class/uploader.php	2006-03-23 14:02:50 UTC (rev 273)
+@@ -119,6 +119,10 @@
+     var $savedFileName;
+ 
+ 	var $extensionToMime = array();
++	
++	var $extensionsToBeSanitized = array(&quot;php&quot;, &quot;php3&quot;, &quot;php5&quot;);
++	var $checkImageType = true;
++	
+     /**
+      * Constructor
+      *
+@@ -189,13 +193,6 @@
+ 			}
+ 		}
+         $this-&gt;errors = array();
+-		if ( $ext &amp;&amp; in_array( $ext, array( 'gif', 'jpg', 'jpeg', 'png', 'bmp', 'xbm' ) ) ) {
+-	   		// Prevent sending of invalid images that would crash IE
+-			if ( ! ( $info = getimagesize( $this-&gt;mediaTmpName ) ) ) {
+-				$this-&gt;setErrors( 'Invalid file content' );
+-				return false;
+-			}
+-		}
+         if (intval($this-&gt;mediaSize) &lt; 0) {
+             $this-&gt;setErrors(_ER_UP_INVALIDFILESIZE);
+             return false;
+@@ -308,6 +305,8 @@
+         if (!is_writeable($this-&gt;uploadDir)) {
+             $this-&gt;setErrors(sprintf(_ER_UP_FAILEDOPENDIRWRITE, $this-&gt;uploadDir));
+         }
++        $this-&gt;sanitizeMultipleExtensions();
++        
+         if (!$this-&gt;checkMaxFileSize()) {
+             $this-&gt;setErrors(sprintf(_ER_UP_FILESIZETOOLARGE, $this-&gt;mediaSize));
+         }
+@@ -320,6 +319,9 @@
+         if (!$this-&gt;checkMimeType()) {
+             $this-&gt;setErrors(sprintf(_ER_UP_MIMETYPENOTALLOWED, $this-&gt;mediaType));
+         }
++        if (!$this-&gt;checkImageType()) {
++            $this-&gt;setErrors('Invalide image file');
++        }
+         if (count($this-&gt;errors) &gt; 0) {
+             return false;
+         }
+@@ -425,6 +427,41 @@
+ 	}
+ 
+     /**
++     * Check whether or not the uploaded image type is valid
++     *
++     * @return  bool
++     **/
++    function checkImageType()
++    {
++	    if(empty($this-&gt;checkImageType)) return true;
++
++        if( (&quot;image&quot; == substr($this-&gt;mediaType, 0, strpos($this-&gt;mediaType, &quot;/&quot;))) || 
++        	(!empty($this-&gt;mediaRealType) &amp;&amp; &quot;image&quot; == substr($this-&gt;mediaRealType, 0, strpos($this-&gt;mediaRealType, &quot;/&quot;)))
++        ){
++			if ( ! ( $info = @getimagesize( $this-&gt;mediaTmpName ) ) ) {
++				return false;
++			}
++		}
++		return true;
++	}
++
++    /**
++     * Sanitize executable filename with multiple extensions
++     *
++     **/
++    function sanitizeMultipleExtensions()
++    {
++	    if(empty($this-&gt;extensionsToBeSanitized)) return;
++	    $patterns = array();
++	    $replaces = array();
++	    foreach($this-&gt;extensionsToBeSanitized as $ext){
++		    $patterns[] = &quot;/\.&quot;.preg_quote($ext).&quot;\./i&quot;;
++		    $replaces[] = &quot;_&quot;.$ext.&quot;.&quot;;
++	    }
++        $this-&gt;mediaName = preg_replace($patterns, $replaces, $this-&gt;mediaName);
++	}
++
++    /**
+      * Add an error
+      * 
+      * @param   string  $error
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000262.html">[Xoops4-svn] r272 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+</A></li>
+	<LI>Next message: <A HREF="000264.html">[Xoops4-svn] r274 - XoopsCore/branches/2.0.x/2.0.14/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#263">[ date ]</a>
+              <a href="thread.html#263">[ thread ]</a>
+              <a href="subject.html#263">[ subject ]</a>
+              <a href="author.html#263">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

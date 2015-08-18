@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r85 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r85%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include&In-Reply-To=%3C200512121714.jBCHEMDH006432%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000077.html">
+   <LINK REL="Next"  HREF="000079.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r85 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r85%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include&In-Reply-To=%3C200512121714.jBCHEMDH006432%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r85 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Dec 12 18:14:22 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000077.html">[Xoops4-svn] r84 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class
+</A></li>
+        <LI>Next message: <A HREF="000079.html">[Xoops4-svn] r86 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#78">[ date ]</a>
+              <a href="thread.html#78">[ thread ]</a>
+              <a href="subject.html#78">[ subject ]</a>
+              <a href="author.html#78">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-12 18:14:22 +0100 (Mon, 12 Dec 2005)
+New Revision: 85
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php
+Log:
+Changed the on-demand theme selection code to allow setting the theme using get request vars.
+
+stuff.php?xoops_theme_select=thing
+
+should work now
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php	2005-12-12 17:12:52 UTC (rev 84)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php	2005-12-12 17:14:22 UTC (rev 85)
+@@ -199,9 +199,9 @@
+             $xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin();
+         }
+     }
+-    if (!empty($_POST['xoops_theme_select']) &amp;&amp; in_array($_POST['xoops_theme_select'], $xoopsConfig['theme_set_allowed'])) {
+-        $xoopsConfig['theme_set'] = $_POST['xoops_theme_select'];
+-        $_SESSION['xoopsUserTheme'] = $_POST['xoops_theme_select'];
++    if (!empty($_REQUEST['xoops_theme_select']) &amp;&amp; in_array($_REQUEST['xoops_theme_select'], $xoopsConfig['theme_set_allowed'])) {
++        $xoopsConfig['theme_set'] = $_REQUEST['xoops_theme_select'];
++        $_SESSION['xoopsUserTheme'] = $_REQUEST['xoops_theme_select'];
+     } elseif (!empty($_SESSION['xoopsUserTheme']) &amp;&amp; in_array($_SESSION['xoopsUserTheme'], $xoopsConfig['theme_set_allowed'])) {
+         $xoopsConfig['theme_set'] = $_SESSION['xoopsUserTheme'];
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000077.html">[Xoops4-svn] r84 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class
+</A></li>
+	<LI>Next message: <A HREF="000079.html">[Xoops4-svn] r86 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#78">[ date ]</a>
+              <a href="thread.html#78">[ thread ]</a>
+              <a href="subject.html#78">[ subject ]</a>
+              <a href="author.html#78">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

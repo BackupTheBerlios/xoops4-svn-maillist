@@ -1,0 +1,366 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r234 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . TreeWidget.xoobj TreeWidget.xoobj/www
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r234%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm%3A%20.%20TreeWidget.xoobj%20TreeWidget.xoobj/www&In-Reply-To=%3C200602131510.k1DFAanS023606%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000225.html">
+   <LINK REL="Next"  HREF="000227.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r234 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . TreeWidget.xoobj TreeWidget.xoobj/www</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r234%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm%3A%20.%20TreeWidget.xoobj%20TreeWidget.xoobj/www&In-Reply-To=%3C200602131510.k1DFAanS023606%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r234 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . TreeWidget.xoobj TreeWidget.xoobj/www">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 16:10:36 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000225.html">[Xoops4-svn] r233 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore: . UserExperience
+</A></li>
+        <LI>Next message: <A HREF="000227.html">[Xoops4-svn] r235 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm: . Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#226">[ date ]</a>
+              <a href="thread.html#226">[ thread ]</a>
+              <a href="subject.html#226">[ subject ]</a>
+              <a href="author.html#226">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 16:10:36 +0100 (Mon, 13 Feb 2006)
+New Revision: 234
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/treewidget.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/xo-info.php
+Removed:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/treewidget.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js
+Log:
+Separating the low and high level interface building frameworks
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj (from rev 216, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/treewidget.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj/treewidget.php	2006-01-31 05:24:57 UTC (rev 216)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/treewidget.php	2006-02-13 15:10:36 UTC (rev 234)
+@@ -1,112 +0,0 @@
+-&lt;?php
+-/**
+-* xoops_pyro_TreeWidget component class file
+-*
+-* @copyright	The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @package      xoops_pyro
+-* @subpackage   xoops_pyro_TreeWidget
+-* @author       Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since        2.3.0
+-* @version		$Id$
+-*/
+-
+-XOS::import( 'xoops_pyro_Widget' );
+-
+-/**
+-* xoops_pyro_TreeWidget
+-*
+-* The tree widget renders hierarchical data.
+-* The default HTML output will show an expandable/collapsable tree made of UL/LI elements.
+-* Its dynamic behavior makes strong use of CSS, and only requires minimal scripting (mainly to
+-* assign appropriate CSS classes to elements during initialization).
+-* 
+-* The data is provided to the tree as an array:
+-* &lt;code&gt;
+-* $data = array(
+-* 	'item1' =&gt; array(
+-* 		'name' =&gt; 'Item 1',
+-* 	),
+-* 	'item2' =&gt; array(
+-* 		'name' =&gt; 'Item 2 with sub',
+-* 		'link' =&gt; 'item2.html',
+-* 		'children' =&gt; array(
+-* 			'i2sub1' =&gt; array(
+-* 				'name' =&gt; 'SubItem 1',
+-* 				'link' =&gt; 'subitem1.html',
+-* 			),
+-* 			'i2sub2' =&gt; array(
+-* 				'name' =&gt; 'SubItem 2',
+-* 				'link' =&gt; 'subitem2.html',
+-* 			),
+-* 		),
+-* 	),
+-* );
+-* $widget-&gt;treeData = $data;
+-* echo $widget-&gt;render();
+-* &lt;/code&gt;
+-* 
+-* @author 		Skalpa Keo
+-* @package		xoops_pyro
+-* @subpackage	xoops_pyro_TreeWidget
+-* @since        2.3.0
+-*/
+-class xoops_pyro_TreeWidget extends xoops_pyro_Widget {
+-	
+-	var $stylesheet = 'www/default.css';
+-	var $javascript = 'www/treewidget.js';
+-	
+-	/**
+-	 * The tree nodes data
+-	 *
+-	 * The tree data is an array of nodes. Each node must be an hash containing a 'name' element, and optionally
+-	 * a 'link' element (if it links to another location) or a 'children' element containing this node
+-	 * subnodes.
+-	 * 
+-	 * @var array
+-	 */	
+-	var $treeData = array();
+-	
+-	function xoInit( $options = array() ) {
+-		array_unshift( $this-&gt;elementClasses, 'pyro_TreeWidget' );
+-		return true;	
+-	}
+-	
+-	function render() {
+-		$str = $this-&gt;renderOpeningTag( 'ul' );
+-		foreach ( $this-&gt;treeData as $node ) {
+-			$str .= $this-&gt;renderNode( $node );
+-		}
+-		$str .= '&lt;/ul&gt;';
+-		$str .= &quot;\n&lt;script type='text/javascript'&gt;\n&quot;;
+-		$str .= 'var ' . str_replace( '-', '', $this-&gt;elementId ) . ' = new xoops_pyro_TreeWidget(&quot;' . $this-&gt;elementId . '&quot;);';
+-		$str .= &quot;\n&lt;/script&gt;\n&quot;;
+-		return $str;
+-	}
+-	
+-	/**
+-	 * Internal method used to render a single node
+-	 * @param array $node
+-	 * @return string
+-	 */
+-	function renderNode( $node ) {
+-		if ( !isset( $node['link'] ) ) {
+-			$str = '&lt;li&gt;' . htmlspecialchars( $node['name'] );
+-		} else {
+-			$str = '&lt;li&gt;&lt;a href=&quot;' . htmlspecialchars( $node['link'] ) . '&quot;&gt;' . htmlspecialchars( $node['name'] ) . '&lt;/a&gt;';
+-		}
+-		if ( !@empty( $node['children'] ) ) {
+-			$str .= &quot;\n&lt;ul&gt;\n&quot;;
+-			foreach ( $node['children'] as $child ) {
+-				$str .= $this-&gt;renderNode( $child );
+-			}
+-			$str .= &quot;\n&lt;/ul&gt;\n&quot;;
+-		}
+-		$str .= &quot;&lt;/li&gt;\n&quot;;
+-		return $str;
+-	}
+-	
+-}
+-
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/treewidget.php (from rev 231, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj/treewidget.php)
+
+Deleted: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js	2006-01-31 05:24:57 UTC (rev 216)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js	2006-02-13 15:10:36 UTC (rev 234)
+@@ -1,108 +0,0 @@
+-
+-function xoops_pyro_TreeWidget( elementId, openClass, closedClass ) {
+-	var me=this;
+-	
+-	this.elementId = elementId;
+-	this.targetElement = document.getElementById( elementId );
+-	this.openClass = openClass ? openClass : &quot;openNode&quot;;
+-	this.closedClass = closedClass ? closedClass : &quot;closedNode&quot;;
+-	this.enabled = ( this.targetElement &amp;&amp; document.createElement ) ? true : false;
+-	/**
+-	* Expand all the nodes of this tree
+-	*/
+-	this.expandAll = function () {
+-		if ( !this.enabled )	return;
+-		return this.switchNode( this.targetElement, true );
+-	}
+-	/**
+-	* Collapse all the nodes of this tree
+-	*/
+-	this.collapseAll = function () {
+-		if ( !this.enabled )	return;
+-		return this.switchNode( this.targetElement, false );
+-	}
+-	/**
+-	* Expand nodes ensuring the specified item is visible
+-	*/
+-	this.revealItem = function ( targetId ) {
+-		if ( !this.enabled )	return;
+-		var target;
+-		if ( this.switchNode( this.targetElement, true, targetId ) )
+-			if ( target = document.getElementById( targetId ) )
+-				target.scrollIntoView( false );
+-	}
+-	
+-	this.switchNode = function ( elt, state, targetId ) {
+-		if ( !elt.childNodes || !elt.childNodes.length )	return false;
+-		var nItem, nSub, hasSub = false;
+-		for ( nItem = 0; nItem &lt; elt.childNodes.length; nItem++ ) {
+-			var item = elt.childNodes[nItem];
+-			if ( targetId &amp;&amp; item.id == targetId )	return true;
+-			if ( item.nodeName &amp;&amp; item.nodeName.toLowerCase() == 'li' ) {
+-				for ( nSub = 0; nSub &lt; item.childNodes.length; nSub++ ) {
+-					var subItem = item.childNodes[nSub];
+-					if ( subItem.nodeName &amp;&amp; subItem.nodeName.toLowerCase() == 'ul' ) {
+-						hasSub = true;
+-						if ( targetId &amp;&amp; this.switchNode( elt, state, targetId ) ) {
+-							item.className = this[ state ? 'openClass' : 'closeClass' ];
+-							return true;
+-						}
+-					}
+-				}
+-				if ( hasSub &amp;&amp; targetId ) {
+-					item.className = this[ state ? 'openClass' : 'closeClass' ];
+-				}
+-			}
+-		}
+-	}
+-	
+-	this.handleClick = function ( evt ) {
+-		if ( !evt ) evt=window.event;
+-		var tgt = evt.target ? evt.target : evt.srcElement;
+-		if ( tgt.nodeType == 3 ) tgt.nodeType = tgt.parentNode;
+-		
+-		if ( tgt != this ) {
+-			return true;
+-		} else {
+-			if ( this.className.indexOf( me.openClass ) != -1 ) {
+-				xoReplaceClass( this, me.openClass, me.closedClass );
+-			} else {
+-				xoReplaceClass( this, me.closedClass, me.openClass );
+-			}
+-			evt.cancelBubble = true;
+-			if ( evt.stopPropagation )	evt.stopPropagation();
+-			return false;
+-		}
+-	}
+-	
+-	this.initializeTree = function ( elt ) {
+-		if ( !this.enabled )	return;
+-		if ( !elt.childNodes || !elt.childNodes.length )	return false;
+-		var nItem, nSub, hasSub = false;
+-		for ( nItem = 0; nItem &lt; elt.childNodes.length; nItem++ ) {
+-			var item = elt.childNodes[nItem];
+-			if ( item.nodeName &amp;&amp; item.nodeName.toLowerCase() == 'li' ) {
+-				hasSub = false;
+-				for ( nSub = 0; nSub &lt; item.childNodes.length; nSub++ ) {
+-					var subItem = item.childNodes[nSub];
+-					if ( subItem.nodeName &amp;&amp; subItem.nodeName.toLowerCase() == 'ul' ) {
+-						hasSub = true;
+-						this.initializeTree( subItem );
+-					}
+-				}
+-				if ( !hasSub ) {
+-					item.className = 'treeItem';
+-					item.onclick = function () { return true; }
+-				} else {
+-					if ( !item.className ) {
+-						item.className = this.openClass;
+-					}
+-					item.className += ' treeNode';
+-					item.onclick = this.handleClick;
+-				}
+-			}
+-		}
+-	}
+-	this.targetElement.className = 'pyro_TreeWidget';
+-	this.initializeTree( this.targetElement );
+-}
+
+Copied: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js (from rev 231, XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/TreeWidget.xoobj/www/treewidget.js)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/xo-info.php	2006-02-13 15:10:07 UTC (rev 233)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/xo-info.php	2006-02-13 15:10:36 UTC (rev 234)
+@@ -0,0 +1,36 @@
++&lt;?php
++/**
++ * xoops_pyro bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_pyro
++ */
++
++return array(
++	'xoBundleDisplayName' =&gt; '&quot;Pyro&quot; user interface wigets set',
++	'xoBundleIdentifier' =&gt; 'xoops_pyro',
++	'xoServices' =&gt; array(
++		'xoops_pyro_TreeWidget'	=&gt; array (
++			'xoBundleRoot' =&gt; '/TreeWidget.xoobj'
++		),
++		// Form widgets
++		'xoops_pyro_Form'			=&gt; array( 'xoClassPath' =&gt; '/Forms/form.php' ),
++		'xoops_pyro_FormElement'	=&gt; array( 'xoClassPath' =&gt; '/Forms/element.php' ),
++		'xoops_pyro_FormText'		=&gt; array( 'xoClassPath' =&gt; '/Forms/text.php' ),
++		'xoops_pyro_FormSecret'		=&gt; array( 'xoClassPath' =&gt; '/Forms/text.php' ),
++		'xoops_pyro_FormTextarea'	=&gt; array( 'xoClassPath' =&gt; '/Forms/textarea.php' ),
++		'xoops_pyro_FormSelect'		=&gt; array( 'xoClassPath' =&gt; '/Forms/select.php' ),
++		'xoops_pyro_FormSelect1'	=&gt; array( 'xoClassPath' =&gt; '/Forms/select.php' ),
++		'xoops_pyro_FormSubmit'		=&gt; array( 'xoClassPath' =&gt; '/Forms/submit.php' ),
++		'xoops_pyro_FormRange'		=&gt; array( 'xoClassPath' =&gt; '/Forms/range.php' ),
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000225.html">[Xoops4-svn] r233 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore: . UserExperience
+</A></li>
+	<LI>Next message: <A HREF="000227.html">[Xoops4-svn] r235 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm: . Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#226">[ date ]</a>
+              <a href="thread.html#226">[ thread ]</a>
+              <a href="subject.html#226">[ subject ]</a>
+              <a href="author.html#226">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r35%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200511251236.jAPCaX2o000439%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000027.html">
+   <LINK REL="Next"  HREF="000029.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r35%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200511251236.jAPCaX2o000439%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r35 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Nov 25 13:36:33 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000027.html">[Xoops4-svn] r34 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+        <LI>Next message: <A HREF="000029.html">[Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#28">[ date ]</a>
+              <a href="thread.html#28">[ thread ]</a>
+              <a href="subject.html#28">[ subject ]</a>
+              <a href="author.html#28">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-25 13:36:30 +0100 (Fri, 25 Nov 2005)
+New Revision: 35
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+Log:
+Updated the old db: Smarty resource handler so it doesn't generate queries anymore
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php	2005-11-25 10:37:03 UTC (rev 34)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php	2005-11-25 12:36:30 UTC (rev 35)
+@@ -1,123 +1,100 @@
+ &lt;?php
+-/*
++/**
+  * Smarty plugin
++ * 
++ * Kept for XOOPS 2.0 backward compatibility only !!!
++ * 
++ * Use the new xotpl: handler to access XOOPS templates
+  * ------------------------------------------------------------- 
+  * File:     resource.db.php
+  * Type:     resource
+  * Name:     db
+  * Purpose:  Fetches templates from a database
+  * -------------------------------------------------------------
++ * @package xoops20
++ * @deprecated
+  */
+-function smarty_resource_db_source($tpl_name, &amp;$tpl_source, &amp;$smarty)
+-{
+-    $tplfile_handler =&amp; xoops_gethandler('tplfile');
+-	$tplobj =&amp; $tplfile_handler-&gt;find($GLOBALS['xoopsConfig']['template_set'], null, null, null, $tpl_name, true);
+-	if (count($tplobj) &gt; 0) {
+-		if (false != $smarty-&gt;xoops_canUpdateFromFile()) {
+-			$conf_theme = isset($GLOBALS['xoopsConfig']['theme_set']) ? $GLOBALS['xoopsConfig']['theme_set'] : 'default';
+-			if ($conf_theme != 'default') {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			} else {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			}
+-			if ($filepath != &quot;&quot; &amp;&amp; file_exists($filepath)) {
+-				$file_modified = filemtime($filepath);
+-				if ($file_modified &gt; $tplobj[0]-&gt;getVar('tpl_lastmodified')) {
+-					if (false != $fp = fopen($filepath, 'r')) {
+-						$filesource = fread($fp, filesize($filepath));
+-    					fclose($fp);
+-						$tplobj[0]-&gt;setVar('tpl_source', $filesource, true);
+-						$tplobj[0]-&gt;setVar('tpl_lastmodified', time());
+-						$tplobj[0]-&gt;setVar('tpl_lastimported', time());
+-    					$tplfile_handler-&gt;forceUpdate($tplobj[0]);
+-						$tpl_source = $filesource;
+-        				return true;
+-					}
+-				}
+-			}
++
++function smarty_resource_db_source($tpl_name, &amp;$tpl_source, &amp;$smarty) {
++
++	if ( $tplPath = smarty_resource_db_lookup( $tpl_name ) ) {
++		if ( $tpl_source = file_get_contents( $tplPath ) ) {
++			return true;
+ 		}
+-        $tpl_source = $tplobj[0]-&gt;getVar('tpl_source');
+-        return true;
+-    } else {
+-		return false;
+ 	}
++	return false;
+ }
+ 
+-function smarty_resource_db_timestamp($tpl_name, &amp;$tpl_timestamp, &amp;$smarty)
+-{
+-    $tplfile_handler =&amp; xoops_gethandler('tplfile');
+-    $tplobj =&amp; $tplfile_handler-&gt;find($GLOBALS['xoopsConfig']['template_set'], null, null, null, $tpl_name, false);
+-	if (count($tplobj) &gt; 0) {
+-		if (false != $smarty-&gt;xoops_canUpdateFromFile()) {
+-			$conf_theme = isset($GLOBALS['xoopsConfig']['theme_set']) ? $GLOBALS['xoopsConfig']['theme_set'] : 'default';
+-			if ($conf_theme != 'default') {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_THEME_PATH.'/'.$conf_theme.'/templates/'.$tplobj[0]-&gt;getVar('tpl_module').'/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			} else {
+-				switch ($tplobj[0]-&gt;getVar('tpl_type')) {
+-					case 'module':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/'.$tpl_name;
+-						break;
+-					case 'block':
+-						$filepath = XOOPS_ROOT_PATH.'/modules/'.$tplobj[0]-&gt;getVar('tpl_module').'/templates/blocks/'.$tpl_name;
+-						break;
+-					default:
+-						$filepath = &quot;&quot;;
+-						break;
+-				}
+-			}
+-			if ($filepath != &quot;&quot; &amp;&amp; file_exists($filepath)) {
+-				$file_modified = filemtime($filepath);
+-				if ($file_modified &gt; $tplobj[0]-&gt;getVar('tpl_lastmodified')) {
+-					$tpl_timestamp = $file_modified;
+-					return true;
+-				}
+-			}
++function smarty_resource_db_timestamp($tpl_name, &amp;$tpl_timestamp, &amp;$smarty) {
++
++	if ( $tplPath = smarty_resource_db_lookup( $tpl_name ) ) {
++		if ( $tpl_timestamp = filemtime( $tplPath ) ) {
++			return true;
+ 		}
+-        $tpl_timestamp = $tplobj[0]-&gt;getVar('tpl_lastmodified');
+-        return true;
+-    } else {
+-		return false;
+ 	}
++	return false;
+ }
+ 
+-function smarty_resource_db_secure($tpl_name, &amp;$smarty)
+-{
++function smarty_resource_db_secure($tpl_name, &amp;$smarty) {
+     // assume all templates are secure
+     return true;
+ }
+ 
+-function smarty_resource_db_trusted($tpl_name, &amp;$smarty)
+-{
++function smarty_resource_db_trusted($tpl_name, &amp;$smarty) {
+     // not used for templates
+ }
++
++/**
++ * Get a template path from its old-style name
++ *
++ * @param string	$tplName	XOOPS 2.0 name of the template to search
++ * @param bool		$refresh	Set this to true to force regeneration of the cache
++ * @return string	Full path to the template (or false if not found)
++ */
++function smarty_resource_db_lookup( $tplName, $refresh = false ) {
++	static $list = null;
++	global $xoops;
++
++	if ( !isset($list) ) {
++		$list = @include $xoops-&gt;path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' );
++	}
++	if ( !is_array($list) || $refresh ) {
++		// List not found: regenerate it
++		$handler =&amp; xoops_gethandler( 'module' );
++		$modules = $handler-&gt;getList( null, true );
++		$templates = array();
++	
++		foreach ( array_keys( $modules ) as $modname ) {
++			$modversion = array();
++			if ( @include $xoops-&gt;path( &quot;modules/$modname/xoops_version.php&quot; ) ) {
++				if ( isset($modversion['templates']) ) {
++					foreach ( $modversion['templates'] as $tpl ) {
++						$templates[ $tpl['file'] ] = &quot;modules/$modname/templates/&quot; . $tpl['file'];
++					}
++				}
++				if ( isset($modversion['blocks']) ) {
++					foreach ( $modversion['blocks'] as $block ) {
++						if ( isset( $block['template'] ) ) {
++							$templates[ $block['template'] ] = &quot;modules/$modname/templates/blocks/&quot; . $block['template'];
++						}
++					}
++				}
++			}
++		}
++		if ( $fp = fopen( $xoops-&gt;path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ), 'wt' ) ) {
++			fwrite( $fp, &quot;&lt;?php\nreturn &quot; . var_export( $templates, true ) . &quot;;\n?&gt;&quot; );
++			fclose( $fp );
++			$list = $templates;		// Only save the static if saving was successful
++		} else {
++			trigger_error( &quot;Cannot create db: resource handler templates list&quot;, E_USER_WARNING );
++		}
++	}
++	if ( isset( $list[$tplName] ) ) {
++		return $xoops-&gt;path( $list[$tplName] );
++	}
++	return false;
++}
++
++
++
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000027.html">[Xoops4-svn] r34 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+	<LI>Next message: <A HREF="000029.html">[Xoops4-svn] r36 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#28">[ date ]</a>
+              <a href="thread.html#28">[ thread ]</a>
+              <a href="subject.html#28">[ subject ]</a>
+              <a href="author.html#28">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

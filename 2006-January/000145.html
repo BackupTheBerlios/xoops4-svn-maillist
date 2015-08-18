@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r153 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r153%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200601200513.k0K5Diki005708%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000144.html">
+   <LINK REL="Next"  HREF="000146.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r153 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r153%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200601200513.k0K5Diki005708%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r153 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 06:13:44 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000144.html">[Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000146.html">[Xoops4-svn] r154 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#145">[ date ]</a>
+              <a href="thread.html#145">[ thread ]</a>
+              <a href="subject.html#145">[ subject ]</a>
+              <a href="author.html#145">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 06:13:36 +0100 (Fri, 20 Jan 2006)
+New Revision: 153
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+Log:
+Ensured old themes disable HTTP redirection (as they wouldn't display the redirection message correctly)
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-20 05:10:01 UTC (rev 152)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-20 05:13:36 UTC (rev 153)
+@@ -156,9 +156,13 @@
+ 
+ 		if ( $info = @include &quot;$this-&gt;path/xo-info.php&quot; ) {
+ 			XOS::apply( $this, $info );
++			if ( isset( $_SESSION ) ) {
++				unset( $_SESSION[$xoops-&gt;services['http']-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] );
++			}
+ 		} else {
+ 			$this-&gt;themeAPI = '2.0';
+ 			$this-&gt;parentTheme = ( $this-&gt;folderName == 'xoops20' ? '' : 'xoops20' );
++			$_SESSION[$xoops-&gt;services['http']-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] = true;
+ 		}
+ 		if ( $this-&gt;bufferOutput ) {
+ 			ob_start();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000144.html">[Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000146.html">[Xoops4-svn] r154 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#145">[ date ]</a>
+              <a href="thread.html#145">[ thread ]</a>
+              <a href="subject.html#145">[ subject ]</a>
+              <a href="author.html#145">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

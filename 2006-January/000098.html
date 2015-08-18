@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r106%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs&In-Reply-To=%3C200601022121.k02LLgdt016434%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000097.html">
+   <LINK REL="Next"  HREF="000099.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r106%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs&In-Reply-To=%3C200601022121.k02LLgdt016434%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r106 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Jan  2 22:21:42 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000097.html">[Xoops4-svn] r105 - XoopsCore/branches/2.3.x/2.3-main/htdocs
+</A></li>
+        <LI>Next message: <A HREF="000099.html">[Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#98">[ date ]</a>
+              <a href="thread.html#98">[ thread ]</a>
+              <a href="subject.html#98">[ subject ]</a>
+              <a href="author.html#98">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-02 22:21:40 +0100 (Mon, 02 Jan 2006)
+New Revision: 106
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/header.php
+Log:
+Enhanced the theme service to accept plug-ins, and modified the blocks aggregation class so it is now a theme plug-in.
+Also fixed a bug with 2.0 themes, that was duplicating content on pages not using smarty, like the inbox page (thx to philou for reporting that one).
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2006-01-02 21:12:48 UTC (rev 105)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2006-01-02 21:21:40 UTC (rev 106)
+@@ -27,8 +27,33 @@
+  */
+ class xoops_logos_PageBuilder {
+ 	
++	var $theme = false;
++	
+ 	var $blocks = array();	
+ 
++	function xoInit( $options = array() ) {
++	    if ( $this-&gt;theme ) {
++		    $this-&gt;retrieveBlocks();
++			$this-&gt;theme-&gt;template-&gt;assign( 'xoBlocks', $this-&gt;blocks );
++	    }
++	    return true;
++	}
++	
++	/**
++	 * Called before a specific zone is rendered
++	 */
++	function preRender() {
++		
++	}
++	/**
++	 * Called after a specific zone is rendered
++	 */
++	function postRender() {
++		
++	}	
++	
++	
++	
+ 	function retrieveBlocks() {
+ 		global $xoopsUser, $xoopsModule, $xoopsConfig;
+ 		
+@@ -71,14 +96,14 @@
+ 			'lastmod'	=&gt; $xobject-&gt;getVar( 'last_modified' ),
+ 		);
+ 
+-		global $xoopsTpl, $xoopsLogger;
++		global $xoopsLogger;
+ 		
+ 		$bcachetime = intval( $xobject-&gt;getVar('bcachetime') );
+         if (empty($bcachetime)) {
+-            $xoopsTpl-&gt;caching = 0;
++            $this-&gt;theme-&gt;template-&gt;caching = 0;
+         } else {
+-            $xoopsTpl-&gt;caching = 2;
+-            $xoopsTpl-&gt;cache_lifetime = $bcachetime;
++            $this-&gt;theme-&gt;template-&gt;caching = 2;
++            $this-&gt;theme-&gt;template-&gt;cache_lifetime = $bcachetime;
+         }
+ 		if ( '' != ( $tplName = $xobject-&gt;getVar('template') ) ) {
+ 			$tplName = &quot;xotpl:modules/{$block['module']}/templates/blocks/$tplName&quot;;
+@@ -92,19 +117,15 @@
+             if ( ! ( $bresult = $xobject-&gt;buildBlock() ) ) {
+                 return false;
+             }
+-			$xoopsTpl-&gt;assign( 'block', $bresult );
+-            $block['content'] = $xoopsTpl-&gt;fetch( $tplName, $cacheid );
+-            $xoopsTpl-&gt;clear_assign('block');
++			$this-&gt;theme-&gt;template-&gt;assign( 'block', $bresult );
++            $block['content'] = $this-&gt;theme-&gt;template-&gt;fetch( $tplName, $cacheid );
++            $this-&gt;theme-&gt;template-&gt;clear_assign('block');
+         } else {
+             $xoopsLogger-&gt;addBlock( $xobject-&gt;getVar('name'), true, $bcachetime );
+-            $block['content'] = $xoopsTpl-&gt;fetch( $tplName, $cacheid );
++            $block['content'] = $this-&gt;theme-&gt;template-&gt;fetch( $tplName, $cacheid );
+         }
+         return $block;
+ 	}
+ 	
+-	function assignVars( &amp;$template ) {
+-		$template-&gt;assign( 'xoBlocks', $this-&gt;blocks );
+-	}
+ 	
+-	
+ }
+\ No newline at end of file
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-02 21:12:48 UTC (rev 105)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-02 21:21:40 UTC (rev 106)
+@@ -84,7 +84,7 @@
+ 	var $path = '';
+ 	var $url = '';
+    /**
+-   * Whether or not the theme engine should include output generated by php
++   * Whether or not the theme engine should include the output generated by php
+    * @var string
+    */
+ 	var $bufferOutput = true;
+@@ -94,17 +94,17 @@
+ 	*/
+ 	var $contentType = 'text/html';
+ 	/**
+-	* Page-level template to use (relative to templates/page/)
++	* Canvas-level template to use
+ 	* @var string
+ 	*/
+ 	var $canvasTemplate = '';
+ 	/**
+-	* Page-level template to use (relative to templates/page/)
++	* Page-level template to use
+ 	* @var string
+ 	*/
+ 	var $pageTemplate = '';
+ 	/**
+-	* The file to fetch from the theme
++	* Content-level template to use
+ 	* @var string
+ 	*/
+ 	var $contentTemplate = '';
+@@ -129,6 +129,12 @@
+ 	* @access protected
+ 	*/
+ 	var $parentInfos = array();
++	/**
++	* Page construction plug-ins to use
++	* @var array
++	* @access public
++	*/
++	var $plugins = array( 'xoops_logos_PageBuilder' );
+ 	
+ 	var $renderCount = 0;
+ 	/**
+@@ -157,6 +163,10 @@
+ 		if ( $this-&gt;bufferOutput ) {
+ 			ob_start();
+ 		}
++		// Instanciate and initialize all the theme plugins
++		foreach ( $this-&gt;plugins as $k =&gt; $bundleId ) {
++			$this-&gt;plugins[$k] =&amp; XOS::create( $bundleId, array( 'theme' =&gt; &amp;$this ) );
++		}
+ 		return true;
+ 	}
+ 
+@@ -206,6 +216,8 @@
+ 			$this-&gt;contentTemplate = $contentTpl;
+ 		}
+ 		$vars['xoTheme']	=&amp; $this;
++		/* this will be changed */
++		$vars['xoops_dirname'] = @!empty( $GLOBALS['xoopsModule'] ) ? $GLOBALS['xoopsModule']-&gt;getVar('dirname') : 'system';
+ 		$this-&gt;template-&gt;assign( $vars );
+ 		$this-&gt;renderZone( 'canvas' );
+ 		$this-&gt;renderCount++;
+@@ -232,11 +244,12 @@
+ 			} elseif ( $zone != 'content' ) {
+ 				$this-&gt;renderZone( $zones[$zone] + 1 );
+ 			}
+-			if ( !empty($this-&gt;content) &amp;&amp; $zone == 'content' ) {
++			if ( !empty($this-&gt;content) &amp;&amp; $zone == 'content' &amp;&amp; $this-&gt;themeAPI != '2.0' ) {
+ 				echo $this-&gt;content;
+ 			}
+ 		}	
+ 	}
++
+ 	function renderAttributes( $coll ) {
+ 		$str = '';
+ 		foreach ( $coll as $name =&gt; $val ) {
+@@ -273,7 +286,7 @@
+     *
+     * @param string $src path to .js file
+     * @param array $attributes name =&gt; value paired array of attributes such as title
+-    * @param string $content JavaScript code
++    * @param string $content JavaScript code to output between the tags
+     *
+     * @return void
+     **/
+@@ -296,7 +309,7 @@
+     *
+     * @param string $src path to .css file
+     * @param array $attributes name =&gt; value paired array of attributes such as title
+-    * @param string $content CSS code
++    * @param string $content CSS code to output between the &lt;style&gt; tags (in case $src is empty)
+     *
+     * @return void
+     **/
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/header.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/header.php	2006-01-02 21:12:48 UTC (rev 105)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/header.php	2006-01-02 21:21:40 UTC (rev 106)
+@@ -92,13 +92,6 @@
+         $xoopsTpl-&gt;assign('xoops_pagetitle', htmlspecialchars($xoopsConfig['slogan'], ENT_QUOTES));
+         $xoopsTpl-&gt;assign('xoops_dirname', &quot;system&quot;);
+     }
+-
+-    /////////
+-    $builder =&amp; XOS::create( 'xoops_logos_PageBuilder' );
+-    $builder-&gt;retrieveBlocks();
+-    
+-    $builder-&gt;assignVars( $xoops-&gt;services['theme']-&gt;template );
+-    
+ 	
+     if (xoops_getenv('REQUEST_METHOD') != 'POST' &amp;&amp; !empty($xoopsModule) &amp;&amp; !empty($xoopsConfig['module_cache'][$xoopsModule-&gt;getVar('mid')])) {
+         $xoopsTpl-&gt;xoops_setCaching(2);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000097.html">[Xoops4-svn] r105 - XoopsCore/branches/2.3.x/2.3-main/htdocs
+</A></li>
+	<LI>Next message: <A HREF="000099.html">[Xoops4-svn] r107 - XoopsCore/branches/2.3.x/2.3-main/htdocs/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#98">[ date ]</a>
+              <a href="thread.html#98">[ thread ]</a>
+              <a href="subject.html#98">[ subject ]</a>
+              <a href="author.html#98">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

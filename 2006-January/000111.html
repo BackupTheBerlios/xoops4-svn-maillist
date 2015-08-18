@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r119 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r119%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel&In-Reply-To=%3C200601160535.k0G5ZSZP029416%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000110.html">
+   <LINK REL="Next"  HREF="000112.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r119 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r119%20-%20XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel&In-Reply-To=%3C200601160535.k0G5ZSZP029416%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r119 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Jan 16 06:35:28 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000110.html">[Xoops4-svn] r118 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/xoops-devteam
+</A></li>
+        <LI>Next message: <A HREF="000112.html">[Xoops4-svn] r120 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#111">[ date ]</a>
+              <a href="thread.html#111">[ thread ]</a>
+              <a href="subject.html#111">[ subject ]</a>
+              <a href="author.html#111">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-16 06:35:27 +0100 (Mon, 16 Jan 2006)
+New Revision: 119
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/module.php
+Log:
+One last fix about odd modules version numbers before release, so Marco gets happy :-)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/module.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/module.php	2006-01-16 01:16:53 UTC (rev 118)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/module.php	2006-01-16 05:35:27 UTC (rev 119)
+@@ -86,7 +86,7 @@
+             $this-&gt;loadInfo($dirname, $verbose);
+         }
+         $this-&gt;setVar('name', $this-&gt;modinfo['name'], true);
+-        $this-&gt;setVar('version', 100 * $this-&gt;modinfo['version']);
++		$this-&gt;setVar('version', round(100 * $this-&gt;modinfo['version']) );
+         $this-&gt;setVar('dirname', $this-&gt;modinfo['dirname'], true);
+         $hasmain = (isset($this-&gt;modinfo['hasMain']) &amp;&amp; $this-&gt;modinfo['hasMain'] == 1) ? 1 : 0;
+         $hasadmin = (isset($this-&gt;modinfo['hasAdmin']) &amp;&amp; $this-&gt;modinfo['hasAdmin'] == 1) ? 1 : 0;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000110.html">[Xoops4-svn] r118 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/xoops-devteam
+</A></li>
+	<LI>Next message: <A HREF="000112.html">[Xoops4-svn] r120 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#111">[ date ]</a>
+              <a href="thread.html#111">[ thread ]</a>
+              <a href="subject.html#111">[ subject ]</a>
+              <a href="author.html#111">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,528 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r246 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . PreferencesHandler.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r246%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices%3A%20.%20PreferencesHandler.xoobj&In-Reply-To=%3C200602191036.k1JAaFCE019193%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000237.html">
+   <LINK REL="Next"  HREF="000239.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r246 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . PreferencesHandler.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r246%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices%3A%20.%20PreferencesHandler.xoobj&In-Reply-To=%3C200602191036.k1JAaFCE019193%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r246 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices: . PreferencesHandler.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 11:36:15 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000237.html">[Xoops4-svn] r245 - XoopsCore/branches/2.2.x
+</A></li>
+        <LI>Next message: <A HREF="000239.html">[Xoops4-svn] r247 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#238">[ date ]</a>
+              <a href="thread.html#238">[ thread ]</a>
+              <a href="subject.html#238">[ subject ]</a>
+              <a href="author.html#238">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 11:36:14 +0100 (Sun, 19 Feb 2006)
+New Revision: 246
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/preferences.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/xo-info.php
+Log:
+Added the new preferences handler meant to manage objects default properties (it allows each individual setting to be host-specific, user-specific or language-specific)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/preferences.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/preferences.php	2006-02-16 22:02:06 UTC (rev 245)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/preferences.php	2006-02-19 10:36:14 UTC (rev 246)
+@@ -0,0 +1,403 @@
++&lt;?php
++/**
++ * xoops_core_PreferencesHandler main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_core
++ * @subpackage	xoops_core_PreferencesHandler
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++XOS::import( 'xoops_db_Accessor' );
++
++
++define( 'XO_PREFS_HOST', 1 );
++define( 'XO_PREFS_BUNDLE', 2 );
++define( 'XO_PREFS_USER', 4 );
++
++define( 'XO_PREFS_ANYHOST', '' );
++define( 'XO_PREFS_ANYUSER', 0 );
++define( 'XO_PREFS_CURRENTHOST', 1 );
++define( 'XO_PREFS_CURRENTUSER', 1 );
++
++/**
++ * XOOPS default preferences handler
++ * 
++ * The preferences system allows you to store custom properties values for XOS objects. These settings will
++ * then be automatically applied to new objects when you instanciate them. Preferences are assigned a scope 
++ * using a combination of username, component ID, host name and language. This mechanism allows you to create
++ * preferences which apply to different domains.
++ * 
++ * For example, using preferences you can save a preference value that applies to:
++ * - The current user on the current host
++ * - All users on a specific host
++ * - The current user on any host, when using a specific language
++ * - Any user on any host, when using a specific language
++ * 
++ * The PreferencesHandler has a high-level API which makes it very simple to store and retrieve components
++ * preferences using the default scope (current user, any host) which is appropriate for the majority of 
++ * situations, as well as a low-level API which allows you to specify the exact scope of the preferences you 
++ * want to manipulate when necessary.
++ * 
++ * NB: Preferences are normally managed automatically by the system, so you should not have to deal with this
++ * class by yourself, unless you are making a {@link xoops_panel_ConfigurationPanel Configuration Panel}.
++ *
++ * @package		xoops_core
++ * @subpackage	xoops_core_PreferencesHandler
++ * @devstatus	unfinished
++ */
++class xoops_core_PreferencesHandler extends xoops_db_Accessor {
++
++	var $tables = array( 'sys_preference' );
++	
++	
++	var $user = false;
++	
++	
++	var $hostName = false;
++
++	var $language = false;
++	
++	var $prefsValues = array();
++
++	/**
++	 * Folder to read managed preferences from
++	 *
++	 * @var string
++	 */
++	var $preferencesFolder = '/XOOPS/Preferences/';
++	
++	/**#@+ @tasktype 10 Initialization*/
++	function xoInit( $options = array() ) {
++		if ( !$this-&gt;db ) {
++			$this-&gt;db =&amp; XOS::create( 'xoops_db_Database' );
++		}
++		$table = $this-&gt;db-&gt;prefix( 'sys_preference' );
++		$selectPred = &quot;(`bundleId`='' OR `bundleId`=?) AND (`hostName`='' OR `hostName`=?) AND (`language`='' OR `language`=?)&quot;;
++		
++		$this-&gt;queries = array(
++			'getPrefs' =&gt; &quot;SELECT * FROM `$table` WHERE `userId`=? AND $selectPred ORDER BY `weight`,`language`&quot;,
++			'delPrefs' =&gt; &quot;DELETE FROM `$table` WHERE `bundleId`=:bundle AND `userId`=:user AND `hostName`=:host&quot;,
++			'insertScalar' =&gt;
++				&quot;INSERT INTO `$table` (`weight`,`bundleId`,`userId`,`hostName`,`language`,`propertyName`,`scalarValue`,`complexValue`) &quot; .
++				&quot;VALUES &quot;,
++			'insertComplex' =&gt;
++				&quot;INSERT INTO `$table` (`weight`,`bundleId`,`userId`,`hostName`,`language`,`propertyName`,`scalarValue`,`complexValue`) &quot; .
++				&quot;VALUES &quot;,
++		);
++		return true;
++	}
++	/**#@-*/
++
++	/**#@+ @tasktype 20 Getting preferences values*/
++	/**
++	 * Obtains a preference value for the specified key and object
++	 *
++	 * @param string $key The preference key whose value to obtain
++	 * @param string $bundleId The identifier of the object whose preferences to search
++	 * @return mixed The preference data for the specified key and object. If no value was located, returns null
++	 */
++	function getObjectValue( $key, $bundleId ) {
++		return $this-&gt;getValue( $key, $bundleId, XO_PREFS_CURRENTUSER, XO_PREFS_ANYHOST );
++	}
++	/**
++	 * Obtains a preference value for the specified domain
++	 *
++	 * @param string $key The preference key whose value to obtain
++	 * @param string $bundleId The identifier of the object whose preferences to search
++	 * @param integer $userID XO_PREFS_CURRENTUSER if to search the current-user domain, otherwise XO_PREFS_ANYUSER
++	 * @param unknown_type $hostName
++	 */
++	function getValue( $key, $bundleId = '', $userId = XO_PREFS_CURRENTUSER, $hostName = XO_PREFS_ANYHOST ) {
++		$vars =&amp; $this-&gt;loadValues( $bundleId, $userId, $hostName );
++		return $vars ? @$vars[$key] : null;
++	}
++	/**
++	 * Convenience function that allows you to obtain multiple preference values
++	 *
++	 * @param string $key An array of preference keys the values of which to obtain
++	 * @param string $bundleId The identifier of the object whose preferences to search
++	 * @param integer $userId XO_PREFS_CURRENTUSER if to search the current-user domain, otherwise XO_PREFS_ANYUSER
++	 * @param unknown_type $hostName
++	 */
++	function getMultiple( $keys = array(), $bundleId = '', $userId = 0, $hostName = '' ) {
++		$ptr =&amp; $this-&gt;loadValues( $bundleId, $userId, $hostName );
++		if ( empty($keys) ) {
++			return $ptr;
++		} else {
++			$vars = array();
++			foreach ( $keys as $key ) {
++				if ( isset( $ptr[$key] ) ) {
++					$vars[$key] = $ptr[$key];
++				}
++			}
++			return $vars;
++		}
++	}
++	/**#@-*/
++
++	/**#@+ @tasktype 30 Setting preferences values*/
++	/**
++	 * Adds, modifies, or removes a preference
++	 *
++	 * @param string $key The preference key whose value you wish to set
++	 * @param string $value The value to set for the specified key and object. Pass NULL to remove the specified key from the object&#146;s preferences
++	 * @param string $bundleId The identifier of the object whose preferences you wish to create or modify
++	 * @return mixed The preference data for the specified key and object. If no value was located, returns null
++	 */
++	function setObjectValue( $key, $value, $bundleId, $localized = false ) {
++		return $this-&gt;setValue( $key, $value, $bundleId, XO_PREFS_CURRENTUSER, XO_PREFS_ANYHOST );
++	}
++	/**
++	 * Adds, modifies, or removes a preference value for the specified domain
++	 *
++	 * @param string $key The preference key whose value you wish to set
++	 * @param string $value The value to set for the specified key and object. Pass NULL to remove the specified key from the specified domain
++	 * @param integer $userId XO_PREFS_CURRENTUSER if to to modify the current user&#146;s preferences, XO_PREFS_ANYUSER for all users
++	 * @param unknown_type $hostName
++	 */
++	function setValue( $key, $value = null, $bundleId = '', $userId = 0, $hostName = 0, $localized = false ) {
++		$vars =&amp; $this-&gt;loadValues( $bundleId, $userId, $hostName );
++		if ( isset($value) ) {
++			$vars[$key] = $value;
++			//$localizedKeys[$bundleId][$hostName] = $localized;
++		} else {
++			unset( $vars[$key] );
++		}
++		return $value;
++	}
++	/**
++	 * Obtains a preference value for the specified domain
++	 *
++	 * @param string $key An array of preference keys the values of which to obtain
++	 * @param string $bundleId The identifier of the object whose preferences to search
++	 * @param integer $userId XO_PREFS_CURRENTUSER if to search the current-user domain, otherwise XO_PREFS_ANYUSER
++	 * @param unknown_type $hostName
++	 */
++	function setMultiple( $values = array(), $bundleId = '', $userId = 0, $hostName = '', $localized = array() ) {
++		$vars =&amp; $this-&gt;loadValues( $bundleId, $userId, $hostName );
++		if ( $vars ) {
++			foreach ( $values as $key =&gt; $value ) {
++				if ( isset($value) ) {
++					$vars[$key] = $value;
++					//$localizedKeys[$bundleId][$hostName] = $localized;
++				} else {
++					unset( $vars[$key] );
++				}
++			}
++			return true;
++		}
++		return false;
++	}
++	/**#@-*/
++
++	/**#@+ @tasktype 40 Saving preferences to persistent storage*/
++	/**
++	 * Writes to permanent storage all pending changes to the preference data for the specified object
++	 *
++	 * @param string $bundleId The ID of the object whose preferences to write to storage
++	 */
++	function synchronizeObject( $bundleId ) {
++		return $this-&gt;synchronize( $bundleId, XO_PREFS_CURRENTUSER, XO_PREFS_ANYHOST );
++	}
++	/**
++	 * Writes to permanent storage all pending changes to the preference data for the specified object and domain
++	 *
++	 * @param string $bundleId The ID of the object whose preferences to write to storage
++	 * @param integer $userId XO_PREFS_CURRENTUSER if to search the current-user domain, otherwise XO_PREFS_ANYUSER
++	 * @param unknown_type $hostName
++	 */
++	function synchronize( $bundleId, $userId = 0, $hostName = '' ) {
++		$this-&gt;updateDatabaseValues( $bundleId, $userId, $hostName );
++		//return $this-&gt;synchronize( $bundleId, XO_PREFS_CURRENTUSER, XO_PREFS_ANYHOST );
++	}
++	/**#@-*/
++	/**#@+ @tasktype 50 Miscellaneous functions*/
++	function objectValueIsForced( $key, $bundleId, $hostName = '' ) {
++		$vars =&amp; $this-&gt;loadValues( $bundleId, 0, $hostName );
++		if ( $vars ) {
++			return in_array( $key, $this-&gt;managedKeys[$bundleId][$hostName] );
++		}
++		return false;
++	}
++	
++	function &amp;loadValues( $bundleId = '', $userId = 0, $hostName = '' ) {
++		global $xoops;
++
++		$this-&gt;calculateDomainWeight( $bundleId, $userId, $hostName );
++		$varsPointer = false;
++
++		if ( !$userId ) {
++			if ( !isset( $this-&gt;globalPrefs[$bundleId][$hostName] ) ) {
++				$vars = $this-&gt;loadPersistentValues( $bundleId, $hostName );
++				if ( !isset( $this-&gt;globalPrefs[$bundleId][''] ) ) {
++					$this-&gt;globalPrefs[$bundleId][''] = $vars[0][''];
++					$this-&gt;managedKeys[$bundleId][''] = $vars[1][''];
++				}
++				if ( !isset( $this-&gt;globalPrefs[$bundleId][$hostName] ) ) {
++					$this-&gt;globalPrefs[$bundleId][$hostName] = $vars[0][$hostName];
++					$this-&gt;managedKeys[$bundleId][$hostName] = $vars[1][$hostName];
++				}
++				$vars = $this-&gt;loadDatabaseValues( $bundleId, 0, $hostName );
++				foreach ( $vars as $key =&gt; $value ) {
++					if ( !in_array( $key, $this-&gt;managedKeys[$bundleId][$hostName] ) ) {
++						$this-&gt;globalPrefs[$bundleId][$hostName][$key] = $value;
++					}
++				}
++			}
++			$varsPointer =&amp; $this-&gt;globalPrefs[$bundleId][$hostName];
++		} else {
++			if ( !isset( $this-&gt;userPrefs[$bundleId][$hostName] ) ) {
++				$this-&gt;userPrefs[$bundleId][$hostName] = array();
++				$vars = $this-&gt;loadDatabaseValues( $bundleId, $userId, $hostName );
++				foreach ( $vars as $key =&gt; $value ) {
++					$this-&gt;userPrefs[$bundleId][$hostName][$key] = $value;
++				}
++			}
++			$varsPointer =&amp; $this-&gt;userPrefs[$bundleId][$hostName];
++		}
++		return $varsPointer;
++	}
++
++	/**
++	 * Read all the keys of the specified domain from the database
++	 *
++	 * @param unknown_type $bundleId
++	 * @param unknown_type $userId
++	 * @param unknown_type $host
++	 * @return unknown
++	 * @access protected
++	 */
++	function loadDatabaseValues( $bundleId = '', $userId = 0, $host = '' ) {
++		global $xoops;
++		
++		$this-&gt;calculateDomainWeight( $bundleId, $userId, $host );
++		
++		$rows = $this-&gt;fetchAll( 'getPrefs', array( $userId, $bundleId, $host, '' ) );
++		$values = array();
++		foreach ( $rows as $row ) {
++			$values[ $row['propertyName'] ] = isset( $row['complexValue'] ) ? unserialize( $row['complexValue'] ) : $row['scalarValue'];
++		}
++		return $values;		
++	}
++	
++	function calculateDomainWeight( &amp;$bundleId, &amp;$userId, &amp;$hostName ) {
++		global $xoops;
++		$weight = 0;
++		if ( !empty( $bundleId ) ) {
++			$weight += XO_PREFS_BUNDLE;
++		} else {
++			$bundleId = '';
++		}
++		if ( $userId == XO_PREFS_CURRENTUSER ) {
++			$userId = $xoops-&gt;currentUser-&gt;userId;
++			$weight += XO_PREFS_USER;
++		} else {
++			$userId = 0;
++		}
++		if ( !empty( $hostName ) ) { 
++			$hostName = $xoops-&gt;hostId;
++			$weight += XO_PREFS_HOST;
++		} else {
++			$hostName = XO_PREFS_ANYHOST;
++		}
++		return $weight;
++	}
++	
++	
++	function updateDatabaseValues( $bundleId = '', $userId = 0, $hostName = '' ) {
++		$weight = $this-&gt;calculateDomainWeight( $bundleId, $userId, $hostName );
++		
++		if ( !isset( $this-&gt;globalPrefs[$bundleId][$hostName] ) ) {
++			trigger_error( &quot;Cannot update preferences that have not been loaded&quot;, E_USER_NOTICE );
++			return false;
++		}
++		// First, delete all the rows corresponding to the specified domain
++		$count = $this-&gt;exec( 'delPrefs', array( ':bundle' =&gt; $bundleId, ':user' =&gt; $userId, ':host' =&gt; $hostName ) );
++
++		$vars =&amp; $this-&gt;globalPrefs[$bundleId][$hostName];
++		$params = array( ':bundle' =&gt; $bundleId, ':user' =&gt; $userId, ':host' =&gt; $hostName, ':language' =&gt; '');
++		$params = array_map( array( &amp;$this-&gt;db, 'quote' ), $params );
++		$scalarValues = array();
++		$complexValues = array();
++		$valString = '(' . $weight . ',' . implode( ',', $params );
++		
++		foreach ( $vars as $prop =&gt; $val ) {
++			$prop = $this-&gt;db-&gt;quote( $prop );
++			if ( ( is_string( $val ) &amp;&amp; strlen( $val ) &gt; 255 ) || is_array( $val ) ) {
++				$complexValues[] = &quot;$valString,$prop,'',&quot; . $this-&gt;db-&gt;quote( serialize( $val ) ) . ')';
++			} else {
++				$scalarValues[] = &quot;$valString,$prop,&quot; . $this-&gt;db-&gt;quote($val) . &quot;,NULL)&quot;;
++			}
++		}
++		if ( !empty( $scalarValues ) ) {
++			$this-&gt;db-&gt;exec( $this-&gt;queries['insertScalar'] . implode( &quot;,&quot;, $scalarValues ) );
++		}
++		if ( !empty( $complexValues ) ) {
++			$this-&gt;db-&gt;exec( $this-&gt;queries['insertComplex'] . implode( &quot;,&quot;, $complexValues ) );
++		}
++	}
++	/**
++	 * Read persistent preferences definition
++	 *
++	 * @param unknown_type $bundleId
++	 * @param unknown_type $hostName
++	 * @access protected
++	 */	
++	function loadPersistentValues( $bundleId = '', $host = '' ) {
++		global $xoops;
++		if ( $bundleId &amp;&amp; !XOS::import( $bundleId ) ) {
++			trigger_error( &quot;Cannot load persistant preferences of unknown type $bundleId&quot;, E_USER_WARNING );
++			return false;
++		}
++		$dummy = 0;
++		$this-&gt;calculateDomainWeight( $bundleId, $dummy, $host );
++		
++		
++		$managed = $vars = array( '' =&gt; array() );
++
++		if ( $bundleId &amp;&amp; class_exists( $bundleId ) ) {
++			$vars[''] = array_merge( $vars[''], get_class_vars( $bundleId ) );
++		}
++		if ( !$bundleId ) {
++			$bundleId = 'global';
++		}
++		if ( $fromfile = @include $xoops-&gt;path( &quot;/XOOPS/Preferences/$bundleId.php&quot; ) ) {
++			if ( !is_array( $fromfile ) ) {
++				trigger_error( &quot;Managed preferences file for $bundleId is corrupt&quot;, E_USER_WARNING );
++			} else {
++				$managed[''] = array_merge( $managed[''], array_keys( $fromfile ) );
++				$vars[''] = array_merge( $vars[''], $fromfile );
++			}
++		}
++		if ( $host ) {
++			$managed[$host] = $managed[''];
++			$vars[$host] = $vars[''];
++			if ( $fromfile = @include $xoops-&gt;path( &quot;/XOOPS/Preferences/ByHost/$host-$bundleId.php&quot; ) ) {
++				if ( !is_array( $fromfile ) ) {
++					trigger_error( &quot;Managed preferences file for $bundleId is corrupt&quot;, E_USER_WARNING );
++				} else {
++					$managed[$host] = array_merge( $managed[$host], array_keys( $fromfile ) );
++					$vars[$host] = array_merge( $vars[$host], $fromfile );
++				}
++			}
++		}
++		return array( $vars, $managed );
++	}
++	/**#@-*/
++
++}
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/preferences.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/xo-info.php	2006-02-16 22:02:06 UTC (rev 245)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/xo-info.php	2006-02-19 10:36:14 UTC (rev 246)
+@@ -0,0 +1,23 @@
++&lt;?php
++/**
++* xoops_core_PreferencesHandler bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_core
++* @subpackage	xoops_core_PreferencesHandler
++* @version		$Id$
++*/
++
++return array(
++	'xoBundleDisplayName'			=&gt; 'XOOPS foundation preferences handler',
++	'xoBundleIdentifier'			=&gt; 'xoops_core_PreferencesHandler',
++	'xoClassPath' =&gt; '/preferences.php',
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/PreferencesHandler.xoobj/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000237.html">[Xoops4-svn] r245 - XoopsCore/branches/2.2.x
+</A></li>
+	<LI>Next message: <A HREF="000239.html">[Xoops4-svn] r247 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#238">[ date ]</a>
+              <a href="thread.html#238">[ thread ]</a>
+              <a href="subject.html#238">[ subject ]</a>
+              <a href="author.html#238">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

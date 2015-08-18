@@ -1,0 +1,1250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r212 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs htdocs/include htdocs/modules htdocs/themes/default htdocs/themes/default/img
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r212%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20XOOPS/Boot%20XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj%20XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts%20XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs%20htdocs/include%20htdocs/modules%20htdocs/themes/default%20htdocs/themes/default/img&In-Reply-To=%3C200601300247.k0U2lIvU009452%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000203.html">
+   <LINK REL="Next"  HREF="000205.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r212 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs htdocs/include htdocs/modules htdocs/themes/default htdocs/themes/default/img</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r212%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20XOOPS/Boot%20XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj%20XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts%20XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins%20XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%20htdocs%20htdocs/include%20htdocs/modules%20htdocs/themes/default%20htdocs/themes/default/img&In-Reply-To=%3C200601300247.k0U2lIvU009452%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r212 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj htdocs htdocs/include htdocs/modules htdocs/themes/default htdocs/themes/default/img">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Jan 30 03:47:18 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000203.html">[Xoops4-svn] r211 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm htdocs htdocs/modules/sysutils/identification
+</A></li>
+        <LI>Next message: <A HREF="000205.html">[Xoops4-svn] r213 - XoopsCore/branches/tasks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#204">[ date ]</a>
+              <a href="thread.html#204">[ thread ]</a>
+              <a href="subject.html#204">[ subject ]</a>
+              <a href="author.html#204">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-30 03:47:08 +0100 (Mon, 30 Jan 2006)
+New Revision: 212
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/sysutils/
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/img/logged_in-22.png
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/img/xoops-logo.png
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.xotpl
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/style-default.css
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/user.php
+Log:
+Merged the task #123353 changes to the main 2.3 branch
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -46,7 +46,7 @@
+ 	 * Import a specific component definition
+ 	 */
+ 	function import( $bundleId ) {
+-		$me =&amp; $GLOBALS['exxos'];
++		$me =&amp; $GLOBALS[EXXOS];
+ 
+ 		if ( !isset( $me-&gt;registry[$bundleId] ) ) {
+ 			return false;
+@@ -64,13 +64,14 @@
+ 			}
+ 			return $me-&gt;imported[$bundleId] = false;
+ 		}
++		return true;
+ 	}
+ 
+ 	/**
+ 	 * Get a class variable value
+ 	 */
+ 	function classVar( $id, $prop ) {
+-		$me =&amp; $GLOBALS['exxos'];
++		$me =&amp; $GLOBALS[EXXOS];
+ 		
+ 		if ( !isset( $me-&gt;registry[$id] ) ) {
+ 			return null;
+@@ -92,7 +93,7 @@
+ 	 * existing instance if it has.
+ 	 */
+ 	function &amp;create( $id, $options = null, $args = null ) {
+-		$me =&amp; $GLOBALS['exxos'];
++		$me =&amp; $GLOBALS[EXXOS];
+ 		$inst = false;
+ 		if ( is_array( $id ) ) {
+ 			@list( $id, $options, $initArgs ) = $id;
+@@ -102,8 +103,6 @@
+ 		}
+ 		XOS::import($id);
+ 		if ( isset( $me-&gt;registry[$id] ) ) {
+-			$options['xoBundleIdentifier'] = $id;
+-			$options['xoBundleRoot'] = $me-&gt;registry[$id]['xoBundleRoot'];
+ 			if ( !isset($me-&gt;factories[$id]) &amp;&amp; isset($me-&gt;registry[$id]['xoFactory']) ) {
+ 				$me-&gt;factories[$id] =&amp; XOS::create( $me-&gt;registry[$id]['xoFactory'] );
+ 				unset($me-&gt;registry[$id]['xoFactory']);
+@@ -117,10 +116,12 @@
+ 			} else {
+ 				$inst =&amp; XOS::createInstanceOf( $id, $options, $args );
+ 			}
+-			if ( is_object( $inst ) &amp;&amp; @$inst-&gt;xoSingleton ) {
+-				$me-&gt;services[ $id ] =&amp; $inst;
+-				if (!@empty( $options[ 'xoServiceName' ] ) ) {
+-					$me-&gt;services[ $options[ 'xoServiceName' ] ] =&amp; $inst;
++			if ( is_object( $inst ) ) {
++				if ( @$inst-&gt;xoSingleton ) {
++					$me-&gt;services[ $id ] =&amp; $inst;
++					if (!@empty( $options[ 'xoServiceName' ] ) ) {
++						$me-&gt;services[ $options[ 'xoServiceName' ] ] =&amp; $inst;
++					}
+ 				}
+ 			}
+ 		}
+@@ -143,7 +144,8 @@
+ 		if ( is_object( $inst ) ) {
+ 			// Set specified properties values
+ 			XOS::apply( $inst, $options );
+-			XOS::apply( $inst, $GLOBALS['exxos']-&gt;registry[$class] );
++			XOS::apply( $inst, $GLOBALS[EXXOS]-&gt;registry[$class] );
++			$inst-&gt;xoBundleIdentifier = $class;
+ 			// Initialize the component instance
+ 			if ( method_exists( $inst, 'xoInit' ) ) {
+ 				if ( !$inst-&gt;xoInit( $options ) ) {
+@@ -177,11 +179,4 @@
+ 	
+ }
+ 
+-if ( !@is_object( $GLOBALS['exxos'] ) ) {
+-	$GLOBALS['exxos'] =&amp; new XOS();
+-}
+-
+-
+-
+-
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -14,6 +14,21 @@
+ * @version		$Id$
+ */
+ 
++
++define( 'EXXOS', 'xoops' );
++
++
++define( 'XO_TYPE_INT',		0x10 );
++define( 'XO_TYPE_FLOAT',	0x11 );
++define( 'XO_TYPE_BOOL',		0x12 );
++
++define( 'XO_TYPE_STRING',	0x20 );
++define( 'XO_TYPE_FILE',		0x21 );
++define( 'XO_TYPE_PATH',		0x22 );
++define( 'XO_TYPE_MARKUP',	0x23 );
++
++define( 'XO_TYPE_ARRAY',	0x80 );
++
+ /**
+ * Xoops2 kernel class
+ *
+@@ -24,7 +39,7 @@
+ * @package		xoops_kernel
+ * @subpackage	xoops_kernel_Xoops2
+ */
+-class xoops_kernel_Xoops2 {
++class xoops_kernel_Xoops2 extends XOS {
+ 	var $xoBundleIdentifier		= 'xoops_kernel_Xoops2';
+ 	var $xoRunMode				= XO_MODE_PROD;
+ 	var $xoShortVersionString	= 'XOOPS 2.3.0-alpha1 &quot;Cheerleaders&quot;';
+@@ -73,18 +88,14 @@
+ 	 * @var string
+ 	 */
+ 	var $startupItemsPath		= 'XOOPS/StartupItems';
+-	/**
+-	 * References to the currently running services
+-	 *
+-	 * @var array
+-	 */
+-	var $services				= null;
++
+ 	var $captures				= array(
+ 		'error'		=&gt; 'xoops_kernel_ErrorHandler',
+ 		'logger'	=&gt; 'xoops_kernel_Logger',
+ 		'http'		=&gt; 'xoops_http_HttpHandler',
+ 		'session'	=&gt; 'xoops_http_SessionService',
+ 		'auth'		=&gt; 'xoops_auth_AuthenticationService',
++		'theme'		=&gt; 'xoops_pyro_Theme',
+ 		'legacydb'	=&gt; array( 'xoops_db_Database', array( 'driverName' =&gt; 'xoops.legacy' ) ),
+ 	);
+ 	/** 
+@@ -102,6 +113,12 @@
+ 	 */
+ 	var $hasShutdown			= false;
+ 	/**
++	 * Hostname to use to construct absolute URIs
++	 *
++	 * @var string
++	 */
++	var $hostName				= '';
++	/**
+ 	 * Semi-relative URI to this XOOPS files
+ 	 *
+ 	 * @var string
+@@ -148,7 +165,7 @@
+ 
+ 	function xoops_kernel_Xoops2( $hostId, $hostVars ) {
+ 	 	$GLOBALS['xoops']	=&amp; $this;
+-	 	$GLOBALS['exxos']-&gt;pathHandler =&amp; $this;
++	 	$this-&gt;pathHandler =&amp; $this;
+ 
+ 	 	$this-&gt;hostId = $hostId;
+ 	 	XOS::apply( $this, $hostVars );
+@@ -157,7 +174,7 @@
+  		error_reporting( ( $this-&gt;xoRunMode == XO_MODE_DEV ) ? E_ALL : 0 );
+ 
+  		$this-&gt;loadRegistry();
+-	 	$this-&gt;services =&amp; $GLOBALS['exxos']-&gt;services;
++	 	//$this-&gt;services =&amp; $GLOBALS['exxos']-&gt;services;
+ 
+ 	 	$captures = @include $this-&gt;path( 'var/Application Support/xoops_kernel_Xoops2/services.php' );
+ 	 	if ( is_array($captures) ) {
+@@ -168,8 +185,10 @@
+ 		
+ 		$this-&gt;baseLocation = $this-&gt;isSecure ? $this-&gt;secureLocation : $this-&gt;hostLocation;
+ 		if ( false !== ( $pos = strpos( $this-&gt;baseLocation, '/' ) ) ) {
++			$this-&gt;hostName = substr( $this-&gt;baseLocation, 0, $pos );
+ 			$this-&gt;baseLocation = substr( $this-&gt;baseLocation, $pos );
+ 		} else {
++			$this-&gt;hostName = $this-&gt;baseLocation;
+ 			$this-&gt;baseLocation = '';
+ 		}
+ 	}
+@@ -187,23 +206,19 @@
+ 	 * @return bool
+ 	 */
+ 	function boot() {
+-		if ( !$this-&gt;hasBooted ) {
+-			register_shutdown_function( array( &amp;$this, 'shutdown' ) );
+-			if ( !empty($this-&gt;bootFile) ) {
+-				require_once $this-&gt;path( &quot;/XOOPS/Boot/$this-&gt;bootFile&quot; );
+-			}
+-			// @TODO-2.3: This shouldn't be there but is kept temporarily until the
+-			// old common.php has been cleaned up as it should
+-			include_once XOOPS_ROOT_PATH.&quot;/include/common.php&quot;;
+-
+-			if ( isset( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] ) ) {
+-				$this-&gt;acceptUser( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] );
+-			}
+-			if ( $this-&gt;launchStartupItems() ) {
+-				return true;
+-			} 
+-			$this-&gt;hasBooted = true;
++		if ( $this-&gt;hasBooted ) {
++			return $this-&gt;launchCurrentModule();
+ 		}
++		register_shutdown_function( array( &amp;$this, 'shutdown' ) );
++		if ( !empty($this-&gt;bootFile) ) {
++			require_once $this-&gt;path( &quot;/XOOPS/Boot/$this-&gt;bootFile&quot; );
++		}
++		$this-&gt;launchCurrentModule();
++		
++		if ( $this-&gt;launchStartupItems() ) {
++			return true;
++		} 
++		$this-&gt;hasBooted = true;
+ 		return true;
+ 	}
+ 	/**
+@@ -258,16 +273,19 @@
+ 		return true;
+ 	}
+ 
+-	function launchModule() {
+-		return true;
+-		if ( !$this-&gt;loadService( 'module', 'xoops_kernel_Module' ) ) {
+-			return false;
++	function launchCurrentModule() {
++		$module =&amp; $this-&gt;loadModule();
++		if ( !$module ) {
++			$this-&gt;services['http']-&gt;sendResponse( 500, null, -1 );
++		} else {
++			//if ( !$module-&gt;checkAccess() ) {
++				//$this-&gt;services['http']-&gt;sendResponse( 403, null, -1 );
++			//} else {
++				$this-&gt;currentModule =&amp; $module;
++				return true;
++			//}
+ 		}
+-		if ( !$this-&gt;services['module']-&gt;checkAccess() ) {
+-			//$this-&gt;services['http']-&gt;setResponse( 403, null, null, true );
+-			return false;
+-		}
+-		return $this-&gt;services['module']-&gt;xoBundleIdentifier;
++		return false;
+ 	}
+ 
+ 
+@@ -281,7 +299,7 @@
+ 		if ( !is_array($reg) || ( $this-&gt;xoRunMode &amp; XO_MODE_DEV_MASK ) ) {
+ 			$reg = include $this-&gt;path( &quot;$this-&gt;xoBundleRoot/scripts/rebuild_registry.php&quot; );
+ 		}
+-		$GLOBALS['exxos']-&gt;registry = $reg;
++		$this-&gt;registry = $reg;
+ 	}
+ 	
+ 	/**
+@@ -306,6 +324,25 @@
+ 		}
+ 		return $this-&gt;services[$name];
+ 	}
++	/**
++	 * Creates an instance of the specified module bundle
++	 * 
++	 * @param string $bundleId	Bundle ID of the module to instanciate
++	 * @param array  $options	Parameters to send to the service during instanciation
++	 */
++	function &amp;loadModule( $bundleId = '', $options = array() ) {
++		if ( !empty($bundleId) &amp;&amp; isset( $this-&gt;services[$bundleId] ) ) {
++			return $this-&gt;services[$bundleId];
++		}
++		if ( !isset( $this-&gt;factories[ 'xoops_kernel_Module' ] ) ) {
++			$this-&gt;factories['xoops_kernel_Module'] =&amp; XOS::create( 'xoops_kernel_ModuleFactory' );
++		}
++		$module =&amp; $this-&gt;factories['xoops_kernel_Module']-&gt;createInstanceOf( $bundleId, $options );
++		if ( $module ) {
++			$this-&gt;services[ $module-&gt;xoBundleIdentifier ] =&amp; $module;
++		}
++		return $module;		
++	}
+ 
+ 	/**
+ 	 * Accept the specified user as the currently logged in user
+@@ -315,24 +352,39 @@
+ 	 * @return boolean
+ 	 */
+ 	function acceptUser( $login = '', $permanent = false ) {
+-		if ( empty( $login ) &amp;&amp; isset( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] ) ) {
+-			$login = $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'];
+-			$permanent = true;
+-		}
+ 		if ( !$login ) {
+ 			return false;
+ 		}
+-		// @TODO-2.3: Clean this up later... This handler stuff is so, so lame... :-(
++		// @TODO-2.3: Clean this up later...
++		$GLOBALS['xoopsDB'] = $this-&gt;loadService( 'legacydb' );
++
++		require_once XOOPS_ROOT_PATH . '/include/functions.php';
++		require_once XOOPS_ROOT_PATH . '/kernel/object.php';
++		require_once XOOPS_ROOT_PATH . '/class/criteria.php';
++		
+ 		$handler =&amp; xoops_gethandler('member');
+ 		list($user) = $handler-&gt;getUsers( new Criteria( 'uname', $login ) );
+ 		if ( is_object( $user ) ) {
+-			$user-&gt;getGroups();
+-			$this-&gt;currentUser = $user;
++			$GLOBALS['xoopsUser'] = $user;
++			XOS::import( 'xoops_kernel_User' );
++			$lvl_lookup = array( 0 =&gt; XO_LEVEL_INACTIVE, 1 =&gt; XO_LEVEL_REGISTERED, 5 =&gt; XO_LEVEL_ADMIN );
++			$this-&gt;currentUser = XOS::create( 'xoops_kernel_User', array(
++				'userId' =&gt; $user-&gt;getVar( 'uid', 'n' ),
++				'login' =&gt; $user-&gt;getVar( 'uname', 'n' ),
++				'email' =&gt; $user-&gt;getVar( 'email', 'n' ),
++				'groups' =&gt; $user-&gt;getGroups(),
++				'fullName' =&gt; $user-&gt;getVar( 'name', 'n' ),
++				'level' =&gt; $lvl_lookup[ $user-&gt;getVar( 'level', 'n' ) ],
++			) );
++			
+ 			if ( $permanent &amp;&amp; $this-&gt;services['session'] ) {
+ 				$this-&gt;services['session']-&gt;start();
+ 				$_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] = $login;
+ 			}
+ 			return true;
++		} else {
++			$GLOBALS['xoopsUser'] = '';
++			$this-&gt;currentUser = XOS::create( 'xoops_kernel_User' );
+ 		}
+ 		return false;
+ 	}
+@@ -347,7 +399,7 @@
+ 		}
+ 		$parts = explode( '#', $url );
+ 		if ( count( $parts ) == 1 ) {
+-			if ( $parts[0]{0} == '/' ) {
++			if ( substr( $parts[0], 0, 1 ) == '/' ) {
+ 				$parts[0] = substr( $parts[0], 1 );
+ 			}
+ 			$parts = explode( '/', $parts[0], 2 );
+@@ -364,7 +416,7 @@
+ 			}
+ 		} else {
+ 			$root = XOS::classVar( $parts[0], 'xoBundleRoot' );
+-			return $this-&gt;path( $root . '/' . $parts[1] );
++			return $this-&gt;path( $root . '/' . $parts[1], $virtual );
+ 		}
+ 	}
+ 	/**
+@@ -373,7 +425,54 @@
+ 	function url( $url ) {
+ 		return $this-&gt;path( $url, true );
+ 	}
++	/**
++	* Performs a virtual sub-request
++	*
++	* This will call the page specified in $url as if it was normally requested, giving the possibility to
++	* customize the content of the $_REQUEST and $_SERVER variables the sub-request will receive.&lt;br /&gt;
++	* NOTE: For this to work correctly, the called page must use &lt;b&gt;return&lt;/b&gt; to end processing if necessary
++	* - NOT exit() or die() -, also it must use $_REQUEST to get its parameters, not $_POST or $_GET (but that
++	* is how a well-coded page should be done anyway).
++	*
++	* @param	array	$request	Values to be passed to the sub-request as its $_REQUEST var
++	* @param	array	$server		Values to add/change in the $_SERVER var
++	* @return	mixed	The value returned by the requested page (or false if an error occured)
++	*/
++	function virtual( $url, $request = array(), $server = array() ) {
++		// Extract the query parameters specified via the url string and add them to $_REQUEST
++		$parsed = parse_url( $url );
++		if ( isset($parsed['query']) ) {
++			$args=array();
++			parse_str( $parsed['query'], $args );
++			if ( !empty($args) ) {
++				$request = array_merge( $request, $args );
++			}
++			if ( !isset($server['REQUEST_URI']) ) {
++				//$server['REQUEST_URI'] = $parsed['path'];
++			}
++		}
++		list( $moduleName, $moduleLocation ) = explode( '#', $url, 2 );
++		if ( !$subModule = $this-&gt;loadModule( $moduleName ) ) {
++			trigger_error( &quot;Cannot perform virtual request to unknown module $moduleName&quot;, E_USER_WARNING );
++			return false;
++		}
++		if ( substr( $moduleLocation, 0, 1 ) == '/' ) {
++			$subModule-&gt;currentLocation = $subModule-&gt;findLocationName( $moduleLocation );
++		} else {
++			$subModule-&gt;currentLocation = $moduleLocation;
++		}
++		$path = $this-&gt;path( $subModule-&gt;xoBundleRoot . $subModule-&gt;moduleLocations[ $subModule-&gt;currentLocation ]['scriptFile'] );
+ 
++		$backup = array( $this-&gt;isVirtual, $this-&gt;currentModule, $_REQUEST, $_SERVER );
++		$cwd = getcwd();
++		list( $this-&gt;isVirtual, $this-&gt;currentModule, $_REQUEST, $_SERVER ) = array( true, $subModule, $request, array_merge( $_SERVER, $server ) );
++		chdir( dirname( $path ) );
++		$ret = include $path;
++		list( $this-&gt;isVirtual, $this-&gt;currentModule, $_REQUEST, $_SERVER ) = $backup;
++		chdir( $cwd );
++		return $ret;
++	}
++
+ } // class xoops_kernel_Xoops2
+ 
+ /**
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -26,8 +26,19 @@
+ }
+ 
+ if ( isset( $_SERVER['SERVER_NAME'] ) ) {
++	// If we're not using the cli sapi, instanciate the http related services
+ 	$this-&gt;loadService( 'session' );
+ 	$this-&gt;loadService( 'http' );
++	// Wake up user if info is found in the session
++	if ( isset( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] ) ) {
++		$this-&gt;acceptUser( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'], true );
++	}
++
+ }
+ 
++
++
++
++
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -55,15 +55,6 @@
+ 	&lt;!--{xo-logger-output}--&gt;
+ &lt;/body&gt;&lt;/html&gt;';
+ 	/**
+-	* Default strings to add to the response status header (indexed by status code)
+-	* @var array
+-	*/
+-	var $responseMessages = array(
+-		200			=&gt; 'OK',
+-		400			=&gt; 'Bad request',
+-		404			=&gt; 'Not found',
+-	);
+-	/**
+ 	* Location of the default error pages (unimplemented)
+ 	* @var string
+ 	*/
+@@ -97,24 +88,13 @@
+ 	 */
+ 	function absoluteUrl( $url ) {
+ 		global $xoops;
+-		static $host;	
+ 
+ 		if ( strpos( $url, '://' ) === false ) {
+-			if ( !isset($host) ) {
+-				list( $defaultPort, $proto ) =
+-					( substr( $_SERVER['SERVER_PROTOCOL'], 4, 1 ) == '/' ) ? array( 80, '<A HREF="http://">http://</A>' ) : array( 443, '<A HREF="https://">https://</A>' );
+-				if ( !$host = @$_SERVER['HTTP_HOST'] ) {
+-					$host = !empty($this-&gt;defaultServerName) ? $this-&gt;defaultServerName : $_SERVER['SERVER_NAME'];
+-				}
+-				if ( !empty($_SERVER['SERVER_PORT']) &amp;&amp; $_SERVER['SERVER_PORT'] != $defaultPort ) {
+-					$host .= ':' . $_SERVER['SERVER_PORT'];
+-				}
+-				$host = $proto . $host;
+-			}
+-	        if ( !strlen($url) ) {
++			$host = 'http' . ( $xoops-&gt;isSecure ? 's' : '' ) . '://' . $xoops-&gt;hostName;
++			if ( !strlen($url) ) {
+ 	            $url = $_SERVER['REQUEST_URI'];
+         	} elseif ( substr( $url, 0, 1 ) == '/' ) {
+-	            return $host . $xoops-&gt;url( &quot;/www$url&quot; );
++	            return $host . $url;
+         	}
+         	// Check for PATH_INFO
+         	if (isset($_SERVER['PATH_INFO']) &amp;&amp; $_SERVER['PHP_SELF'] != $_SERVER['PATH_INFO']) {
+@@ -152,46 +132,44 @@
+ 		if ( empty($status) ) {
+ 			$status = 200;			// HTTP_STATUS_OK
+ 		}
+-		if ( empty($message) &amp;&amp; isset($this-&gt;errorMessages[$status]) ) {
+-		 	$message =  $this-&gt;errorMessages[$status];
+-		}
+-		/*
+-		if ( empty($location) &amp;&amp; isset($this-&gt;errorPages[$status]) ) {
++		/* if ( empty($location) &amp;&amp; isset($this-&gt;errorPages[$status]) ) {
+ 			$location = $this-&gt;errorPages[$status];
+-		}
+-		*/
++		} */
+ 		if ( $location == -1 ) {
+-		 	if ( !( $location = @$_SERVER['HTTP_REFERER'] ) ) {
+-		 		$location = '/www/';
+-			}
++			$location = !@empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : $xoops-&gt;url( '/www/' );
+ 		}
+-		if ( !empty($location) &amp;&amp; !$xoops-&gt;isVirtual ) {
++		if ( !empty($location) ) {
+ 		    if ( preg_match( &quot;/[\\0-\\31]|about:|script:/i&quot;, $location ) ) {
+-        		$location = '/www/';
++        		$location = $xoops-&gt;url( '/www/' );
+     		}
+     		if ( !strpos( $location, '://' ) ) {
+-				$location = $this-&gt;absoluteUrl( $xoops-&gt;url( $location ) );
++				$location = $this-&gt;absoluteUrl( $location );
+     		}
+-			if ( $this-&gt;enableRedirections ) {
+-				$_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] = array(
+-					'STATUS' =&gt; $status,
+-					'URL' =&gt; $_SERVER['REQUEST_URI'],
+-					'REQUEST_METHOD' =&gt; $_SERVER['REQUEST_METHOD'],
+-					'ERROR_NOTES' =&gt; $message,
+-				);
+-				header( &quot;Location: $location&quot; );
+-				$this-&gt;sendResponseCode( $status, $message );
+-				echo &quot;&lt;body&gt;&lt;a href='$location'&gt;Page redirected. Status: $status, $message.&lt;/a&gt;&lt;/body&gt;&quot;;
+-			} else {
+-				$this-&gt;sendResponseCode( 200, $message );
+-				$vars = array(
+-					'{refresh}' =&gt; '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $this-&gt;fakeRedirectPageDelay . '; url=' . htmlspecialchars( $location, ENT_QUOTES ) . '&quot; /&gt;',
+-					'{message}' =&gt; $message,
+-					'{ifnotreload}' =&gt; sprintf( _IFNOTRELOAD, $location )
+-				);
+-				echo str_replace( array_keys( $vars ), array_values( $vars ), $this-&gt;fakeRedirectTemplate );
++		}
++		if ( !$xoops-&gt;isVirtual ) {
++			$this-&gt;sendResponseCode( $status, $message );
++			if ( !empty( $location ) ) {
++				if ( $this-&gt;enableRedirections ) {
++					$_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] = array(
++						'STATUS' =&gt; $status,
++						'URL' =&gt; $_SERVER['REQUEST_URI'],
++						'REQUEST_METHOD' =&gt; $_SERVER['REQUEST_METHOD'],
++						'ERROR_NOTES' =&gt; $message,
++					);
++					header( &quot;Location: $location&quot; );
++					echo &quot;&lt;body&gt;&lt;a href='$location'&gt;Page redirected. Status: $status, $message.&lt;/a&gt;&lt;/body&gt;&quot;;
++				} else {
++					//$this-&gt;sendResponseCode( 200, $message );
++					$vars = array(
++						'{refresh}' =&gt; '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $this-&gt;fakeRedirectPageDelay . '; url=' . htmlspecialchars( $location, ENT_QUOTES ) . '&quot; /&gt;',
++						'{message}' =&gt; $message,
++						'{ifnotreload}' =&gt; sprintf( _IFNOTRELOAD, $location )
++					);
++					echo str_replace( array_keys( $vars ), array_values( $vars ), $this-&gt;fakeRedirectTemplate );
++				}
+ 			}
+ 		}
++		return array( $status, $message, $location );
+ 	}
+ 	/**
+ 	 * Send the specified response code header to the response
+@@ -205,7 +183,7 @@
+ 			if ( $pos = strpos( $message, '&lt;' ) ) {
+ 				$message = substr( $message, 0, $pos );
+ 			}
+-			header( &quot;Status: $status $message&quot; );
++			//header( &quot;Status: $status $message&quot; );
+ 			header( &quot;HTTP/1.1 $status $message&quot; );
+ 		}
+ 	}
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -45,6 +45,11 @@
+ 	 * @var string
+ 	 */
+ 	var $cacheLimiter = '';
++	/**
++	* If sessions are created for unauthenticated visitors
++	* @var boolean
++	*/
++	var $createGuestSessions = false;
+ 	
+ 	/**
+ 	* Initialize the session service
+@@ -53,7 +58,9 @@
+ 		if ( $this-&gt;saveHandler &amp;&amp; !$this-&gt;attachHandler( $this-&gt;saveHandler ) ) {
+ 			return false;
+ 		}
+-		$this-&gt;start();
++		if ( isset( $_COOKIE[ session_name() ] ) || $this-&gt;createGuestSessions ) {
++			$this-&gt;start();
++		}
+ 	 	return true;
+ 	}
+ 	/**
+@@ -106,6 +113,7 @@
+ 	*/
+ 	function destroy() {
+ 		$_SESSION = array();
++		unset( $_COOKIE[ session_name() ] );
+ 		session_destroy();
+ 	}
+ 	/**
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -48,7 +48,7 @@
+ 	var $timers = array();
+ 
+ 	function xoInit( $options = array() ) {
+-		ob_start();
++		ob_start( array( &amp;$this, 'renderEvents' ) );
+ 	 	return true;
+ 	}
+ 	/**
+@@ -66,17 +66,6 @@
+ 				$this-&gt;timers[$k]['stop'] = $now;
+ 			}
+ 		}
+-	  	$output = '';
+-
+-	 	while ( false !== ( $str = ob_get_contents() ) ) {		// Clean all open output buffers and reconstruct output :-)
+-	 		$output = $str . $output;
+-	 		ob_end_clean();
+-		}
+-		if ( $this-&gt;activated ) {
+-			$this-&gt;renderEvents( $output );
+-		} else {
+-			echo $output;
+-		}
+ 	}
+ 	/**
+ 	 * Returns the current microtime in seconds.
+@@ -130,6 +119,9 @@
+ 	 * @param string $output The content generated during the current request
+ 	 */
+ 	function renderEvents( $output ) {
++		if ( !$this-&gt;activated ) {
++			return $output;
++		}
+ 		$log = &quot;\n&lt;div class=\&quot;xo-logger-output\&quot;&gt;\n&quot;;
+ 		foreach ( $this-&gt;events as $category =&gt; $events ) {
+ 			$log .= &quot;&lt;div class=\&quot;xo-events $category\&quot;&gt;\n&quot;;
+@@ -146,9 +138,9 @@
+ 		$pattern = '&lt;!--{xo-logger-output}--&gt;';
+ 		$pos = strpos( $output, $pattern );
+ 		if ( $pos !== false ) {
+-			echo substr( $output, 0, $pos ) . $log . substr( $output, $pos + strlen( $pattern ) );
++			return substr( $output, 0, $pos ) . $log . substr( $output, $pos + strlen( $pattern ) );
+ 		} else {
+-			echo $output . $log;
++			return $output . $log;
+ 		}
+ 	}	
+ 
+
+Copied: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php (from rev 211, XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/module.php)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -45,19 +45,34 @@
+ 	return $registry;
+ }
+ 
+-function xoRegisterComponent( $registry, $bundleInfo, $bundleRoot ) {
++function xoRegisterComponent( $registry, $bundleInfo, $bundleRoot, $prefix = '' ) {
+ 	global $xoops;
+ 
++	$isModule = ( substr( $bundleInfo['xoBundleIdentifier'], 0, 4 ) == 'mod_' );
++	
+ 	$services = array();
+ 	if ( isset( $bundleInfo['xoServices'] ) ) {
+ 		foreach ( $bundleInfo['xoServices'] as $localId =&gt; $localInfo ) {
+ 			if ( @$subRoot = $localInfo['xoBundleRoot'] ) {
+ 				if ( $localInfo = @include $xoops-&gt;path( $bundleRoot . $subRoot . '/xo-info.php' ) ) {
+-					$localInfo = xoRegisterComponent( array(), $localInfo, $bundleRoot . $subRoot );
++					if ( !$isModule ) {
++						$localInfo = xoRegisterComponent( array(), $localInfo, $bundleRoot . $subRoot );
++					} else {
++						$localInfo = xoRegisterComponent( array(), $localInfo, $bundleRoot . $subRoot, $bundleInfo['xoBundleIdentifier'] . '#' );
++					}
++					foreach ( $localInfo as $k =&gt; $v ) {
++						if ( substr( $k, 0, 2 ) != 'xo' ) {
++							unset( $localInfo[$k] );
++						}
++					}
+ 					$services = array_merge( $services, $localInfo );
+ 				}
+ 			} else {
+ 				$localInfo['xoBundleRoot'] = $bundleRoot;
++				if ( $isModule ) {
++					$localInfo['xoBundleIdentifier'] = $localId;
++					$localId = $bundleInfo['xoBundleIdentifier'] . '#' . $localId;
++				}
+ 				if ( is_array( $localInfo ) ) {
+ 					$services[$localId] = $localInfo;
+ 				}
+@@ -68,6 +83,11 @@
+ 	$bundleId = $bundleInfo['xoBundleIdentifier'];
+ 	unset( $bundleInfo['xoBundleIdentifier'] );
+ 	$bundleInfo['xoBundleRoot'] = $bundleRoot;
++	foreach ( $bundleInfo as $k =&gt; $v ) {
++		if ( substr( $k, 0, 2 ) != 'xo' ) {
++			unset( $bundleInfo[$k] );
++		}
++	}
+ 
+ 	$services[$bundleId] = $bundleInfo;
+ 	return array_merge( $registry, $services );
+@@ -75,6 +95,7 @@
+ 
+ $registry = array();
+ $registry = xoScanComponentsFolder( $registry, '/XOOPS/Frameworks', true );
++$registry = xoScanComponentsFolder( $registry, '/www/modules', true );
+ 
+ if ( $fp = fopen( $this-&gt;path( '/var/Application Support/xoops_kernel_Xoops2/registry.php' ), 'wt' ) ) {
+ 	fwrite( $fp, &quot;&lt;?php\nreturn &quot; . var_export( $registry, true ) . &quot;;\n?&gt;&quot; );
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -10,27 +10,21 @@
+ 
+ class xoops_kernel_User {
+ 	
++	var $userId = 0;
++
+ 	var $level = XO_LEVEL_ANONYMOUS;
+-	var $groups = array( XO_GROUP_ANONYMOUS );
++	var $groups = array( XOOPS_GROUP_ANONYMOUS );
+ 	
+-	var $name = 'anonymous';
++	var $login = 'anonymous';
+ 	var $password = '';
+ 	
++	var $email = '';
+ 	
+-	
++	var $fullName = '';
++
+ }
+ 
+ 
+ 
+ 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -18,8 +18,20 @@
+ 	global $xoops;
+ 	
+ 	$argStr = trim( $argStr );
++
++	@list( $modId, $location ) = explode( '#', $argStr, 2 );
++	if ( isset( $location ) ) {
++		if ( $module = $xoops-&gt;loadModule( $modId ) ) {
++			$uri = $module-&gt;xoBundleRoot;
++			if ( isset( $location ) &amp;&amp; isset( $module-&gt;moduleLocations[$location] ) ) {
++				$uri .= $module-&gt;moduleLocations[$location]['scriptFile'];
++			}
++		}
++	} else {
++		$uri = $argStr;
++	}
+ 	
+-	return &quot;\necho '&quot; . addslashes( $xoops-&gt;path( $argStr, true ) ) . &quot;';&quot;;
++	return &quot;\necho '&quot; . addslashes( $xoops-&gt;path( $uri, true ) ) . &quot;';&quot;;
+ 
+ }
+ 
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -31,14 +31,15 @@
+ 	 * 
+ 	 * @var string
+ 	 */
+-	var $defaultTheme = 'default-web';
++	var $defaultTheme = 'default';
+ 
+ 	/**
+ 	 * Instanciate the specified theme
+ 	 */
+ 	function &amp;createInstance( $options = array(), $initArgs = array() ) {
+ 		if ( @empty( $options['folderName'] ) ) {
+-			$options['folderName'] = $this-&gt;defaultTheme;
++			//$options['folderName'] = $this-&gt;defaultTheme;
++			$options['folderName'] = $GLOBALS['xoopsConfig']['theme_set'];
+ 		} elseif ( !empty( $this-&gt;allowedThemes ) &amp;&amp; !in_array( $options['folderName'], $this-&gt;allowedThemes ) ) {
+ 			$options['folderName'] = $this-&gt;defaultTheme;
+ 		}
+@@ -241,8 +242,10 @@
+ 			$tpl = $zone . 'Template';
+ 			$tpl = $this-&gt;$tpl;
+ 			if ( !empty( $tpl ) ) {
+-				if ( $tpl{0} == '.' ) {
++				if ( substr( $tpl, 0, 1 ) == '.' ) {
+ 					$tpl = $xoops-&gt;path( $this-&gt;resourcePath( substr( $tpl, 1 ) ) );
++				} elseif ( !strpos( $tpl, ':' ) ) {
++					$tpl = 'xotpl:' . $tpl;
+ 				}
+ 				$this-&gt;template-&gt;display( $tpl );
+ 			} elseif ( $zone != 'content' ) {
+@@ -267,7 +270,19 @@
+ 	
+ 	function resourcePath( $path, $fromDocRoot = true ) {
+ 		global $xoops;
+-		if ( $path{0} == '/' ) {
++		
++		$parts = explode( '#', $path, 2 );
++		if ( count( $parts ) &gt; 1 ) {
++			list( $bundleId, $resPath ) = $parts;
++			// This is component resource: modules are in 'modules', and components in 'components'
++			$themedRoot = ( substr( $parts[0], 0, 4 ) == 'mod_' ) ? 'modules' : 'components';
++			if ( file_exists( &quot;$this-&gt;path/$themedRoot/$bundleId/$resPath&quot; ) ) {
++				return &quot;themes/$this-&gt;folderName/$themedRoot/$bundleId/$resPath&quot;;
++			} else {
++				return XOS::classVar( $bundleId, 'xoBundleRoot' ) . '/' . $resPath;
++			}
++		}		
++		if ( substr( $path, 0, 1 ) == '/' ) {
+ 			$path = substr( $path, 1 );
+ 			$fromDocRoot = false;
+ 		}
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -33,7 +33,8 @@
+ 	
+ 	// Initialize the old XOOPS global vars
+ 	// This ensures this file can be included from within a function with no prob
+-	$GLOBALS['xoopsUser'] = $GLOBALS['xoopsUserId'] = $GLOBALS['xoopsUserGroups'] = $GLOBALS['xoopsUserIsAdmin'] = false;
++	// $xoopsUser is initialized by the kernel right now
++	$GLOBALS['xoopsUserId'] = $GLOBALS['xoopsUserGroups'] = $GLOBALS['xoopsUserIsAdmin'] = false;
+ 	$GLOBALS['xoopsDB'] = $GLOBALS['xoopsConfig'] = $GLOBALS['xoopsModule'] = $GLOBALS['xoopsModuleConfig'] = null;
+ 
+ 	global $xoops, $xoopsOption;
+@@ -154,7 +155,6 @@
+     $GLOBALS['xoopsRequestUri'] = $_SERVER[ 'REQUEST_URI' ];       // Deprecated (use the corrected $_SERVER variable now)
+     /**#@-*/
+ 
+-    $GLOBALS['xoopsUser'] = '';
+     $member_handler =&amp; xoops_gethandler('member');
+ 
+ 	// NB: SSL login has been temporarily disabled until the birth of the user-login module
+@@ -162,15 +162,12 @@
+     //if ($xoopsConfig['use_ssl'] &amp;&amp; isset($_POST[$xoopsConfig['sslpost_name']]) &amp;&amp; $_POST[$xoopsConfig['sslpost_name']] != '') {
+ 	//session_id($_POST[$xoopsConfig['sslpost_name']]);
+ 
+-	// NB: User mgmt is not stabilized, so keep using $xoopsUser for the moment
+-	if ( !@empty( $_SESSION ) ) {
+-		$xoops-&gt;acceptUser();
+-		if ( $xoops-&gt;currentUser ) {
+-			$GLOBALS['xoopsUser'] = $xoops-&gt;currentUser;
+-			//$xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin();
+-		}
+-	}
+ 	global $xoopsUser;
++	if ( $xoopsUser &amp;&amp; is_object( $xoopsUser ) ) {
++		$GLOBALS['xoopsUserId'] = $xoopsUser-&gt;getVar( 'uid', 'n' );
++		$GLOBALS['xoopsUserIsAdmin'] = $xoopsUser-&gt;isAdmin();
++		$GLOBALS['xoopsUserGroups'] = $xoopsUser-&gt;getGroups();
++	}
+ 	
+     if (!empty($_REQUEST['xoops_theme_select']) &amp;&amp; in_array($_REQUEST['xoops_theme_select'], $xoopsConfig['theme_set_allowed'])) {
+         $xoopsConfig['theme_set'] = $_REQUEST['xoops_theme_select'];
+
+Copied: XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/sysutils (from rev 211, XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/canvas-default.xotpl	2006-01-30 02:47:08 UTC (rev 212)
+@@ -1,5 +1,8 @@
+ &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;([$xoops_langcode])&quot; lang=&quot;([$xoops_langcode])&quot;&gt;
++&lt;html
++	xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;
++	xml:lang=&quot;([$xoops_langcode])&quot; lang=&quot;([$xoops_langcode])&quot;
++&gt;
+ &lt;head&gt;
+ 	&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=([$xoops_charset])&quot; /&gt;
+ 	&lt;meta http-equiv=&quot;content-language&quot; content=&quot;([$xoops_langcode])&quot; /&gt;
+@@ -37,7 +40,7 @@
+ &lt;/script&gt;
+ 	
+ &lt;/head&gt;
+-&lt;body&gt;
++&lt;body class=&quot;([$xoops-&gt;currentModule-&gt;xoBundleIdentifier])&quot;&gt;
+ 
+ ([if $xoBlocks.canvas_left and $xoBlocks.canvas_right])
+ 	([assign var=canvas_class value=&quot;xo-with_both&quot;])
+@@ -57,6 +60,17 @@
+ 			&lt;div id=&quot;xo-banner-ad&quot;&gt;([$xoops_banner])&lt;/div&gt;
+ 			([/if])
+ 		&lt;/div&gt;
++		&lt;div id=&quot;xo-header-userinfo&quot;&gt;
++		([if not $xoops-&gt;currentUser-&gt;userId])
++			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#login])&quot;&gt;Log in&lt;/a&gt;
++			&lt;a href=&quot;([xoAppUrl /www/register.php])&quot;&gt;Register&lt;/a&gt;
++		([else])
++			&lt;div class=&quot;user-name&quot;&gt;
++				([if $xoops-&gt;currentUser-&gt;fullName])([$xoops-&gt;currentUser-&gt;fullName])([else])([$xoops-&gt;currentUser-&gt;login])([/if])
++			&lt;/div&gt;
++			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#logout])&quot;&gt;Log out&lt;/a&gt;
++		([/if])
++		&lt;/div&gt;
+ 	&lt;/div&gt;
+ ([if $xoops-&gt;services.http-&gt;redirectMessage])
+ 	&lt;div id=&quot;xo-redirect-message&quot;&gt;
+@@ -88,8 +102,9 @@
+ 			Powered by ([$xoops-&gt;xoShortVersionString])
+ 		&lt;/a&gt;
+ 	&lt;/div&gt;
+-
+ &lt;/div&gt;
+   
++&lt;!--{xo-logger-output}--&gt;
++
+ &lt;/body&gt;
+ &lt;/html&gt;
+
+Copied: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/img/logged_in-22.png (from rev 211, XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/img/logged_in-22.png)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/img/xoops-logo.png
+===================================================================
+(Binary files differ)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/msie.css	2006-01-30 02:47:08 UTC (rev 212)
+@@ -1,6 +1,29 @@
+ 
+ 
++#xo-header-userinfo {
++	right:			25px;
++}
++#xo-header-userinfo .user-name {
++	background:		transparent none;
++	padding:		0px;
++}
++
++
+ #xo-page {
+ 	/* Fix to allow 100% large elements inside the content zone (this browser is so lame... it's unbelievable) */
+ 	height:			1%;
+ }
++
++#xo-canvas-left {
++	display:	inline;
++}
++
++
++.mod_xoops_Identification #xo-page.login {
++	text-align:		center;
++}
++.mod_xoops_Identification #xo-page.login #login_window  {
++	text-align:		left;
++	margin:			1em;
++	width:			480px;
++}
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.xotpl
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.xotpl	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/page-default.xotpl	2006-01-30 02:47:08 UTC (rev 212)
+@@ -1,5 +1,5 @@
+ 
+-	&lt;div id=&quot;xo-page&quot;&gt;
++	&lt;div id=&quot;xo-page&quot;([if $xoops-&gt;currentModule-&gt;currentLocation]) class=&quot;([$xoops-&gt;currentModule-&gt;currentLocation])&quot;([/if])&gt;
+ 		([if !empty($xoops_ccblocks)])
+ 		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topblocks&quot;&gt;
+ 		([foreach item=block from=$xoops_ccblocks])
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/style-default.css
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/style-default.css	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/style-default.css	2006-01-30 02:47:08 UTC (rev 212)
+@@ -11,13 +11,15 @@
+ 	font:					10pt sans-serif;
+ }
+ 
++
+ #xo-canvas {
+-	position:		relative;
+ 	margin:			15px;
+ 	background:		#EEEEEE;
+ }
+ 
++/* ------------------- Canvas banner ------------------- */
+ #xo-canvas-header {
++	position:		relative;
+ 	border-bottom:	1px solid #CCCCCC;
+ 	background:		#FFFFFF;
+ 	padding:		3px 3px 3px;
+@@ -45,12 +47,31 @@
+ 	margin:			0px auto;
+ }
+ 
++#xo-header-userinfo {
++	position:		absolute;
++	top:			6px;
++	right:			10px;
++	color:			#ffffff;
++	font-size:		90%;
++	font-weight:	bold;
++	text-align:		center;
++}
++#xo-header-userinfo a {
++	display:		block;
++	color:			#eeeeee;
++}
++#xo-header-userinfo .user-name {
++	background:		url(img/logged_in-22.png) no-repeat right center;
++	padding-top:	2px;
++	padding-right:	24px;
++}
++
+ #xo-redirect-message {
+ 	position:		absolute;
+ 	z-index:		20;
+ 	left:			25%;
+ 	width:			50%;
+-	top:			62px;
++	top:			80px;
+ 	padding:		.2em 1em;
+ 	background:		#000000;
+ 	color:			#EEEEEE;
+@@ -58,8 +79,8 @@
+ 	font-weight:	bold;
+ }
+ 
++/* ------------------- Main canvas zone (columns and page) ------------------- */
+ #xo-canvas-main {
+-	clear:			both;
+ 	border-top:		1px solid #FFFFFF;
+ 	padding:		6px;
+ }
+@@ -72,13 +93,12 @@
+ 	float:			left;
+ 	border:			1px solid #666666;
+ }
+-
++#xo-canvas-column .xo-block {
++	display:		block;
++}
+ #xo-canvas-rightcolumn {
+ 	float:			right;
+-	padding-bottom:	96px;
+-	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
+ }
+-
+ #xo-page {
+ 	background:		#ffffff;
+ 	padding:		0px;
+@@ -87,13 +107,17 @@
+ }
+ 
+ #xo-canvas.xo-with_left #xo-page, #xo-canvas.xo-with_both #xo-page {
+-	margin-left:	176px;
++	margin-left:	170px;
+ }
+-
+ #xo-canvas.xo-with_right #xo-page, #xo-canvas.xo-with_both #xo-page {
+-	margin-right:	176px;
++	margin-right:	170px;
+ }
+ 
++#xo-content {
++	position:		relative;
++}
++
++
+ #xo-canvas-footer {
+ 	padding:		1px;
+ 	background:		#DDDDDD;
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/user.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/user.php	2006-01-30 02:14:47 UTC (rev 211)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/user.php	2006-01-30 02:47:08 UTC (rev 212)
+@@ -36,6 +36,25 @@
+     $op = trim($_GET['op']);
+ }
+ 
++global $xoops, $xoopsUser;
++
++switch ( $op ) {
++case 'login':
++	$response = $xoops-&gt;virtual( 'mod_xoops_Identification#login', array(
++		'login' =&gt; @$_REQUEST['uname'],
++		'password' =&gt; @$_REQUEST['pass'],
++		'xoops_redirect' =&gt; @$_REQUEST['xoops_redirect'],
++	) );
++	return $xoops-&gt;services['http']-&gt;sendResponse( is_array( $response ) ? $response : 200 );
++case 'logout':
++	if ( $xoopsUser ) {
++		return $xoops-&gt;services['http']-&gt;sendResponse( $xoops-&gt;virtual( 'mod_xoops_Identification#logout' ) );
++	} else {
++		return $xoops-&gt;services['http']-&gt;sendResponse( 303, '', $xoops-&gt;url( 'mod_xoops_Identification#login' ) );
++	}
++}
++
++
+ if ($op == 'main') {
+     if ( !$xoopsUser ) {
+         $xoopsOption['template_main'] = 'system_userform.html';
+@@ -62,28 +81,6 @@
+     exit();
+ }
+ 
+-if ($op == 'login') {
+-    include_once XOOPS_ROOT_PATH.'/include/checklogin.php';
+-    exit();
+-}
+-
+-if ($op == 'logout') {
+-    $message = '';
+-    $_SESSION = array();
+-    session_destroy();
+-    if ($xoopsConfig['use_mysession'] &amp;&amp; $xoopsConfig['session_name'] != '') {
+-        setcookie($xoopsConfig['session_name'], '', time()- 3600, '/',  '', 0);
+-    }
+-    // clear entry from online users table
+-    if (is_object($xoopsUser)) {
+-        $online_handler =&amp; xoops_gethandler('online');
+-        $online_handler-&gt;destroy($xoopsUser-&gt;getVar('uid'));
+-    }
+-    $message = _US_LOGGEDOUT.'&lt;br /&gt;'._US_THANKYOUFORVISIT;
+-    redirect_header('index.php', 1, $message);
+-    exit();
+-}
+-
+ if ($op == 'actv') {
+     $id = intval($_GET['id']);
+     $actkey = trim($_GET['actkey']);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000203.html">[Xoops4-svn] r211 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm htdocs htdocs/modules/sysutils/identification
+</A></li>
+	<LI>Next message: <A HREF="000205.html">[Xoops4-svn] r213 - XoopsCore/branches/tasks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#204">[ date ]</a>
+              <a href="thread.html#204">[ thread ]</a>
+              <a href="subject.html#204">[ subject ]</a>
+              <a href="author.html#204">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r151 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r151%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj&In-Reply-To=%3C200601191239.k0JCdxGJ000620%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000142.html">
+   <LINK REL="Next"  HREF="000144.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r151 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r151%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj&In-Reply-To=%3C200601191239.k0JCdxGJ000620%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r151 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 13:39:59 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000142.html">[Xoops4-svn] r150 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000144.html">[Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#143">[ date ]</a>
+              <a href="thread.html#143">[ thread ]</a>
+              <a href="subject.html#143">[ subject ]</a>
+              <a href="author.html#143">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 13:39:57 +0100 (Thu, 19 Jan 2006)
+New Revision: 151
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php
+Log:
+Little fix to ensure the arg separator is set by default to '&amp;' if trans sid is enabled.
+(advised in patch #1152840)
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php	2006-01-19 12:17:50 UTC (rev 150)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php	2006-01-19 12:39:57 UTC (rev 151)
+@@ -97,6 +97,11 @@
+ 	 * @var string
+ 	 */
+ 	var $urlRewriterTags	= 'a=href,area=href,frame=src,iframe=src,input=src,form=,fieldset=';
++	/**
++	 * String used as parameters separator in rewritting tags
++	 * @var string
++	 */
++	var $outputArgSeparator = '&amp;';
+ 
+ 	// ---------- Garbage collection option ----------
+ 	/**
+@@ -140,6 +145,7 @@
+ 		'gcDivisor'			=&gt; 'session.gc_divisor',
+ 		'useTransparentSid'	=&gt; 'session.use_trans_sid',
+ 		'urlRewriterTags'	=&gt; 'url_rewriter.tags',
++		'outputArgSeparator'=&gt; 'arg_separator.output',
+ 	);
+ 	/**
+ 	* Initialize the session service
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000142.html">[Xoops4-svn] r150 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000144.html">[Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#143">[ date ]</a>
+              <a href="thread.html#143">[ thread ]</a>
+              <a href="subject.html#143">[ subject ]</a>
+              <a href="author.html#143">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

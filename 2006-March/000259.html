@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r269 - XoopsCore/branches/2.2.x/2.2.5/html/install/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r269%20-%20XoopsCore/branches/2.2.x/2.2.5/html/install/class&In-Reply-To=%3C200603221022.k2MAMmxe003965%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000258.html">
+   <LINK REL="Next"  HREF="000260.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r269 - XoopsCore/branches/2.2.x/2.2.5/html/install/class</H1>
+    <B>phppp at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r269%20-%20XoopsCore/branches/2.2.x/2.2.5/html/install/class&In-Reply-To=%3C200603221022.k2MAMmxe003965%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r269 - XoopsCore/branches/2.2.x/2.2.5/html/install/class">phppp at berlios.de
+       </A><BR>
+    <I>Wed Mar 22 11:22:48 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000258.html">[Xoops4-svn] r268 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+</A></li>
+        <LI>Next message: <A HREF="000260.html">[Xoops4-svn] r270 - XoopsCore/branches/2.2.x/2.2.5/html/install/sql
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#259">[ date ]</a>
+              <a href="thread.html#259">[ thread ]</a>
+              <a href="subject.html#259">[ subject ]</a>
+              <a href="author.html#259">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: phppp
+Date: 2006-03-22 11:22:48 +0100 (Wed, 22 Mar 2006)
+New Revision: 269
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php
+Log:
+clean up plus unexpected variable conversion
+
+Modified: XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php	2006-03-22 10:10:57 UTC (rev 268)
++++ XoopsCore/branches/2.2.x/2.2.5/html/install/class/mainfilemanager.php	2006-03-22 10:22:48 UTC (rev 269)
+@@ -68,7 +68,6 @@
+         fclose($file);
+ 
+         foreach($this-&gt;rewrite as $key =&gt; $val){
+-            $val = str_replace('$', '\\$', $val);
+             if(is_int($val) &amp;&amp;
+              preg_match(&quot;/(define\()([\&quot;'])(&quot;.$key.&quot;)\\2,\s*([0-9]+)\s*\)/&quot;,$content)){
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000258.html">[Xoops4-svn] r268 - XoopsCore/branches/2.2.x/2.2.5/html/language/english
+</A></li>
+	<LI>Next message: <A HREF="000260.html">[Xoops4-svn] r270 - XoopsCore/branches/2.2.x/2.2.5/html/install/sql
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#259">[ date ]</a>
+              <a href="thread.html#259">[ thread ]</a>
+              <a href="subject.html#259">[ subject ]</a>
+              <a href="author.html#259">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

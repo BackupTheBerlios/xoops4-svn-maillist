@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r147 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r147%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601191118.k0JBIGH9008077%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000138.html">
+   <LINK REL="Next"  HREF="000140.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r147 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r147%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601191118.k0JBIGH9008077%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r147 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 12:18:16 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000138.html">[Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel
+</A></li>
+        <LI>Next message: <A HREF="000140.html">[Xoops4-svn] r148 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#139">[ date ]</a>
+              <a href="thread.html#139">[ thread ]</a>
+              <a href="subject.html#139">[ subject ]</a>
+              <a href="author.html#139">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 12:18:15 +0100 (Thu, 19 Jan 2006)
+New Revision: 147
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php
+Log:
+Moved some methods of the base db class to the mysql driver
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php	2006-01-19 06:34:03 UTC (rev 146)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php	2006-01-19 11:18:15 UTC (rev 147)
+@@ -87,6 +87,7 @@
+ 	}
+ }
+ 
++
+ /**
+  * Base class for database drivers
+  */
+@@ -194,45 +195,6 @@
+ 		return empty($this-&gt;prefix) ? $table : ( $this-&gt;prefix . '_' . $table );
+ 	}
+ 	
+-	/**
+-	 * Fetch the SQLSTATE associated with the last operation on the database handle 
+-	 */
+-	function errorCode() {
+-		return 'HY000';
+-	}
+-	/**
+-	 * Fetch extended error information associated with the last operation on the database handle 
+-	 * 
+-	 * &lt;p&gt;errorInfo() returns an array of error information about the last operation performed 
+-	 * by this database handle. The array consists of the following fields:&lt;br /&gt;
+-	 * 0: SQLSTATE error code (a five-character alphanumeric identifier defined in the ANSI SQL standard).&lt;br /&gt;
+-	 * 1: Driver-specific error code
+-	 * 2: Driver-specific error message&lt;/p&gt;
+-	 * 
+-	 * &lt;p class=&quot;note&quot;&gt;This implementation doesn't support SQLSTATE (it will always be HY000)&lt;/p&gt;
+-	 */
+-	function errorInfo() {
+-		return array( 'HY000', 0, 0 );
+-	}	
+-	/**
+-	 * Execute an SQL statement and return the number of affected rows
+-	 * 
+-	 * PDO::exec() does not return results from a SELECT statement. For a SELECT statement that 
+-	 * you only need to issue once during your program, consider issuing PDO::query().
+-	 * For a statement that you need to issue multiple times, prepare a PDOStatement object 
+-	 * with PDO::prepare() and issue the statement with PDOStatement::execute().
+-	 * 
+-	 * @param string $statement The SQL statement to prepare and execute
+-	 */
+-	function exec( $statement ) {
+-		return false;	
+-	}
+-	/**
+-	 * Returns the ID of the last inserted row or sequence value
+-	 */
+-	function lastInsertId( $name = '' ) {
+-		return 0;
+-	}
+ }
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000138.html">[Xoops4-svn] r146 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS/Boot htdocs/include htdocs/kernel
+</A></li>
+	<LI>Next message: <A HREF="000140.html">[Xoops4-svn] r148 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#139">[ date ]</a>
+              <a href="thread.html#139">[ thread ]</a>
+              <a href="subject.html#139">[ subject ]</a>
+              <a href="author.html#139">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

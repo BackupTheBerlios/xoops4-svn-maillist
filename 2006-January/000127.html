@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r135%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include&In-Reply-To=%3C200601181352.k0IDqogW027661%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000126.html">
+   <LINK REL="Next"  HREF="000128.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r135%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include&In-Reply-To=%3C200601181352.k0IDqogW027661%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include">skalpa at berlios.de
+       </A><BR>
+    <I>Wed Jan 18 14:52:50 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000126.html">[Xoops4-svn] r134 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database
+</A></li>
+        <LI>Next message: <A HREF="000128.html">[Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#127">[ date ]</a>
+              <a href="thread.html#127">[ thread ]</a>
+              <a href="subject.html#127">[ subject ]</a>
+              <a href="author.html#127">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-18 14:52:49 +0100 (Wed, 18 Jan 2006)
+New Revision: 135
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php
+Log:
+Updated common.php so $xoopsDB also references the legacydb service
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php	2006-01-18 13:48:56 UTC (rev 134)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php	2006-01-18 13:52:49 UTC (rev 135)
+@@ -84,12 +84,14 @@
+     include_once XOOPS_ROOT_PATH.'/include/functions.php';
+ 
+     // #################### Connect to DB ##################
+-    require_once XOOPS_ROOT_PATH.'/class/database/databasefactory.php';
+-    if ($_SERVER['REQUEST_METHOD'] != 'POST' || !$xoopsSecurity-&gt;checkReferer(XOOPS_DB_CHKREF)) {
++    require_once XOOPS_ROOT_PATH.'/class/database/database.php';
++
++    global $xoops;
++    $xoopsDB =&amp; $xoops-&gt;loadService( 'legacydb' );
++    if ( !$xoopsDB-&gt;allowWebChanges ) {
+         define('XOOPS_DB_PROXY', 1);
+     }
+-    $xoopsDB =&amp; XoopsDatabaseFactory::getDatabaseConnection();
+-
++    
+     // ################# Include required files ##############
+     require_once XOOPS_ROOT_PATH.'/kernel/object.php';
+     require_once XOOPS_ROOT_PATH.'/class/criteria.php';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000126.html">[Xoops4-svn] r134 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database
+</A></li>
+	<LI>Next message: <A HREF="000128.html">[Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#127">[ date ]</a>
+              <a href="thread.html#127">[ thread ]</a>
+              <a href="subject.html#127">[ subject ]</a>
+              <a href="author.html#127">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

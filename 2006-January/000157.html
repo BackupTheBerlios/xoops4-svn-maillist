@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r165 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r165%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601201648.k0KGmgb2023697%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000156.html">
+   <LINK REL="Next"  HREF="000158.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r165 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r165%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601201648.k0KGmgb2023697%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r165 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 17:48:42 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000156.html">[Xoops4-svn] r164 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom
+</A></li>
+        <LI>Next message: <A HREF="000158.html">[Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 17:48:41 +0100 (Fri, 20 Jan 2006)
+New Revision: 165
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+Log:
+Added the new error handler component to xoops_kernel
+
+It's a cleaned up version of the 2.0.x one: activation/deactivation really works, it handles the @ operator gracefully, and doesn't contain any output-related stuff (to display is the logger job).
+
+It will be enhanced a bit for exceptions handling on PHP5 later on.
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php	2006-01-20 09:08:45 UTC (rev 164)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php	2006-01-20 16:48:41 UTC (rev 165)
+@@ -0,0 +1,129 @@
++&lt;?php
++/**
++ * xoops_kernel_ErrorHandler main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_kernel
++ * @package		xoops_kernel_ErrorHandler
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++/**
++ * xoops_kernel_ErrorHandler main class
++ * 
++ * The XOOPS error handler catches PHP errors and exceptions and optionally sends
++ * information about them to the logger service.
++ * Physical paths that would be part of the error messages are converted to prevent
++ * path disclosure on production servers.
++ */
++class xoops_kernel_ErrorHandler {
++	/**
++	 * If this handler should catch errors or not
++	 * @var boolean
++	 */
++	var $catchErrors = false;
++	/**
++	 * If this handler should catch exceptions or not
++	 * @var boolean
++	 */
++	var $catchExceptions = false;
++	/**
++	 * Which PHP errors are reported
++	 * @var integer
++	 */
++	var $errorReporting = false;
++	/**
++	 * Default error reporting levels is $errorReporting is not specified
++	 * @var array
++	 */
++	var $defaultReporting = array( XO_MOD_PROD =&gt; 0, XO_MODE_DEBUG =&gt; E_ALL ^ E_NOTICE, XO_MODE_DEV =&gt; E_ALL );
++	/**
++	 * The reporting level that was set before the handler has been activated
++	 * @var integer
++	 * @access private
++	 */
++	var $oldErrorReporting = false;
++	/**
++	 * How errors are reported in the message
++	 * @var string[]
++	 */
++	var $errorNames = array(
++		E_ERROR =&gt; 'Error', E_USER_ERROR =&gt; 'Error', E_WARNING =&gt; 'Warning', E_USER_WARNING =&gt; 'Warning',
++		E_NOTICE =&gt; 'Notice', E_USER_NOTICE =&gt; 'Notice',
++	);
++	/**
++	 * Initializes this instance
++	 */
++	function xoInit( $options = array() ) {
++		global $xoops;
++		if ( $this-&gt;errorReporting === false ) {
++			$this-&gt;errorReporting = $this-&gt;defaultReporting[ $xoops-&gt;xoRunMode ];
++		}
++		$this-&gt;activateErrorHandling( true );
++		return true;
++	}
++	/**
++	 * Enable/disable the error handling functionality.
++	 *
++	 * When set to active, the error handler set the php error reporting level to E_ALL and uses its own
++	 * $errorReporting property to mask the errors to report to ensure @ operator still works :-).
++	 * @param bool	$enable		Whether to enable or disable the error handler
++	 */
++	function activateErrorHandling( $enable = true ) {
++		if ( $enable &amp;&amp; !$this-&gt;catchErrors ) {
++			set_error_handler( array( &amp;$this, 'handleError' ) );
++			$this-&gt;oldErrorReporting = error_reporting( E_ALL );
++			return $this-&gt;catchErrors = true;
++		} elseif ( !$enable &amp;&amp; $this-&gt;catchErrors ) {
++		 	restore_error_handler();
++			error_reporting( $this-&gt;oldErrorReporting );
++			return $this-&gt;catchErrors = false;
++		}
++		return $this-&gt;catchErrors;
++	}
++	/**
++	 * Error handler (called by PHP on error)
++	 */	
++	function handleError( $num, $str, $file = '', $line = 0, $context = false ) {
++		global $xoops;
++		if ( $num &amp; $this-&gt;errorReporting &amp; error_reporting() ) {
++			$name = isset( $this-&gt;errorNames[$num] ) ? $this-&gt;errorNames[$num] : 'Undefined error';
++			$str = $this-&gt;sanitizePaths( $str );
++			if ( DIRECTORY_SEPARATOR != '/' ) {
++				$file = str_replace( DIRECTORY_SEPARATOR, '/', $file );
++			}
++			$file = $this-&gt;sanitizePaths( $file );
++			$str = &quot;$name: $str in $file on line $line&quot;;
++			if ( $xoops-&gt;services['logger'] ) {
++				$xoops-&gt;services['logger']-&gt;logError( $str );
++			} else {
++				echo &quot;$str&lt;br /&gt;\r\n&quot;;
++			}
++		}
++	}
++	/**
++	 * Method used internally to transform physical paths to their XOOPS form
++	 * @param string $str String to search for physical paths
++	 * @return string Safe for display transformed string
++	 */
++	function sanitizePaths( $str ) {
++		global $xoops;
++		foreach ( $xoops-&gt;paths as $root =&gt; $v ) {
++			$str  = str_replace( $v[0] . '/', &quot;/$root/&quot;, $str );
++		}
++		return $str;
++	}	
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php	2006-01-20 09:08:45 UTC (rev 164)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php	2006-01-20 16:48:41 UTC (rev 165)
+@@ -18,6 +18,9 @@
+ 	'xoBundleIdentifier' =&gt; 'xoops_kernel',
+ 	
+ 	'xoServices' =&gt; array(
++		'xoops_kernel_ErrorHandler' =&gt; array(
++			'xoClassPath' =&gt; '/errorhandler.php',
++		),
+ 		'xoops_kernel_Module' =&gt; array(
+ 			'xoClassPath' =&gt; '/module.php',
+ 			'xoFactory' =&gt; 'xoops_kernel_ModuleFactory',
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000156.html">[Xoops4-svn] r164 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom
+</A></li>
+	<LI>Next message: <A HREF="000158.html">[Xoops4-svn] r166 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

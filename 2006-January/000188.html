@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r196 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r196%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj&In-Reply-To=%3C200601272338.k0RNcdMs011890%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000187.html">
+   <LINK REL="Next"  HREF="000189.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r196 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r196%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj&In-Reply-To=%3C200601272338.k0RNcdMs011890%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r196 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 28 00:38:39 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000187.html">[Xoops4-svn] r195 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules: . sysutils sysutils/identification sysutils/identification/images sysutils/identification/templates
+</A></li>
+        <LI>Next message: <A HREF="000189.html">[Xoops4-svn] r197 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-28 00:38:36 +0100 (Sat, 28 Jan 2006)
+New Revision: 196
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+Log:
+Several bugfixes / optimizations in the HTTP handler
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-26 22:29:44 UTC (rev 195)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-27 23:38:36 UTC (rev 196)
+@@ -55,15 +55,6 @@
+ 	&lt;!--{xo-logger-output}--&gt;
+ &lt;/body&gt;&lt;/html&gt;';
+ 	/**
+-	* Default strings to add to the response status header (indexed by status code)
+-	* @var array
+-	*/
+-	var $responseMessages = array(
+-		200			=&gt; 'OK',
+-		400			=&gt; 'Bad request',
+-		404			=&gt; 'Not found',
+-	);
+-	/**
+ 	* Location of the default error pages (unimplemented)
+ 	* @var string
+ 	*/
+@@ -97,24 +88,13 @@
+ 	 */
+ 	function absoluteUrl( $url ) {
+ 		global $xoops;
+-		static $host;	
+ 
+ 		if ( strpos( $url, '://' ) === false ) {
+-			if ( !isset($host) ) {
+-				list( $defaultPort, $proto ) =
+-					( substr( $_SERVER['SERVER_PROTOCOL'], 4, 1 ) == '/' ) ? array( 80, '<A HREF="http://">http://</A>' ) : array( 443, '<A HREF="https://">https://</A>' );
+-				if ( !$host = @$_SERVER['HTTP_HOST'] ) {
+-					$host = !empty($this-&gt;defaultServerName) ? $this-&gt;defaultServerName : $_SERVER['SERVER_NAME'];
+-				}
+-				if ( !empty($_SERVER['SERVER_PORT']) &amp;&amp; $_SERVER['SERVER_PORT'] != $defaultPort ) {
+-					$host .= ':' . $_SERVER['SERVER_PORT'];
+-				}
+-				$host = $proto . $host;
+-			}
+-	        if ( !strlen($url) ) {
++			$host = 'http' . ( $xoops-&gt;isSecure ? 's' : '' ) . '://' . $xoops-&gt;hostName;
++			if ( !strlen($url) ) {
+ 	            $url = $_SERVER['REQUEST_URI'];
+         	} elseif ( substr( $url, 0, 1 ) == '/' ) {
+-	            return $host . $xoops-&gt;url( &quot;/www$url&quot; );
++	            return $host . $url;
+         	}
+         	// Check for PATH_INFO
+         	if (isset($_SERVER['PATH_INFO']) &amp;&amp; $_SERVER['PHP_SELF'] != $_SERVER['PATH_INFO']) {
+@@ -152,44 +132,41 @@
+ 		if ( empty($status) ) {
+ 			$status = 200;			// HTTP_STATUS_OK
+ 		}
+-		if ( empty($message) &amp;&amp; isset($this-&gt;errorMessages[$status]) ) {
+-		 	$message =  $this-&gt;errorMessages[$status];
+-		}
+-		/*
+-		if ( empty($location) &amp;&amp; isset($this-&gt;errorPages[$status]) ) {
++		/* if ( empty($location) &amp;&amp; isset($this-&gt;errorPages[$status]) ) {
+ 			$location = $this-&gt;errorPages[$status];
+-		}
+-		*/
++		} */
+ 		if ( $location == -1 ) {
+-		 	if ( !( $location = @$_SERVER['HTTP_REFERER'] ) ) {
+-		 		$location = '/www/';
+-			}
++			$location = !@empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : $xoops-&gt;url( '/www/' );
+ 		}
+-		if ( !empty($location) &amp;&amp; !$xoops-&gt;isVirtual ) {
++		if ( !empty($location) ) {
+ 		    if ( preg_match( &quot;/[\\0-\\31]|about:|script:/i&quot;, $location ) ) {
+-        		$location = '/www/';
++        		$location = $xoops-&gt;url( '/www/' );
+     		}
+     		if ( !strpos( $location, '://' ) ) {
+-				$location = $this-&gt;absoluteUrl( $xoops-&gt;url( $location ) );
++				$location = $this-&gt;absoluteUrl( $location );
+     		}
+-			if ( $this-&gt;enableRedirections ) {
+-				$_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] = array(
+-					'STATUS' =&gt; $status,
+-					'URL' =&gt; $_SERVER['REQUEST_URI'],
+-					'REQUEST_METHOD' =&gt; $_SERVER['REQUEST_METHOD'],
+-					'ERROR_NOTES' =&gt; $message,
+-				);
+-				header( &quot;Location: $location&quot; );
+-				$this-&gt;sendResponseCode( $status, $message );
+-				echo &quot;&lt;body&gt;&lt;a href='$location'&gt;Page redirected. Status: $status, $message.&lt;/a&gt;&lt;/body&gt;&quot;;
+-			} else {
+-				$this-&gt;sendResponseCode( 200, $message );
+-				$vars = array(
+-					'{refresh}' =&gt; '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $this-&gt;fakeRedirectPageDelay . '; url=' . htmlspecialchars( $location, ENT_QUOTES ) . '&quot; /&gt;',
+-					'{message}' =&gt; $message,
+-					'{ifnotreload}' =&gt; sprintf( _IFNOTRELOAD, $location )
+-				);
+-				echo str_replace( array_keys( $vars ), array_values( $vars ), $this-&gt;fakeRedirectTemplate );
++		}
++		if ( !$xoops-&gt;isVirtual ) {
++			$this-&gt;sendResponseCode( $status, $message );
++			if ( !empty( $location ) ) {
++				if ( $this-&gt;enableRedirections ) {
++					$_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] = array(
++						'STATUS' =&gt; $status,
++						'URL' =&gt; $_SERVER['REQUEST_URI'],
++						'REQUEST_METHOD' =&gt; $_SERVER['REQUEST_METHOD'],
++						'ERROR_NOTES' =&gt; $message,
++					);
++					header( &quot;Location: $location&quot; );
++					echo &quot;&lt;body&gt;&lt;a href='$location'&gt;Page redirected. Status: $status, $message.&lt;/a&gt;&lt;/body&gt;&quot;;
++				} else {
++					//$this-&gt;sendResponseCode( 200, $message );
++					$vars = array(
++						'{refresh}' =&gt; '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $this-&gt;fakeRedirectPageDelay . '; url=' . htmlspecialchars( $location, ENT_QUOTES ) . '&quot; /&gt;',
++						'{message}' =&gt; $message,
++						'{ifnotreload}' =&gt; sprintf( _IFNOTRELOAD, $location )
++					);
++					echo str_replace( array_keys( $vars ), array_values( $vars ), $this-&gt;fakeRedirectTemplate );
++				}
+ 			}
+ 		}
+ 		return array( $status, $message, $location );
+@@ -206,7 +183,7 @@
+ 			if ( $pos = strpos( $message, '&lt;' ) ) {
+ 				$message = substr( $message, 0, $pos );
+ 			}
+-			header( &quot;Status: $status $message&quot; );
++			//header( &quot;Status: $status $message&quot; );
+ 			header( &quot;HTTP/1.1 $status $message&quot; );
+ 		}
+ 	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000187.html">[Xoops4-svn] r195 - in XoopsCore/branches/tasks/123353-authentication/htdocs/modules: . sysutils sysutils/identification sysutils/identification/images sysutils/identification/templates
+</A></li>
+	<LI>Next message: <A HREF="000189.html">[Xoops4-svn] r197 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

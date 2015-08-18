@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r137 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r137%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj&In-Reply-To=%3C200601190305.k0J35Imo009321%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000128.html">
+   <LINK REL="Next"  HREF="000130.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r137 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r137%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj&In-Reply-To=%3C200601190305.k0J35Imo009321%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r137 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 19 04:05:18 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000128.html">[Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000130.html">[Xoops4-svn] r138 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#129">[ date ]</a>
+              <a href="thread.html#129">[ thread ]</a>
+              <a href="subject.html#129">[ subject ]</a>
+              <a href="author.html#129">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-19 04:05:13 +0100 (Thu, 19 Jan 2006)
+New Revision: 137
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+Log:
+Some fixed in the initialization routine
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-19 02:52:11 UTC (rev 136)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-01-19 03:05:13 UTC (rev 137)
+@@ -55,24 +55,34 @@
+ 	* Initialize the session service
+ 	*/
+ 	function xoInit( $options = array() ) {
+-	 	global $xoops;
+-
+-		if ( $this-&gt;saveHandler &amp;&amp; !is_object( $this-&gt;saveHandler ) ) {
+-			if ( ! ( $this-&gt;saveHandler = XOS::create( $this-&gt;saveHandler ) ) ) {
+-				trigger_error( &quot;Failed to initialize the session save handler: session cannot start.&quot;, E_USER_WARNING );
++		if ( $this-&gt;saveHandler &amp;&amp; !$this-&gt;attachHandler( $this-&gt;saveHandler ) ) {
++			return false;
++		}
++		$this-&gt;start();
++	 	return true;
++	}
++	/**
++	 * Initialize the specified object as a save handler
++	 *
++	 * @param mixed $handler Object to attach (or bundleIdentifier of the handler to instanciate)
++	 * @return boolean true on success, false otherwise
++	 */
++	function attachHandler( $handler ) {
++		if ( !is_object( $handler ) ) {
++			if ( ! ( $handler = XOS::create( $handler ) ) ) {
++				trigger_error( &quot;Failed to initialize the session save handler.&quot;, E_USER_WARNING );
+ 				return false;
+ 			}
+ 		}
+-		if ( $this-&gt;saveHandler ) {
+-	    	session_set_save_handler(
+-	    		array( &amp;$this-&gt;saveHandler, 'open' ), array( &amp;$this-&gt;saveHandler, 'close'),
+-	    		array( &amp;$this-&gt;saveHandler, 'read'), array( &amp;$this-&gt;saveHandler, 'write'),
+-	    		array( &amp;$this-&gt;saveHandler, 'destroy'), array( &amp;$this-&gt;saveHandler, 'gc')
+-	    	);
+-		}
++    	session_set_save_handler(
++    		array( &amp;$handler, 'open' ), array( &amp;$handler, 'close'),
++    		array( &amp;$handler, 'read'), array( &amp;$handler, 'write'),
++    		array( &amp;$handler, 'destroy'), array( &amp;$handler, 'gc')
++    	);
++		$this-&gt;saveHandler =&amp; $handler;
+ 		return true;
+ 	}
+-
++	
+ 	/**
+ 	* Create a new session
+ 	*/
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000128.html">[Xoops4-svn] r136 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Http.xofrm Http.xofrm/session.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000130.html">[Xoops4-svn] r138 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#129">[ date ]</a>
+              <a href="thread.html#129">[ thread ]</a>
+              <a href="subject.html#129">[ subject ]</a>
+              <a href="author.html#129">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

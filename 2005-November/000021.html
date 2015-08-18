@@ -1,0 +1,2127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r26 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Boot XOOPS/Frameworks htdocs htdocs/class htdocs/class/database htdocs/class/xml/rss htdocs/class/xoopsform htdocs/include htdocs/kernel
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r26%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove%3A%20XOOPS/Boot%20XOOPS/Frameworks%20htdocs%20htdocs/class%20htdocs/class/database%20htdocs/class/xml/rss%20htdocs/class/xoopsform%20htdocs/include%20htdocs/kernel&In-Reply-To=%3C200511250720.jAP7KULq007884%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000020.html">
+   <LINK REL="Next"  HREF="000018.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r26 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Boot XOOPS/Frameworks htdocs htdocs/class htdocs/class/database htdocs/class/xml/rss htdocs/class/xoopsform htdocs/include htdocs/kernel</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r26%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove%3A%20XOOPS/Boot%20XOOPS/Frameworks%20htdocs%20htdocs/class%20htdocs/class/database%20htdocs/class/xml/rss%20htdocs/class/xoopsform%20htdocs/include%20htdocs/kernel&In-Reply-To=%3C200511250720.jAP7KULq007884%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r26 - in XoopsCore/branches/tasks/121476-tplset-remove: XOOPS/Boot XOOPS/Frameworks htdocs htdocs/class htdocs/class/database htdocs/class/xml/rss htdocs/class/xoopsform htdocs/include htdocs/kernel">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Nov 25 08:20:30 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000020.html">[Xoops4-svn] r25 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS-data/Application Support htdocs/class htdocs/class/database htdocs/class/xml/rss htdocs/class/xoopsform htdocs/include htdocs/kernel
+</A></li>
+        <LI>Next message: <A HREF="000018.html">[Xoops4-svn] r27 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS-data/Application Support
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-25 08:20:20 +0100 (Fri, 25 Nov 2005)
+New Revision: 26
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/exxos.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/hosts.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/rc.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/xoops2.php
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/database.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/module.textsanitizer.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/tree.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xml/rss/xmlrss2parser.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsblock.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopscomments.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsform/form.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopstopic.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/functions.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/avatar.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/block.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/comment.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configcategory.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configitem.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configoption.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/group.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/image.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagecategory.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imageset.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagesetimg.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/notification.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/object.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/online.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/privmessage.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplfile.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/user.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/mainfile.dist.php
+Log:
+Updating the tplsets work branch with the latest changes done to the main 2.3 branch (the kernel draft and refs fixes)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/exxos.php (from rev 25, XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/hosts.php (from rev 25, XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/hosts.php)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php (from rev 25, XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/rc.php (from rev 25, XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/xoops2.php (from rev 25, XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/xoops2.php)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore (from rev 25, XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/database.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/database.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/database.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -123,9 +123,9 @@
+ class Database
+ {
+ 
+-	function &amp;getInstance()
+-	{
+-		return XoopsDatabaseFactory::getDatabaseConnection();
++	function &amp;getInstance() {
++		$inst =&amp; XoopsDatabaseFactory::getDatabaseConnection();
++		return $inst;
+ 	}
+ }
+ 
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -228,7 +228,7 @@
+      * @return resource query result or FALSE if successful
+      * or TRUE if successful and no result
+      */
+-    function &amp;queryF($sql, $limit=0, $start=0)
++    function queryF($sql, $limit=0, $start=0)
+ 	{
+ 		if ( !empty($limit) ) {
+ 			if (empty($start)) {
+@@ -258,7 +258,7 @@
+      * 
+      * @abstract
+ 	 */
+-	function &amp;query($sql, $limit=0, $start=0)
++	function query($sql, $limit=0, $start=0)
+ 	{
+ 
+     }
+@@ -346,7 +346,7 @@
+      * @return resource query result or FALSE if successful
+      * or TRUE if successful and no result
+      */
+-	function &amp;query($sql, $limit=0, $start=0)
++	function query($sql, $limit=0, $start=0)
+ 	{
+ 		return $this-&gt;queryF($sql, $limit, $start);
+ 	}
+@@ -378,7 +378,7 @@
+      * @param int $start offset of first record to return
+      * @return resource query result or FALSE if unsuccessful
+      */
+-	function &amp;query($sql, $limit=0, $start=0)
++	function query($sql, $limit=0, $start=0)
+ 	{
+ 	    $sql = ltrim($sql);
+ 		if (strtolower(substr($sql, 0, 6)) == 'select') {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/module.textsanitizer.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/module.textsanitizer.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/module.textsanitizer.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -103,20 +103,20 @@
+      *
+      * @return	string
+      */
+-    function &amp;smiley($message)
++    function smiley($message)
+ 	{
+ 		$db =&amp; Database::getInstance();
+ 		if (count($this-&gt;smileys) == 0) {
+ 			if ($getsmiles = $db-&gt;query(&quot;SELECT * FROM &quot;.$db-&gt;prefix(&quot;smiles&quot;))){
+ 				while ($smiles = $db-&gt;fetchArray($getsmiles)) {
+-					$message =&amp; str_replace($smiles['code'], '&lt;img src=&quot;'.XOOPS_UPLOAD_URL.'/'.htmlspecialchars($smiles['smile_url']).'&quot; alt=&quot;&quot; /&gt;', $message);
++					$message = str_replace($smiles['code'], '&lt;img src=&quot;'.XOOPS_UPLOAD_URL.'/'.htmlspecialchars($smiles['smile_url']).'&quot; alt=&quot;&quot; /&gt;', $message);
+ 					array_push($this-&gt;smileys, $smiles);
+ 				}
+ 			}
+ 		} 
+ 		elseif (is_array($this-&gt;smileys)) {
+ 			foreach ($this-&gt;smileys as $smile) {
+-				$message =&amp; str_replace($smile['code'], '&lt;img src=&quot;'.XOOPS_UPLOAD_URL.'/'.htmlspecialchars($smile['smile_url']).'&quot; alt=&quot;&quot; /&gt;', $message);
++				$message = str_replace($smile['code'], '&lt;img src=&quot;'.XOOPS_UPLOAD_URL.'/'.htmlspecialchars($smile['smile_url']).'&quot; alt=&quot;&quot; /&gt;', $message);
+ 			}
+ 		}
+ 		return $message;
+@@ -128,7 +128,7 @@
+ 	 * @param   string  $text
+ 	 * @return  string
+ 	 **/
+-	function &amp;makeClickable(&amp;$text)
++	function makeClickable(&amp;$text)
+ 	{
+ 		$patterns = array(&quot;/(^|[^]_a-z0-9-=\&quot;'\/])([a-z]+?):\/\/([^, \r\n\&quot;\(\)'&lt;&gt;]+)/i&quot;, &quot;/(^|[^]_a-z0-9-=\&quot;'\/])www\.([a-z0-9\-]+)\.([^, \r\n\&quot;\(\)'&lt;&gt;]+)/i&quot;, &quot;/(^|[^]_a-z0-9-=\&quot;'\/])ftp\.([a-z0-9\-]+)\.([^, \r\n\&quot;\(\)'&lt;&gt;]+)/i&quot;, &quot;/(^|[^]_a-z0-9-=\&quot;'\/:\.])([a-z0-9\-_\.]+?)@([^, \r\n\&quot;\(\)'&lt;&gt;\[\]]+)/i&quot;);
+ 		$replacements = array(&quot;\\1&lt;a href=\&quot;\\2://\\3\&quot; target=\&quot;_blank\&quot;&gt;\\2://\\3&lt;/a&gt;&quot;, &quot;\\1&lt;a href=\&quot;<A HREF="http://www.\\2.\\3\">http://www.\\2.\\3\</A>&quot; target=\&quot;_blank\&quot;&gt;www.\\2.\\3&lt;/a&gt;&quot;, &quot;\\1&lt;a href=\&quot;<A HREF="ftp://ftp.\\2.\\3\">ftp://ftp.\\2.\\3\</A>&quot; target=\&quot;_blank\&quot;&gt;ftp.\\2.\\3&lt;/a&gt;&quot;, &quot;\\1&lt;a href=\&quot;mailto:\\2@\\3\&quot;&gt;\\2@\\3&lt;/a&gt;&quot;);
+@@ -203,7 +203,8 @@
+ 		$replacements[] = &quot;(tammairanslip)&quot;;
+ 		$patterns[] = &quot;/a{$c}b{$c}o{$c}u{$c}t{$c}:/si&quot;;
+ 		$replacements[] = &quot;about :&quot;;
+-		return preg_replace($patterns, $replacements, $text);
++		$text = preg_replace($patterns, $replacements, $text);
++		return $text;
+ 	}
+ 
+ 	/**
+@@ -213,7 +214,7 @@
+      *
+      * @return	string
+ 	 */
+-	function &amp;nl2Br($text)
++	function nl2Br($text)
+ 	{
+ 		return preg_replace(&quot;/(\015\012)|(\015)|(\012)/&quot;,&quot;&lt;br /&gt;&quot;,$text);
+ 	}
+@@ -224,10 +225,10 @@
+ 	 * @param   string  $text
+ 	 * @return  string
+ 	 **/
+-	function &amp;addSlashes($text)
++	function addSlashes($text)
+ 	{
+ 		if (!get_magic_quotes_gpc()) {
+-			$text =&amp; addslashes($text);
++			$text = addslashes($text);
+ 		}
+ 		return $text;
+ 	}
+@@ -238,10 +239,10 @@
+     *
+     * @return	string
+ 	*/
+-	function &amp;stripSlashesGPC($text)
++	function stripSlashesGPC($text)
+ 	{
+ 		if (get_magic_quotes_gpc()) {
+-			$text =&amp; stripslashes($text);
++			$text = stripslashes($text);
+ 		}
+ 		return $text;
+ 	}
+@@ -253,7 +254,7 @@
+     *
+     * @return	string
+ 	*/
+-	function &amp;htmlSpecialChars($text)
++	function htmlSpecialChars($text)
+ 	{
+ 		//return preg_replace(&quot;/&amp;/i&quot;, '&amp;', htmlspecialchars($text, ENT_QUOTES));
+ 		return preg_replace(array(&quot;/&amp;/i&quot;, &quot;/&nbsp;/i&quot;), array('&amp;', '&amp;nbsp;'), htmlspecialchars($text, ENT_QUOTES));
+@@ -265,7 +266,7 @@
+ 	 * @param   string  $text
+ 	 * @return  string
+ 	 **/
+-	function &amp;undoHtmlSpecialChars(&amp;$text)
++	function undoHtmlSpecialChars( $text )
+ 	{
+ 		return preg_replace(array(&quot;/&gt;/i&quot;, &quot;/&lt;/i&quot;, &quot;/&quot;/i&quot;, &quot;/&#039;/i&quot;), array(&quot;&gt;&quot;, &quot;&lt;&quot;, &quot;\&quot;&quot;, &quot;'&quot;), $text);
+ 	}
+@@ -285,28 +286,28 @@
+ 	{
+ 		if ($html != 1) {
+ 			// html not allowed
+-			$text =&amp; $this-&gt;htmlSpecialChars($text);
++			$text = $this-&gt;htmlSpecialChars($text);
+ 		}
+-		$text =&amp; $this-&gt;codePreConv($text, $xcode); // Ryuji_edit(2003-11-18)
+-		$text =&amp; $this-&gt;makeClickable($text);
++		$text = $this-&gt;codePreConv($text, $xcode); // Ryuji_edit(2003-11-18)
++		$text = $this-&gt;makeClickable($text);
+ 		if ($smiley != 0) {
+ 			// process smiley
+-			$text =&amp; $this-&gt;smiley($text);
++			$text = $this-&gt;smiley($text);
+ 		}
+ 		if ($xcode != 0) {
+ 			// decode xcode
+ 			if ($image != 0) {
+ 				// image allowed
+-				$text =&amp; $this-&gt;xoopsCodeDecode($text);
+-            		} else {
+-                		// image not allowed
+-                		$text =&amp; $this-&gt;xoopsCodeDecode($text, 0);
++				$text = $this-&gt;xoopsCodeDecode($text);
++			} else {
++				// image not allowed
++				$text = $this-&gt;xoopsCodeDecode($text, 0);
+ 			}
+ 		}
+ 		if ($br != 0) {
+-			$text =&amp; $this-&gt;nl2Br($text);
++			$text = $this-&gt;nl2Br($text);
+ 		}
+-		$text =&amp; $this-&gt;codeConv($text, $xcode, $image);	// Ryuji_edit(2003-11-18)
++		$text = $this-&gt;codeConv($text, $xcode, $image);	// Ryuji_edit(2003-11-18)
+ 		return $text;
+ 	}
+ 
+@@ -323,31 +324,31 @@
+ 	 **/
+ 	function &amp;previewTarea(&amp;$text, $html = 0, $smiley = 1, $xcode = 1, $image = 1, $br = 1)
+ 	{
+-		$text =&amp; $this-&gt;stripSlashesGPC($text);
++		$text = $this-&gt;stripSlashesGPC($text);
+ 		if ($html != 1) {
+ 			// html not allowed
+-			$text =&amp; $this-&gt;htmlSpecialChars($text);
++			$text = $this-&gt;htmlSpecialChars($text);
+ 		}
+-		$text =&amp; $this-&gt;codePreConv($text, $xcode); // Ryuji_edit(2003-11-18)
+-		$text =&amp; $this-&gt;makeClickable($text);
++		$text = $this-&gt;codePreConv($text, $xcode); // Ryuji_edit(2003-11-18)
++		$text = $this-&gt;makeClickable($text);
+ 		if ($smiley != 0) {
+ 			// process smiley
+-			$text =&amp; $this-&gt;smiley($text);
++			$text = $this-&gt;smiley($text);
+ 		}
+ 		if ($xcode != 0) {
+ 			// decode xcode
+ 			if ($image != 0) {
+ 				// image allowed
+-				$text =&amp; $this-&gt;xoopsCodeDecode($text);
++				$text = $this-&gt;xoopsCodeDecode($text);
+ 			} else {
+ 				// image not allowed
+-				$text =&amp; $this-&gt;xoopsCodeDecode($text, 0);
++				$text = $this-&gt;xoopsCodeDecode($text, 0);
+ 			}
+ 		}
+ 		if ($br != 0) {
+-			$text =&amp; $this-&gt;nl2Br($text);
++			$text = $this-&gt;nl2Br($text);
+ 		}
+-		$text =&amp; $this-&gt;codeConv($text, $xcode, $image);	// Ryuji_edit(2003-11-18)
++		$text = $this-&gt;codeConv($text, $xcode, $image);	// Ryuji_edit(2003-11-18)
+ 		return $text;
+ 	}
+ 
+@@ -525,7 +526,8 @@
+ 
+ 	function &amp;makeTareaData4Preview(&amp;$text, $html=1, $smiley=1, $xcode=1)
+ 	{
+-		return $this-&gt;previewTarea($text, $html, $smiley, $xcode);
++		$text = $this-&gt;previewTarea($text, $html, $smiley, $xcode);
++		return $text;
+ 	}
+ 
+ 	function makeTareaData4PreviewInForm($text)
+@@ -540,30 +542,30 @@
+ 		return $this-&gt;htmlSpecialChars($text);
+ 	}
+ 
+-	function &amp;oopsStripSlashesGPC($text)
++	function oopsStripSlashesGPC($text)
+ 	{
+ 		return $this-&gt;stripSlashesGPC($text);
+ 	}
+ 
+-	function &amp;oopsStripSlashesRT($text)
++	function oopsStripSlashesRT($text)
+ 	{
+ 		if (get_magic_quotes_runtime()) {
+-			$text =&amp; stripslashes($text);
++			$text = stripslashes($text);
+ 		}
+ 		return $text;
+ 	}
+ 
+-	function &amp;oopsAddSlashes($text)
++	function oopsAddSlashes($text)
+ 	{
+ 		return $this-&gt;addSlashes($text);
+ 	}
+ 
+-	function &amp;oopsHtmlSpecialChars($text)
++	function oopsHtmlSpecialChars($text)
+ 	{
+ 		return $this-&gt;htmlSpecialChars($text);
+ 	}
+ 
+-	function &amp;oopsNl2Br($text)
++	function oopsNl2Br($text)
+ 	{
+ 		return $this-&gt;nl2br($text);
+ 	}
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/tree.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/tree.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/tree.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -115,7 +115,7 @@
+ 	 * @param   string  $key    ID of the parent object
+ 	 * @return  array   Array of children of the parent
+ 	 **/
+-	function &amp;getFirstChild($key)
++	function getFirstChild($key)
+ 	{
+ 		$ret = array();
+ 		if (isset($this-&gt;_tree[$key]['child'])) {
+@@ -133,7 +133,7 @@
+ 	 * @param   array   $ret    (Empty when called from client) Array of children from previous recursions.
+ 	 * @return  array   Array of child nodes.
+ 	 **/
+-	function &amp;getAllChild($key, $ret = array())
++	function getAllChild($key, $ret = array())
+ 	{
+ 		if (isset($this-&gt;_tree[$key]['child'])) {
+ 			foreach ($this-&gt;_tree[$key]['child'] as $childkey) {
+@@ -156,7 +156,7 @@
+ 	 * @param   int $uplevel (empty when called from outside) level of recursion
+ 	 * @return  array   Array of parent nodes. 
+ 	 **/
+-	function &amp;getAllParent($key, $ret = array(), $uplevel = 1)
++	function getAllParent($key, $ret = array(), $uplevel = 1)
+ 	{
+ 		if (isset($this-&gt;_tree[$key]['parent']) &amp;&amp; isset($this-&gt;_tree[$this-&gt;_tree[$key]['parent']]['obj'])) {
+ 			$ret[$uplevel] =&amp; $this-&gt;_tree[$this-&gt;_tree[$key]['parent']]['obj'];
+@@ -212,7 +212,7 @@
+ 	 * @param   integer $key             ID of the object to display as the root of select options
+ 	 * @return  string  HTML select box
+ 	 **/
+-	function &amp;makeSelBox($name, $fieldName, $prefix='-', $selected='', $addEmptyOption = false, $key=0)
++	function makeSelBox($name, $fieldName, $prefix='-', $selected='', $addEmptyOption = false, $key=0)
+     {
+         $ret = '&lt;select name='.$name.'&gt;';
+         if (false != $addEmptyOption) {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xml/rss/xmlrss2parser.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xml/rss/xmlrss2parser.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xml/rss/xmlrss2parser.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -101,7 +101,8 @@
+             if (isset($this-&gt;_imageData[$name])) {
+                 return $this-&gt;_imageData[$name];
+             }
+-            return false;
++            $return = false;
++            return $return;
+         }
+         return $this-&gt;_imageData;
+     }
+@@ -591,7 +592,8 @@
+ 
+     function handleEndElement(&amp;$parser)
+     {
+-        $parser-&gt;setItems($parser-&gt;getTempArr());
++    	$items =&amp; $parser-&gt;getTempArr();
++        $parser-&gt;setItems( $items );
+     }
+ }
+ 
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsblock.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsblock.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsblock.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -130,7 +130,7 @@
+     * @param $c_type    type of block content
+     * @returns string
+     */
+-    function &amp;getContent($format = 'S', $c_type = 'T')
++    function getContent($format = 'S', $c_type = 'T')
+     {
+         switch ( $format ) {
+         case 'S':
+@@ -164,7 +164,7 @@
+         }
+     }
+ 
+-    function &amp;buildBlock()
++    function buildBlock()
+     {
+         global $xoopsConfig, $xoopsOption;
+         $block = array();
+@@ -213,7 +213,7 @@
+     * If position is 1, content in DB is positioned
+     * after the original content
+     */
+-    function &amp;buildContent($position,$content=&quot;&quot;,$contentdb=&quot;&quot;)
++    function buildContent($position,$content=&quot;&quot;,$contentdb=&quot;&quot;)
+     {
+         if ( $position == 0 ) {
+             $ret = $contentdb.$content;
+@@ -223,7 +223,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;buildTitle($originaltitle, $newtitle=&quot;&quot;)
++    function buildTitle($originaltitle, $newtitle=&quot;&quot;)
+     {
+         if ($newtitle != &quot;&quot;) {
+             $ret = $newtitle;
+@@ -288,7 +288,7 @@
+     * @param $orderby   order of the blocks
+     * @returns array of block objects
+     */
+-    function &amp;getAllBlocksByGroup($groupid, $asobject=true, $side=null, $visible=null, $orderby=&quot;b.weight,b.bid&quot;, $isactive=1)
++    function getAllBlocksByGroup($groupid, $asobject=true, $side=null, $visible=null, $orderby=&quot;b.weight,b.bid&quot;, $isactive=1)
+     {
+         $db =&amp; Database::getInstance();
+         $ret = array();
+@@ -342,7 +342,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;getAllBlocks($rettype=&quot;object&quot;, $side=null, $visible=null, $orderby=&quot;side,weight,bid&quot;, $isactive=1)
++    function getAllBlocks($rettype=&quot;object&quot;, $side=null, $visible=null, $orderby=&quot;side,weight,bid&quot;, $isactive=1)
+     {
+         $db =&amp; Database::getInstance();
+         $ret = array();
+@@ -391,7 +391,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;getByModule($moduleid, $asobject=true)
++    function getByModule($moduleid, $asobject=true)
+     {
+         $db =&amp; Database::getInstance();
+         if ( $asobject == true ) {
+@@ -411,7 +411,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;getAllByGroupModule($groupid, $module_id=0, $toponlyblock=false, $visible=null, $orderby='b.weight,b.bid', $isactive=1)
++    function getAllByGroupModule($groupid, $module_id=0, $toponlyblock=false, $visible=null, $orderby='b.weight,b.bid', $isactive=1)
+     {
+         $db =&amp; Database::getInstance();
+         $ret = array();
+@@ -460,7 +460,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;getNonGroupedBlocks($module_id=0, $toponlyblock=false, $visible=null, $orderby='b.weight,b.bid', $isactive=1)
++    function getNonGroupedBlocks($module_id=0, $toponlyblock=false, $visible=null, $orderby='b.weight,b.bid', $isactive=1)
+     {
+         $db =&amp; Database::getInstance();
+         $ret = array();
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopscomments.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopscomments.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopscomments.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -136,7 +136,7 @@
+ 		return ($size + 1);
+ 	}
+ 
+-	function &amp;getCommentTree()
++	function getCommentTree()
+ 	{
+ 		$mytree = new XoopsTree($this-&gt;ctable, &quot;comment_id&quot;, &quot;pid&quot;);
+ 		$ret = array();
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsform/form.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsform/form.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopsform/form.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -228,14 +228,15 @@
+      * @return object  reference to a {@link XoopsFormElement}, false if not found
+ 	 */
+ 	function &amp;getElementByName($name){
+-		$elements =&amp; $this-&gt;getElements(true);
++		$elements = $this-&gt;getElements(true);
+ 		$count = count($elements);
+ 		for ($i = 0; $i &lt; $count; $i++) {
+ 			if ($name == $elements[$i]-&gt;getName()) {
+ 				return $elements[$i];
+ 			}
+ 		}
+-		return false;
++		$elt = false;
++		return $elt;
+ 	}
+ 
+ 	/**
+@@ -276,7 +277,7 @@
+ 	 * @param	string 	$name	the &quot;name&quot; attribute of a form element
+ 	 * @return	string 	the &quot;value&quot; attribute assigned to a form element, null if not set
+ 	 */
+-	function &amp;getElementValue($name){
++	function getElementValue($name){
+ 		$ele =&amp; $this-&gt;getElementByName($name);
+ 		if (is_object($ele) &amp;&amp; method_exists($ele, 'getValue')) {
+ 			return $ele-&gt;getValue($value);
+@@ -289,7 +290,7 @@
+ 	 * 
+ 	 * @return	array 	array of name/value pairs assigned to form elements
+ 	 */
+-	function &amp;getElementValues(){
++	function getElementValues(){
+ 		// will not use getElementByName() for performance..
+ 		$elements =&amp; $this-&gt;getElements(true);
+ 		$count = count($elements);
+@@ -321,6 +322,8 @@
+ 		if (isset($this-&gt;_extra)) {
+ 			return $this-&gt;_extra;
+ 		}
++		$extra = null;
++		return $extra;
+ 	}
+ 
+ 	/**
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -34,7 +34,7 @@
+ 	define(&quot;XOOPS_LISTS_INCLUDED&quot;,1);
+ 	class XoopsLists
+ 	{
+-		function &amp;getTimeZoneList()
++		function getTimeZoneList()
+ 		{
+ 			include_once XOOPS_ROOT_PATH.'/language/'.$GLOBALS['xoopsConfig']['language'].'/timezone.php';
+ 			$time_zone_list = array (&quot;-12&quot; =&gt; _TZ_GMTM12, &quot;-11&quot; =&gt; _TZ_GMTM11, &quot;-10&quot; =&gt; _TZ_GMTM10, &quot;-9&quot; =&gt; _TZ_GMTM9, &quot;-8&quot; =&gt; _TZ_GMTM8, &quot;-7&quot; =&gt; _TZ_GMTM7, &quot;-6&quot; =&gt; _TZ_GMTM6, &quot;-5&quot; =&gt; _TZ_GMTM5, &quot;-4&quot; =&gt; _TZ_GMTM4, &quot;-3.5&quot; =&gt; _TZ_GMTM35, &quot;-3&quot; =&gt; _TZ_GMTM3, &quot;-2&quot; =&gt; _TZ_GMTM2, &quot;-1&quot; =&gt; _TZ_GMTM1, &quot;0&quot; =&gt; _TZ_GMT0, &quot;1&quot; =&gt; _TZ_GMTP1, &quot;2&quot; =&gt; _TZ_GMTP2, &quot;3&quot; =&gt; _TZ_GMTP3, &quot;3.5&quot; =&gt; _TZ_GMTP35, &quot;4&quot; =&gt; _TZ_GMTP4, &quot;4.5&quot; =&gt; _TZ_GMTP45, &quot;5&quot; =&gt; _TZ_GMTP5, &quot;5.5&quot; =&gt; _TZ_GMTP55, &quot;6&quot; =&gt; _TZ_GMTP6, &quot;7&quot; =&gt; _TZ_GMTP7, &quot;8&quot; =&gt; _TZ_GMTP8, &quot;9&quot; =&gt; _TZ_GMTP9, &quot;9.5&quot; =&gt; _TZ_GMTP95, &quot;10&quot; =&gt; _TZ_GMTP10, &quot;11&quot; =&gt; _TZ_GMTP11, &quot;12&quot; =&gt; _TZ_GMTP12);
+@@ -44,7 +44,7 @@
+ 		/*
+ 		 * gets list of themes folder from themes directory
+ 		 */
+-		function &amp;getThemesList()
++		function getThemesList()
+ 		{
+ 			return XoopsLists::getDirListAsArray(XOOPS_THEME_PATH.'/');
+ 		}
+@@ -52,7 +52,7 @@
+ 		/*
+ 		 * gets a list of module folders from the modules directory
+ 		 */
+-		function &amp;getModulesList()
++		function getModulesList()
+ 		{
+ 			return XoopsLists::getDirListAsArray(XOOPS_ROOT_PATH.&quot;/modules/&quot;);
+ 		}
+@@ -60,7 +60,7 @@
+ 		/*
+ 		 * gets list of name of directories inside a directory
+ 		 */
+-		function &amp;getDirListAsArray($dirname)
++		function getDirListAsArray($dirname)
+ 		{
+ 			$dirlist = array();
+ 			if (is_dir($dirname) &amp;&amp; $handle = opendir($dirname)) {
+@@ -81,7 +81,7 @@
+ 		/*
+ 		 *  gets list of all files in a directory
+ 		 */
+-		function &amp;getFileListAsArray($dirname, $prefix=&quot;&quot;)
++		function getFileListAsArray($dirname, $prefix=&quot;&quot;)
+ 		{
+ 			$filelist = array();
+ 			if (substr($dirname, -1) == '/') {
+@@ -104,7 +104,7 @@
+ 		/*
+ 		 *  gets list of image file names in a directory
+ 		 */
+-		function &amp;getImgListAsArray($dirname, $prefix=&quot;&quot;)
++		function getImgListAsArray($dirname, $prefix=&quot;&quot;)
+ 		{
+ 			$filelist = array();
+ 			if ($handle = opendir($dirname)) {
+@@ -124,7 +124,7 @@
+ 		/*
+ 		 *  gets list of html file names in a certain directory
+ 		*/
+-		function &amp;getHtmlListAsArray($dirname, $prefix=&quot;&quot;)
++		function getHtmlListAsArray($dirname, $prefix=&quot;&quot;)
+ 		{
+ 			$filelist = array();
+ 			if ($handle = opendir($dirname)) {
+@@ -149,7 +149,7 @@
+ 		 *  gets list of avatar file names in a certain directory
+ 		 *  if directory is not specified, default directory will be searched
+ 		 */
+-		function &amp;getAvatarsList($avatar_dir=&quot;&quot;)
++		function getAvatarsList($avatar_dir=&quot;&quot;)
+ 		{
+ 			$avatars = array();
+ 			if ( $avatar_dir != &quot;&quot; ) {
+@@ -163,7 +163,7 @@
+ 		/*
+ 		 *  gets list of all avatar image files inside default avatars directory
+ 		 */
+-		function &amp;getAllAvatarsList()
++		function getAllAvatarsList()
+ 		{
+ 			$avatars = array();
+ 			$dirlist = array();
+@@ -182,7 +182,7 @@
+ 		*  gets list of subject icon image file names in a certain directory
+ 		*  if directory is not specified, default directory will be searched
+ 		*/
+-		function &amp;getSubjectsList($sub_dir=&quot;&quot;)
++		function getSubjectsList($sub_dir=&quot;&quot;)
+ 		{
+ 			$subjects = array();
+ 			if($sub_dir != &quot;&quot;){
+@@ -196,14 +196,14 @@
+ 		/*
+ 		 * gets list of language folders inside default language directory
+ 		 */
+-		function &amp;getLangList()
++		function getLangList()
+ 		{
+ 			$lang_list = array();
+ 			$lang_list =&amp; XoopsLists::getDirListAsArray(XOOPS_ROOT_PATH.&quot;/language/&quot;);
+ 			return $lang_list;
+ 		}
+ 
+-		function &amp;getCountryList()
++		function getCountryList()
+ 		{
+ 			$country_list = array (
+ 				&quot;&quot;   =&gt; &quot;-&quot;,
+@@ -456,7 +456,7 @@
+     		return $country_list;
+ 		}
+ 
+-		function &amp;getHtmlList()
++		function getHtmlList()
+ 		{
+ 			$html_list = array (
+ 				&quot;a&quot; =&gt; &quot;&lt;a&gt;&quot;,
+@@ -516,7 +516,7 @@
+     		return $html_list;
+ 		}
+ 
+-		function &amp;getUserRankList()
++		function getUserRankList()
+ 		{
+ 			$db =&amp; Database::getInstance();
+ 			$myts =&amp; MyTextSanitizer::getInstance();
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopstopic.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopstopic.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopstopic.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -315,7 +315,7 @@
+ 		return $ret;
+ 	}
+ 
+-	function &amp;getTopicsList()
++	function getTopicsList()
+ 	{
+ 		$result = $this-&gt;db-&gt;query('SELECT topic_id, topic_pid, topic_title FROM '.$this-&gt;table);
+ 		$ret = array();
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -36,10 +36,10 @@
+     $xoopsSecurity-&gt;checkSuperglobals();
+     
+     // ############## Activate error handler ##############
+-    include_once XOOPS_ROOT_PATH . '/class/errorhandler.php';
+-    $xoopsErrorHandler =&amp; XoopsErrorHandler::getInstance();
++    //include_once XOOPS_ROOT_PATH . '/class/errorhandler.php';
++    //$xoopsErrorHandler =&amp; XoopsErrorHandler::getInstance();
+     // Turn on error handler by default (until config value obtained from DB)
+-    $xoopsErrorHandler-&gt;activate(true);
++    //$xoopsErrorHandler-&gt;activate(true);
+ 
+     define(&quot;XOOPS_SIDEBLOCK_LEFT&quot;,0);
+     define(&quot;XOOPS_SIDEBLOCK_RIGHT&quot;,1);
+@@ -59,8 +59,8 @@
+     define(&quot;XOOPS_THEME_PATH&quot;, XOOPS_ROOT_PATH.&quot;/themes&quot;);
+ 
+     define( &quot;SMARTY_DIR&quot;, XOOPS_ROOT_PATH . &quot;/class/smarty/&quot; );
+-    define( &quot;XOOPS_CACHE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Caches&quot; );
+-    define( &quot;XOOPS_COMPILE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Application Support/net_php_Smarty&quot; );
++    define( &quot;XOOPS_CACHE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Caches/xoops_template_Smarty&quot; );
++    define( &quot;XOOPS_COMPILE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Application Support/xoops_template_Smarty&quot; );
+ 
+     define(&quot;XOOPS_THEME_URL&quot;, XOOPS_URL.&quot;/themes&quot;);
+     define(&quot;XOOPS_UPLOAD_URL&quot;, XOOPS_URL.&quot;/uploads&quot;);
+@@ -96,7 +96,8 @@
+     $xoopsConfig =&amp; $config_handler-&gt;getConfigsByCat(XOOPS_CONF);
+ 
+     // #################### Error reporting settings ##################
+-    error_reporting(0);
++/*
++	error_reporting(0);
+ 
+     if ($xoopsConfig['debug_mode'] == 1) {
+         error_reporting(E_ALL);
+@@ -104,7 +105,7 @@
+         // Turn off error handler
+         $xoopsErrorHandler-&gt;activate(false);
+     }
+-
++*/
+     $xoopsSecurity-&gt;checkBadips();
+ 
+     // ################# Include version info file ##############
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/functions.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/functions.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/functions.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -462,14 +462,18 @@
+ function &amp;getMailer()
+ {
+     global $xoopsConfig;
++    $inst = false;
+     include_once XOOPS_ROOT_PATH.&quot;/class/xoopsmailer.php&quot;;
+     if ( file_exists(XOOPS_ROOT_PATH.&quot;/language/&quot;.$xoopsConfig['language'].&quot;/xoopsmailerlocal.php&quot;) ) {
+         include_once XOOPS_ROOT_PATH.&quot;/language/&quot;.$xoopsConfig['language'].&quot;/xoopsmailerlocal.php&quot;;
+         if ( class_exists(&quot;XoopsMailerLocal&quot;) ) {
+-            return new XoopsMailerLocal();
++            $inst =&amp; new XoopsMailerLocal();
+         }
+     }
+-    return new XoopsMailer();
++    if ( !$inst ) {
++    	$inst =&amp; new XoopsMailer();
++    }
++    return $inst;
+ }
+ 
+ function &amp;xoops_gethandler($name, $optional = false )
+@@ -482,13 +486,17 @@
+         }
+         $class = 'Xoops'.ucfirst($name).'Handler';
+         if (class_exists($class)) {
+-            $handlers[$name] = new $class($GLOBALS['xoopsDB']);
++            $handlers[$name] =&amp; new $class($GLOBALS['xoopsDB']);
+         }
+     }
+     if (!isset($handlers[$name]) &amp;&amp; !$optional ) {
+         trigger_error('Class &lt;b&gt;'.$class.'&lt;/b&gt; does not exist&lt;br /&gt;Handler Name: '.$name, E_USER_ERROR);
+     }
+-    return isset($handlers[$name]) ? $handlers[$name] : false;
++    if ( isset($handlers[$name]) ) {
++    	return $handlers[$name];
++    }
++    $inst = false;
++    return $inst;
+ }
+ 
+ function &amp;xoops_getmodulehandler($name = null, $module_dir = null, $optional = false)
+@@ -512,13 +520,18 @@
+         }
+         $class = ucfirst(strtolower($module_dir)).ucfirst($name).'Handler';
+         if (class_exists($class)) {
+-            $handlers[$module_dir][$name] = new $class($GLOBALS['xoopsDB']);
++            $handlers[$module_dir][$name] =&amp; new $class($GLOBALS['xoopsDB']);
+         }
+     }
+     if (!isset($handlers[$module_dir][$name]) &amp;&amp; !$optional) {
+         trigger_error('Handler does not exist&lt;br /&gt;Module: '.$module_dir.'&lt;br /&gt;Name: '.$name, E_USER_ERROR);
+     }
+-    return isset($handlers[$module_dir][$name]) ? $handlers[$module_dir][$name] : false;
++    if ( isset($handlers[$module_dir][$name]) ) {
++    	return $handlers[$module_dir][$name];
++    }
++    $inst = false;
++    return $inst;
++
+ }
+ 
+ function xoops_getrank($rank_id =0, $posts = 0)
+@@ -655,7 +668,7 @@
+     return $gperm_handler-&gt;deleteByModule($module_id, $perm_name, $item_id);
+ }
+ 
+-function &amp;xoops_utf8_encode(&amp;$text)
++function xoops_utf8_encode(&amp;$text)
+ {
+     if (XOOPS_USE_MULTIBYTES == 1) {
+         if (function_exists('mb_convert_encoding')) {
+@@ -666,7 +679,7 @@
+     return utf8_encode($text);
+ }
+ 
+-function &amp;xoops_convert_encoding(&amp;$text)
++function xoops_convert_encoding(&amp;$text)
+ {
+     return xoops_utf8_encode($text);
+ }
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/avatar.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/avatar.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/avatar.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -85,7 +85,8 @@
+ 
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $avatar = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('avatar').' WHERE avatar_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+@@ -98,7 +99,7 @@
+                 return $avatar;
+             }
+         }
+-        return false;
++        return $avatar;
+     }
+ 
+     function insert(&amp;$avatar)
+@@ -203,7 +204,7 @@
+         return true;
+     }
+ 
+-    function &amp;getUser(&amp;$avatar){
++    function getUser(&amp;$avatar){
+         $ret = array();
+         if (strtolower(get_class($avatar)) != 'xoopsavatar') {
+             return $ret;
+@@ -218,7 +219,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;getList($avatar_type = null, $avatar_display = null)
++    function getList($avatar_type = null, $avatar_display = null)
+     {
+         $criteria = new CriteriaCompo();
+         if (isset($avatar_type)) {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/block.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/block.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/block.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -104,7 +104,7 @@
+ 	 * &lt;li&gt;T : use text sanitizater (smilies disabled)&lt;/ul&gt;
+ 	 * @return string content for output
+      **/
+-    function &amp;getContent($format = 'S', $c_type = 'T')
++    function getContent($format = 'S', $c_type = 'T')
+     {
+         switch ( $format ) {
+         case 'S':
+@@ -207,20 +207,19 @@
+      **/
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $block = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('newblocks').' WHERE bid='.$id;
+-            if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++            if ( $result = $this-&gt;db-&gt;query($sql) ) {
++	            $numrows = $this-&gt;db-&gt;getRowsNum($result);
++	            if ($numrows == 1) {
++	                $block = new XoopsBlock();
++	                $block-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
++	            }
+             }
+-            $numrows = $this-&gt;db-&gt;getRowsNum($result);
+-            if ($numrows == 1) {
+-                $block = new XoopsBlock();
+-                $block-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $block;
+-            }
+         }
+-        return false;
++        return $block;
+     }
+ 
+     /**
+@@ -286,7 +285,7 @@
+ 	 * @param bool $id_as_key should the blocks' bid be the key for the returned array?
+ 	 * @return array {@link XoopsBlock}s matching the conditions
+      **/
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -319,7 +318,7 @@
+ 	 * @param string $criteria conditions to match
+ 	 * @return array array of blocks matching the conditions 
+      **/
+-    function &amp;getList($criteria = null)
++    function getList($criteria = null)
+     {
+         $blocks =&amp; $this-&gt;getObjects($criteria, true);
+         $ret = array();
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/comment.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/comment.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/comment.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -133,20 +133,20 @@
+      **/
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $comment = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('xoopscomments').' WHERE com_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $comment;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $comment = new XoopsComment();
+                 $comment-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $comment;
+             }
+         }
+-        return false;
++        return $comment;
+     }
+ 
+     /**
+@@ -213,7 +213,7 @@
+      * 
+      * @return  array   Array of {@link XoopsComment} objects
+      **/
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -288,9 +288,9 @@
+      * 
+      * @return  array   Array of raw database records
+      **/
+-    function &amp;getList($criteria = null)
++    function getList($criteria = null)
+     {
+-        $comments =&amp; $this-&gt;getObjects($criteria, true);
++        $comments = $this-&gt;getObjects($criteria, true);
+         $ret = array();
+         foreach (array_keys($comments) as $i) {
+             $ret[$i] = $comments[$i]-&gt;getVar('com_title');
+@@ -310,7 +310,7 @@
+      * 
+      * @return  array   Array of {@link XoopsComment} objects
+      **/
+-    function &amp;getByItemId($module_id, $item_id, $order = null, $status = null, $limit = null, $start = 0)
++    function getByItemId($module_id, $item_id, $order = null, $status = null, $limit = null, $start = 0)
+     {
+         $criteria = new CriteriaCompo(new Criteria('com_modid', intval($module_id)));
+         $criteria-&gt;add(new Criteria('com_itemid', intval($item_id)));
+@@ -336,7 +336,7 @@
+      * 
+      * @return  array   Array of {@link XoopsComment} objects
+      **/
+-    function &amp;getCountByItemId($module_id, $item_id, $status = null)
++    function getCountByItemId($module_id, $item_id, $status = null)
+     {
+         $criteria = new CriteriaCompo(new Criteria('com_modid', intval($module_id)));
+         $criteria-&gt;add(new Criteria('com_itemid', intval($item_id)));
+@@ -357,7 +357,7 @@
+      * 
+      * @return  array   Array of {@link XoopsComment} objects
+      **/
+-    function &amp;getTopComments($module_id, $item_id, $order, $status = null)
++    function getTopComments($module_id, $item_id, $order, $status = null)
+     {
+         $criteria = new CriteriaCompo(new Criteria('com_modid', intval($module_id)));
+         $criteria-&gt;add(new Criteria('com_itemid', intval($item_id)));
+@@ -378,7 +378,7 @@
+      * 
+      * @return  array   Array of {@link XoopsComment} objects
+      **/
+-    function &amp;getThread($comment_rootid, $comment_id, $status = null)
++    function getThread($comment_rootid, $comment_id, $status = null)
+     {
+         $criteria = new CriteriaCompo(new Criteria('com_rootid', intval($comment_rootid)));
+         $criteria-&gt;add(new Criteria('com_id', intval($comment_id), '&gt;='));
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -103,7 +103,8 @@
+      */
+     function &amp;createConfig()
+     {
+-        return $this-&gt;_cHandler-&gt;create();
++    	$instance =&amp; $this-&gt;_cHandler-&gt;create();
++        return $instance;
+     }
+ 
+     /**
+@@ -183,7 +184,7 @@
+      * 
+      * @return	array   Array of {@link XoopsConfigItem} objects
+      */
+-    function &amp;getConfigs($criteria = null, $id_as_key = false, $with_options = false)
++    function getConfigs($criteria = null, $id_as_key = false, $with_options = false)
+     {
+         return $this-&gt;_cHandler-&gt;getObjects($criteria, $id_as_key);
+     }
+@@ -206,7 +207,7 @@
+      * 
+      * @return	array   array of {@link XoopsConfig}s 
+      */
+-    function &amp;getConfigsByCat($category, $module = 0)
++    function getConfigsByCat($category, $module = 0)
+     {
+         static $_cachedConfigs;
+ 		if (!empty($_cachedConfigs[$module][$category])) {
+@@ -233,8 +234,9 @@
+      * 
+      * @return	object  {@link XoopsConfigOption} 
+      */
+-    function &amp;createConfigOption(){
+-        return $this-&gt;_oHandler-&gt;create();
++    function &amp;createConfigOption() {
++    	$inst =&amp; $this-&gt;_oHandler-&gt;create();
++        return $inst;
+     }
+ 
+     /**
+@@ -244,9 +246,9 @@
+      * 
+      * @return	object  {@link XoopsConfigOption} 
+      */
+-    function &amp;getConfigOption($id)
+-    {
+-        return $this-&gt;_oHandler-&gt;get($id);
++    function &amp;getConfigOption($id) {
++    	$inst =&amp; $this-&gt;_oHandler-&gt;get($id);
++        return $inst;
+     }
+ 
+     /**
+@@ -257,7 +259,7 @@
+      * 
+      * @return	array   Array of {@link XoopsConfigOption}s
+      */
+-    function &amp;getConfigOptions($criteria = null, $id_as_key = false)
++    function getConfigOptions($criteria = null, $id_as_key = false)
+     {
+         return $this-&gt;_oHandler-&gt;getObjects($criteria, $id_as_key);
+     }
+@@ -282,7 +284,7 @@
+      * 
+      * @return	array   Associative array of name=&gt;value pairs.
+      */
+-    function &amp;getConfigList($conf_modid, $conf_catid = 0)
++    function getConfigList($conf_modid, $conf_catid = 0)
+     {
+ 		if (!empty($this-&gt;_cachedConfigs[$conf_modid][$conf_catid])) {
+ 			return $this-&gt;_cachedConfigs[$conf_modid][$conf_catid];
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configcategory.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configcategory.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configcategory.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -105,22 +105,21 @@
+      * 
+      * @return	object  {@link XoopsConfigCategory}, FALSE on fail
+      */
+-    function &amp;get($id)
+-    {
+-        $id = intval($id);
++    function &amp;get($id) {
++        $confcat = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('configcategory').' WHERE confcat_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $confcat;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $confcat = new XoopsConfigCategory();
+                 $confcat-&gt;assignVars($this-&gt;db-&gt;fetchArray($result), false);
+-                return $confcat;
+             }
+         }
+-        return false;
++        return $confcat;
+     }
+ 
+     /**
+@@ -187,7 +186,7 @@
+      * 
+      * @return	array   Array of {@link XoopsConfigCategory}s
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configitem.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configitem.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configitem.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -90,7 +90,7 @@
+      * 
+      * @return	string
+      */
+-    function &amp;getConfValueForOutput()
++    function getConfValueForOutput()
+     {
+         switch ($this-&gt;getVar('conf_valuetype')) {
+         case 'int':
+@@ -201,21 +201,21 @@
+      */
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $config = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('config').' WHERE conf_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $config;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $myrow = $this-&gt;db-&gt;fetchArray($result);
+                 $config = new XoopsConfigItem();
+                 $config-&gt;assignVars($myrow);
+-                return $config;
+             }
+         }
+-        return false;
++        return $config;
+     }
+ 
+     /**
+@@ -279,7 +279,7 @@
+      * @param	bool    $id_as_key  return the config's id as key?
+      * @return	array   Array of {@link XoopsConfigItem} objects
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -313,7 +313,7 @@
+      * @param	object  $criteria   {@link CriteriaElement} 
+      * @return	int     Count of configs matching $criteria
+      */
+-    function &amp;getCount($criteria = null)
++    function getCount($criteria = null)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configoption.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configoption.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/configoption.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -104,20 +104,20 @@
+      */
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $confoption = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('configoption').' WHERE confop_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $confoption;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $confoption = new XoopsConfigOption();
+                 $confoption-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $confoption;
+             }
+         }
+-        return false;
++        return $confoption;
+     }
+ 
+     /**
+@@ -182,7 +182,7 @@
+      * 
+      * @return	array   Array of {@link XoopsConfigOption}s 
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/group.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/group.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/group.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -93,19 +93,19 @@
+      */
+     function &amp;get($id)
+     {
+-        if (intval($id) &gt; 0) {
++        $group = false;
++    	if (intval($id) &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('groups').' WHERE groupid='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $group;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $group = new XoopsGroup();
+                 $group-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $group;
+             }
+         }
+-        return false;
++        return $group;
+     }
+ 
+     /**
+@@ -169,7 +169,7 @@
+      * @param bool $id_as_key should the groups' IDs be used as keys for the associative array?
+      * @return mixed Array of groups
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -254,19 +254,19 @@
+      */
+     function &amp;get($id)
+     {
+-        if (intval($id) &gt; 0) {
++        $mship = false;
++    	if (intval($id) &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('groups_users_link').' WHERE linkid='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $mship;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $mship = new XoopsMembership();
+                 $mship-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $mship;
+             }
+         }
+-        return false;
++        return $mship;
+     }
+ 
+     /**
+@@ -330,7 +330,7 @@
+      * @param bool $id_as_key should the ID be used as the array's key?
+      * @return array array of references
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -403,7 +403,7 @@
+      * objects? FALSE returns associative array.
+      * @return array array of groups the user belongs to
+      */
+-    function &amp;getGroupsByUser($uid)
++    function getGroupsByUser($uid)
+     {
+         $ret = array();
+         $sql = 'SELECT groupid FROM '.$this-&gt;db-&gt;prefix('groups_users_link').' WHERE uid='.intval($uid);
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -108,19 +108,19 @@
+      */
+     function &amp;get($id)
+     {
+-        if (intval($id) &gt; 0) {
++        $perm = false;
++    	if (intval($id) &gt; 0) {
+             $sql = sprintf(&quot;SELECT * FROM %s WHERE gperm_id = %u&quot;, $this-&gt;db-&gt;prefix('group_permission'), $id);
+             if ( !$result = $this-&gt;db-&gt;query($sql) ) {
+-                return false;
++                return $perm;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ( $numrows == 1 ) {
+                 $perm = new XoopsGroupPerm();
+                 $perm-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $perm;
+             }
+         }
+-        return false;
++        return $perm;
+     }
+ 
+     /**
+@@ -187,7 +187,7 @@
+      * 
+      * @return	array   Array of {@link XoopsGroupPerm}s 
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/image.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/image.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/image.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -98,20 +98,20 @@
+      **/
+     function &amp;get($id, $getbinary=true)
+     {
+-        $id = intval($id);
++        $image = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT i.*, b.image_body FROM '.$this-&gt;db-&gt;prefix('image').' i LEFT JOIN '.$this-&gt;db-&gt;prefix('imagebody').' b ON b.image_id=i.image_id WHERE i.image_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $image;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $image = new XoopsImage();
+                 $image-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $image;
+             }
+         }
+-        return false;
++        return $image;
+     }
+ 
+     /**
+@@ -197,7 +197,7 @@
+      * @param   boolean $getbinary  
+      * @return  array   Array of {@link XoopsImage} objects
+      **/
+-    function &amp;getObjects($criteria = null, $id_as_key = false, $getbinary = false)
++    function getObjects($criteria = null, $id_as_key = false, $getbinary = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -256,7 +256,7 @@
+      * @param   bool    $image_display
+      * @return  array   Array of {@link XoopsImage} objects
+      **/
+-    function &amp;getList($imgcat_id, $image_display = null)
++    function getList($imgcat_id, $image_display = null)
+     {
+         $criteria = new CriteriaCompo(new Criteria('imgcat_id', intval($imgcat_id)));
+         if (isset($image_display)) {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagecategory.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagecategory.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagecategory.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -85,19 +85,19 @@
+ 
+     function &amp;get($id)
+     {
+-        if (intval($id) &gt; 0) {
++        $imgcat = false;
++    	if (intval($id) &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('imagecategory').' WHERE imgcat_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $imgcat;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $imgcat = new XoopsImagecategory();
+                 $imgcat-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $imgcat;
+             }
+         }
+-        return false;
++        return $imgcat;
+     }
+ 
+     function insert(&amp;$imgcat)
+@@ -142,7 +142,7 @@
+         return true;
+     }
+ 
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -186,7 +186,7 @@
+         return $count;
+     }
+ 
+-    function &amp;getList($groups = array(), $perm = 'imgcat_read', $display = null, $storetype = null)
++    function getList($groups = array(), $perm = 'imgcat_read', $display = null, $storetype = null)
+     {
+         $criteria = new CriteriaCompo();
+         if (is_array($groups) &amp;&amp; !empty($groups)) {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imageset.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imageset.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imageset.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -68,19 +68,19 @@
+ 
+     function &amp;get($id)
+     {
+-        if (intval($id) &gt; 0) {
++        $imgset = false;
++    	if (intval($id) &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('imgset').' WHERE imgset_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $imgset;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $imgset = new XoopsImageset();
+                 $imgset-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $imgset;
+             }
+         }
+-        return false;
++        return $imgset;
+     }
+ 
+     function insert(&amp;$imgset)
+@@ -127,7 +127,7 @@
+         return true;
+     }
+ 
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -187,7 +187,7 @@
+         return true;
+     }
+ 
+-    function &amp;getList($refid = null, $tplset = null)
++    function getList($refid = null, $tplset = null)
+     {
+         $criteria = new CriteriaCompo();
+         if (isset($refid)) {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagesetimg.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagesetimg.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/imagesetimg.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -68,20 +68,20 @@
+ 
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $imgsetimg = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('imgsetimg').' WHERE imgsetimg_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $imgsetimg;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $imgsetimg = new XoopsImagesetimg();
+                 $imgsetimg-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $imgsetimg;
+             }
+         }
+-        return false;
++        return $imgsetimg;
+     }
+ 
+     function insert(&amp;$imgsetimg)
+@@ -126,7 +126,7 @@
+         return true;
+     }
+ 
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -174,7 +174,7 @@
+  * @return type documentation
+  * @author Kazumi Ono &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+  **/
+-    function &amp;getByImageset($imgset_id, $id_as_key = false)
++    function getByImageset($imgset_id, $id_as_key = false)
+     {
+         return $this-&gt;getObjects(new Criteria('imgsetimg_imgset', intval($imgset_id)), $id_as_key);
+     }
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -88,7 +88,8 @@
+      */
+     function &amp;createGroup()
+     {
+-        return $this-&gt;_gHandler-&gt;create();
++        $inst =&amp; $this-&gt;_gHandler-&gt;create();
++    	return $inst;
+     }
+ 
+     /**
+@@ -98,7 +99,8 @@
+      */
+     function &amp;createUser()
+     {
+-        return $this-&gt;_uHandler-&gt;create();
++        $inst =&amp; $this-&gt;_uHandler-&gt;create();
++    	return $inst;
+     }
+ 
+     /**
+@@ -206,7 +208,7 @@
+      * @param object $criteria {@link CriteriaElement} object
+      * @return array associative array of group-IDs and names
+      */
+-    function &amp;getGroupList($criteria = null)
++    function getGroupList($criteria = null)
+     {
+         $groups =&amp; $this-&gt;_gHandler-&gt;getObjects($criteria, true);
+         $ret = array();
+@@ -327,7 +329,8 @@
+         $criteria-&gt;add(new Criteria('pass', md5($pwd)));
+         $user =&amp; $this-&gt;_uHandler-&gt;getObjects($criteria, false);
+         if (!$user || count($user) != 1) {
+-            return false;
++        	$user = false;
++            return $user;
+         }
+         return $user[0];
+     }
+@@ -345,7 +348,8 @@
+         $criteria-&gt;add(new Criteria('pass', $md5pwd));
+         $user =&amp; $this-&gt;_uHandler-&gt;getObjects($criteria, false);
+         if (!$user || count($user) != 1) {
+-            return false;
++        	$user = false;
++            return $user;
+         }
+         return $user[0];
+     }
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -120,7 +120,8 @@
+             if ( isset($this-&gt;modinfo[$name]) ) {
+                 return $this-&gt;modinfo[$name];
+             }
+-            return false;
++            $return = false;
++            return $return;
+         }
+         return $this-&gt;modinfo;
+     }
+@@ -144,7 +145,7 @@
+      * 
+      * @return	string
+      */
+-    function &amp;subLink()
++    function subLink()
+     {
+         $ret = array();
+         if ( $this-&gt;getInfo('sub') &amp;&amp; is_array($this-&gt;getInfo('sub')) ) {
+@@ -214,7 +215,7 @@
+      * @param   integer $userid
+      * @return  mixed   Search result.
+      **/
+-    function &amp;search($term = '', $andor = 'AND', $limit = 0, $offset = 0, $userid = 0)
++    function search($term = '', $andor = 'AND', $limit = 0, $offset = 0, $userid = 0)
+     {
+         if ($this-&gt;getVar('hassearch') != 1) {
+             return false;
+@@ -254,7 +255,8 @@
+     function &amp;getByDirName($dirname)
+     {
+         $modhandler =&amp; xoops_gethandler('module');
+-        return $modhandler-&gt;getByDirname($dirname);
++        $inst =&amp; $modhandler-&gt;getByDirname($dirname);
++        return $inst;
+     }
+     /**#@-*/
+ }
+@@ -316,13 +318,14 @@
+         static $_cachedModule_dirname;
+         static $_cachedModule_mid;
+         $id = intval($id);
++		$module = false;
+         if ($id &gt; 0) {
+ 			if (!empty($_cachedModule_mid[$id])) {
+ 				return $_cachedModule_mid[$id];
+ 			} else {
+   	        	$sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('modules').' WHERE mid = '.$id;
+   	        	if (!$result = $this-&gt;db-&gt;query($sql)) {
+-  	            	return false;
++  	            	return $module;
+   	        	}
+   	        	$numrows = $this-&gt;db-&gt;getRowsNum($result);
+   	        	if ($numrows == 1) {
+@@ -335,7 +338,7 @@
+   	        	}
+         	}
+ 		}
+-        return false;
++        return $module;
+     }
+ 
+     /**
+@@ -352,9 +355,10 @@
+ 		if (!empty($_cachedModule_dirname[$dirname])) {
+ 			return $_cachedModule_dirname[$dirname];
+ 		} else {
++			$module = false;
+         	$sql = &quot;SELECT * FROM &quot;.$this-&gt;db-&gt;prefix('modules').&quot; WHERE dirname = '&quot;.trim($dirname).&quot;'&quot;;
+         	if (!$result = $this-&gt;db-&gt;query($sql)) {
+-            	return false;
++            	return $module;
+         	}
+         	$numrows = $this-&gt;db-&gt;getRowsNum($result);
+         	if ($numrows == 1) {
+@@ -363,9 +367,8 @@
+             	$module-&gt;assignVars($myrow);
+ 				$_cachedModule_dirname[$dirname] =&amp; $module;
+ 				$_cachedModule_mid[$module-&gt;getVar('mid')] =&amp; $module;
+-            	return $module;
+         	}
+-        	return false;
++        	return $module;
+ 		}
+     }
+ 
+@@ -477,7 +480,7 @@
+      * @param   boolean $id_as_key  Use the ID as key into the array
+      * @return  array
+      **/
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -533,7 +536,7 @@
+      *      if false, array keys will be module id
+      * @return  array
+      **/
+-    function &amp;getList($criteria = null, $dirname_as_key = false)
++    function getList($criteria = null, $dirname_as_key = false)
+     {
+         $ret = array();
+         $modules =&amp; $this-&gt;getObjects($criteria, true);
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/notification.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/notification.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/notification.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -197,20 +197,20 @@
+      **/
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $notification = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('xoopsnotifications').' WHERE not_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $notification;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $notification = new XoopsNotification();
+                 $notification-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $notification;
+             }
+         }
+-        return false;
++        return $notification;
+     }
+ 
+ 
+@@ -278,7 +278,7 @@
+      *
+      * @return  array   Array of {@link XoopsNotification} objects
+      **/
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -387,7 +387,8 @@
+ 		if (count($objects) == 1) {
+ 			return $objects[0];
+ 		}
+-		return false;
++		$inst = false;
++		return $inst;
+ 	}
+ 
+ 	/**
+@@ -482,7 +483,7 @@
+      *
+      * @return array  Array of {@link XoopsNotification} objects
+      **/
+-    function &amp;getByUser ($user_id)
++    function getByUser ($user_id)
+     {
+         $criteria = new Criteria ('not_uid', $user_id);
+         return $this-&gt;getObjects($criteria, true);
+@@ -493,7 +494,7 @@
+      * Get a list of notification events for the current item/mod/user
+      *
+      **/
+-	function &amp;getSubscribedEvents ($category, $item_id, $module_id, $user_id)
++	function getSubscribedEvents ($category, $item_id, $module_id, $user_id)
+     {
+         $criteria = new CriteriaCompo();
+         $criteria-&gt;add (new Criteria('not_modid', $module_id));
+@@ -520,7 +521,7 @@
+      *
+      * @return  array   Array of {@link XoopsNotification} objects
+      **/
+-    function &amp;getByItemId($module_id, $item_id, $order = null, $status = null)
++    function getByItemId($module_id, $item_id, $order = null, $status = null)
+     {
+         $criteria = new CriteriaCompo(new Criteria('com_modid', intval($module_id)));
+         $criteria-&gt;add(new Criteria('com_itemid', intval($item_id)));
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/object.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/object.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/object.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -274,7 +274,7 @@
+     * @param string $format format to use for the output
+     * @return mixed formatted value of the variable
+     */
+-    function &amp;getVar($key, $format = 's')
++    function getVar($key, $format = 's')
+     {
+         $ret = $this-&gt;vars[$key]['value'];
+         switch ($this-&gt;vars[$key]['data_type']) {
+@@ -528,7 +528,7 @@
+     function &amp;xoopsClone()
+     {
+         $class = get_class($this);
+-        $clone = new $class();
++        $clone =&amp; new $class();
+         foreach ($this-&gt;vars as $k =&gt; $v) {
+             $clone-&gt;assignVar($k, $v['value']);
+         }
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/online.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/online.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/online.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -133,7 +133,7 @@
+      * @param	object  $criteria   {@link CriteriaElement} 
+      * @return	array   Array of associative arrays of online information
+      */
+-    function &amp;getAll($criteria = null)
++    function getAll($criteria = null)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/privmessage.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/privmessage.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/privmessage.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -98,20 +98,20 @@
+  **/
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $pm = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('priv_msgs').' WHERE msg_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $pm;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $pm = new XoopsPrivmessage();
+                 $pm-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $pm;
+             }
+         }
+-        return false;
++        return $pm;
+     }
+ 
+ /**
+@@ -171,7 +171,7 @@
+  * @param 	bool 	$id_as_key 	use ID as key into the array?
+  * @return 	array	Array of {@link XoopsPrivmessage} objects
+  **/
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplfile.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplfile.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplfile.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -49,7 +49,7 @@
+ 		$this-&gt;initVar('tpl_source', XOBJ_DTYPE_SOURCE, null, false);
+ 	}
+ 
+-	function &amp;getSource()
++	function getSource()
+ 	{
+ 		return $this-&gt;getVar('tpl_source');
+ 	}
+@@ -83,7 +83,8 @@
+ 
+     function &amp;get($id, $getsource = false)
+     {
+-        $id = intval($id);
++        $tplfile = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             if (!$getsource) {
+                 $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('tplfile').' WHERE tpl_id='.$id;
+@@ -91,16 +92,15 @@
+                 $sql = 'SELECT f.*, s.tpl_source FROM '.$this-&gt;db-&gt;prefix('tplfile').' f LEFT JOIN '.$this-&gt;db-&gt;prefix('tplsource').' s  ON s.tpl_id=f.tpl_id WHERE f.tpl_id='.$id;
+             }
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $tplfile;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $tplfile = new XoopsTplfile();
+                 $tplfile-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $tplfile;
+             }
+         }
+-        return false;
++        return $tplfile;
+     }
+ 
+     function loadSource(&amp;$tplfile)
+@@ -211,7 +211,7 @@
+         return true;
+     }
+ 
+-    function &amp;getObjects($criteria = null, $getsource = false, $id_as_key = false)
++    function getObjects($criteria = null, $getsource = false, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -271,7 +271,7 @@
+         return $ret;
+     }
+ 
+-    function &amp;find($tplset = null, $type = null, $refid = null, $module = null, $file = null, $getsource = false)
++    function find($tplset = null, $type = null, $refid = null, $module = null, $file = null, $getsource = false)
+     {
+         $criteria = new CriteriaCompo();
+         if (isset($tplset)) {
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -68,38 +68,38 @@
+ 
+     function &amp;get($id)
+     {
+-        $id = intval($id);
++        $tplset = false;
++    	$id = intval($id);
+         if ($id &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('tplset').' WHERE tplset_id='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $tplset;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $tplset = new XoopsTplset();
+                 $tplset-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $tplset;
+             }
+         }
+-        return false;
++        return $tplset;
+     }
+ 
+     function &amp;getByName($tplset_name)
+     {
+-        $tplset_name = trim($tplset_name);
++        $tplset = false;
++    	$tplset_name = trim($tplset_name);
+         if ($tplset_name != '') {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('tplset').' WHERE tplset_name='.$this-&gt;db-&gt;quoteString($tplset_name);
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $tplset;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $tplset = new XoopsTplset();
+                 $tplset-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $tplset;
+             }
+         }
+-        return false;
++        return $tplset;
+     }
+ 
+     function insert(&amp;$tplset)
+@@ -146,7 +146,7 @@
+         return true;
+     }
+ 
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+@@ -187,7 +187,7 @@
+         return $count;
+     }
+ 
+-    function &amp;getList($criteria = null)
++    function getList($criteria = null)
+ 	{
+         $ret = array();
+ 		$tplsets =&amp; $this-&gt;getObjects($criteria, true);
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/user.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/user.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/user.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -195,7 +195,8 @@
+ 	 */
+ 	function &amp;groups()
+     {
+-        return $this-&gt;getGroups();
++        $groups =&amp; $this-&gt;getGroups();
++    	return $groups;
+     }
+     /**
+      * Is the user admin ?
+@@ -482,19 +483,19 @@
+      */
+     function &amp;get($id)
+     {
+-        if (intval($id) &gt; 0) {
++        $user = false;
++    	if (intval($id) &gt; 0) {
+             $sql = 'SELECT * FROM '.$this-&gt;db-&gt;prefix('users').' WHERE uid='.$id;
+             if (!$result = $this-&gt;db-&gt;query($sql)) {
+-                return false;
++                return $user;
+             }
+             $numrows = $this-&gt;db-&gt;getRowsNum($result);
+             if ($numrows == 1) {
+                 $user = new XoopsUser();
+                 $user-&gt;assignVars($this-&gt;db-&gt;fetchArray($result));
+-                return $user;
+             }
+         }
+-        return false;
++        return $user;
+     }
+ 
+     /**
+@@ -572,7 +573,7 @@
+      * @param bool $id_as_key use the UID as key for the array?
+      * @return array array of {@link XoopsUser} objects
+      */
+-    function &amp;getObjects($criteria = null, $id_as_key = false)
++    function getObjects($criteria = null, $id_as_key = false)
+     {
+         $ret = array();
+         $limit = $start = 0;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/mainfile.dist.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/mainfile.dist.php	2005-11-25 06:58:43 UTC (rev 25)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/mainfile.dist.php	2005-11-25 07:20:20 UTC (rev 26)
+@@ -74,6 +74,9 @@
+ 	define(&quot;XOOPS_GROUP_USERS&quot;, &quot;2&quot;);
+ 	define(&quot;XOOPS_GROUP_ANONYMOUS&quot;, &quot;3&quot;);
+ 
++	require_once( XOOPS_PATH . '/Boot/xoops2.php' );
++	global $xoops;
++
+ 	if (!isset($xoopsOption['nocommon']) &amp;&amp; XOOPS_ROOT_PATH != '') {
+ 		include XOOPS_ROOT_PATH.&quot;/include/common.php&quot;;
+ 	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000020.html">[Xoops4-svn] r25 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS-data/Application Support htdocs/class htdocs/class/database htdocs/class/xml/rss htdocs/class/xoopsform htdocs/include htdocs/kernel
+</A></li>
+	<LI>Next message: <A HREF="000018.html">[Xoops4-svn] r27 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS-data/Application Support
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

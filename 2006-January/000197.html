@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r205 - XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r205%20-%20XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification&In-Reply-To=%3C200601290059.k0T0xvEv005040%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000196.html">
+   <LINK REL="Next"  HREF="000198.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r205 - XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r205%20-%20XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification&In-Reply-To=%3C200601290059.k0T0xvEv005040%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r205 - XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Jan 29 01:59:57 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000196.html">[Xoops4-svn] r204 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000198.html">[Xoops4-svn] r206 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#197">[ date ]</a>
+              <a href="thread.html#197">[ thread ]</a>
+              <a href="subject.html#197">[ subject ]</a>
+              <a href="author.html#197">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-29 01:59:51 +0100 (Sun, 29 Jan 2006)
+New Revision: 205
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+   XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+Log:
+Minor fixes in the identification module
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-29 00:41:37 UTC (rev 204)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/login.php	2006-01-29 00:59:51 UTC (rev 205)
+@@ -5,7 +5,7 @@
+ 	global $xoops;
+ 
+ 	$app =&amp; $xoops-&gt;currentModule;
+-	
++	//var_export($app);
+ 	// Read the request params defined in xo-info.php (use default if the var isnt found)
+ 	// sanitize them, and create corresponding global vars
+ 	extract( $app-&gt;requestParameters(), EXTR_OVERWRITE );
+@@ -24,7 +24,7 @@
+ 				$xoops-&gt;acceptUser( $login, true );
+ 			    // Perform some maintenance of notification records
+ 			    $notification_handler =&amp; xoops_gethandler('notification');
+-			    $notification_handler-&gt;doLoginMaintenance($user-&gt;getVar('uid'));
++			    $notification_handler-&gt;doLoginMaintenance( $GLOBALS['xoopsUser']-&gt;getVar('uid') );
+ 				return $xoops-&gt;services['http']-&gt;sendResponse( 303, sprintf( XO_('Thank you for logging in, %s'), $login ), $xoops_redirect );
+ 			} else {
+ 				return $xoops-&gt;services['http']-&gt;sendResponse( 403, XO_('Incorrect login'), $_SERVER['REQUEST_URI'] );
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php	2006-01-29 00:41:37 UTC (rev 204)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/logout.php	2006-01-29 00:59:51 UTC (rev 205)
+@@ -13,8 +13,8 @@
+ 
+ 	// clear entry from online users table
+ 	global $xoopsUser;
+-	$online_handler =&amp; xoops_gethandler('online');
+-	$online_handler-&gt;destroy($xoopsUser-&gt;getVar('uid'));
++	$online_handler =&amp; xoops_gethandler( 'online' );
++	$online_handler-&gt;destroy( $xoopsUser-&gt;getVar('uid') );
+ 
+ 	return $xoops-&gt;services['http']-&gt;sendResponse( 200, XO_('You are now logged out. Thanks for your visit'), $xoops-&gt;url( '/www/' ) );
+ 	
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css	2006-01-29 00:41:37 UTC (rev 204)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/modules/sysutils/identification/style.css	2006-01-29 00:59:51 UTC (rev 205)
+@@ -60,6 +60,7 @@
+ }
+ .helper_links a {
+ 	display:		block;
++	width:			50%;
+ }
+ .helper_links a.password_recovery {
+ 	text-align:		right;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000196.html">[Xoops4-svn] r204 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000198.html">[Xoops4-svn] r206 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#197">[ date ]</a>
+              <a href="thread.html#197">[ thread ]</a>
+              <a href="subject.html#197">[ subject ]</a>
+              <a href="author.html#197">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

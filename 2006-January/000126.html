@@ -1,0 +1,350 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r134 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r134%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database&In-Reply-To=%3C200601181348.k0IDmvRw013250%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000125.html">
+   <LINK REL="Next"  HREF="000127.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r134 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r134%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database&In-Reply-To=%3C200601181348.k0IDmvRw013250%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r134 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database">skalpa at berlios.de
+       </A><BR>
+    <I>Wed Jan 18 14:48:57 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000125.html">[Xoops4-svn] r133 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000127.html">[Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#126">[ date ]</a>
+              <a href="thread.html#126">[ thread ]</a>
+              <a href="subject.html#126">[ subject ]</a>
+              <a href="author.html#126">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-18 14:48:56 +0100 (Wed, 18 Jan 2006)
+New Revision: 134
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/database.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/databasefactory.php
+Log:
+Updated all the old database instanciation methods, so they now return a reference to the 'legacydb' service (which is itself an instance of the xoops_db_Database_legacy driver).
+The old mysql class and the XoopsDatabaseFactory::getDatabase() method stay untouched, as they are used by the installer (which will be changed later).
+However, all the modules should now be using the new class without being aware of it.
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/database.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/database.php	2006-01-18 13:38:21 UTC (rev 133)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/database.php	2006-01-18 13:48:56 UTC (rev 134)
+@@ -26,107 +26,116 @@
+ //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+ //  ------------------------------------------------------------------------ //
+ /**
+- * @package     kernel
+- * @subpackage  database
+- * 
+- * @author	    Kazumi Ono	&lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright	copyright (c) 2000-2003 XOOPS.org
++ * This file cannot be requested directly
+  */
++if ( !defined( 'XOOPS_ROOT_PATH' ) ) exit();
+ 
++
+ /**
++ * ---------------------------------------
++ * DONT USE THESE !
++ * ---------------------------------------
++ * Database instances should be created with XOS::create( 'xoops_db_Database' ),
++ * if you need a database object implementing the XOOPS 2.0.x database class
++ * methods, you can get a reference to the legacydb service using $xoops-&gt;loadService()
++ */
++
++
++/**
+  * make sure this is only included once!
+  */
+ if ( !defined(&quot;XOOPS_C_DATABASE_INCLUDED&quot;) ) {
+ 	define(&quot;XOOPS_C_DATABASE_INCLUDED&quot;,1);
+ 
+-/**
+- * Abstract base class for Database access classes
+- * 
+- * @abstract
+- * 
+- * @author Kazumi Ono &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright copyright (c) 2000-2003 XOOPS.org
+- * 
+- * @package kernel
+- * @subpackage database
+- */
+-class XoopsDatabase
++class XoopsDatabase {
++	/**
++	 * constructor
++     * 
++     * will always fail, because this is an abstract class!
++	 */
++	function XoopsDatabase()
+ 	{
+-		/**
+-		 * Prefix for tables in the database
+-		 * @var string
+-		 */
+-		var $prefix = '';
+-		/**
+-		 * reference to a {@link XoopsLogger} object
+-         * @see XoopsLogger
+-		 * @var object XoopsLogger
+-		 */
+-		var $logger;
++		// exit(&quot;Cannot instantiate this class directly&quot;);
++	}
+ 
+-		/**
+-		 * constructor
+-         * 
+-         * will always fail, because this is an abstract class!
+-		 */
+-		function XoopsDatabase()
+-		{
+-			// exit(&quot;Cannot instantiate this class directly&quot;);
+-		}
++	/**
++	 * assign a {@link XoopsLogger} object to the database
++	 * 
++     * @see XoopsLogger
++     * @param object $logger reference to a {@link XoopsLogger} object
++	 */
++	function setLogger(&amp;$logger)
++	{
++		$this-&gt;logger =&amp; $logger;
++	}
+ 
+-		/**
+-		 * assign a {@link XoopsLogger} object to the database
+-		 * 
+-         * @see XoopsLogger
+-         * @param object $logger reference to a {@link XoopsLogger} object
+-		 */
+-		function setLogger(&amp;$logger)
+-		{
+-			$this-&gt;logger =&amp; $logger;
++	/**
++	 * set the prefix for tables in the database
++	 * 
++     * @param string $value table prefix
++	 */
++	function setPrefix($value)
++	{
++		$this-&gt;prefix = $value;
++	}
++	
++	/**
++	 * attach the prefix.'_' to a given tablename
++     * 
++     * if tablename is empty, only prefix will be returned
++	 * 
++     * @param string $tablename tablename
++     * @return string prefixed tablename, just prefix if tablename is empty
++	 */
++	function prefix($tablename='')
++	{
++		if ( $tablename != '' ) {
++			return $this-&gt;prefix .'_'. $tablename;
++		} else {
++			return $this-&gt;prefix;
+ 		}
++	}
++}
+ 
+-		/**
+-		 * set the prefix for tables in the database
+-		 * 
+-         * @param string $value table prefix
+-		 */
+-		function setPrefix($value)
+-		{
+-			$this-&gt;prefix = $value;
+-		}
+-		
+-		/**
+-		 * attach the prefix.'_' to a given tablename
+-         * 
+-         * if tablename is empty, only prefix will be returned
+-		 * 
+-         * @param string $tablename tablename
+-         * @return string prefixed tablename, just prefix if tablename is empty
+-		 */
+-		function prefix($tablename='')
+-		{
+-			if ( $tablename != '' ) {
+-				return $this-&gt;prefix .'_'. $tablename;
++class XoopsDatabaseFactory {
++	/**
++	 * Get a reference to the only instance of database class and connects to DB
++	 * @deprecated
++	 */
++	function &amp;getDatabaseConnection() {
++		return $GLOBALS['xoops']-&gt;loadService( 'legacydb' );
++	}
++	/**
++	 * Gets a reference to the only instance of database class.
++	 * @deprecated
++	 */
++	function &amp;getDatabase() {
++		static $database;
++		if (!isset($database)) {
++			$file = XOOPS_ROOT_PATH.'/class/database/'.XOOPS_DB_TYPE.'database.php';
++			require_once $file;
++			if (!defined('XOOPS_DB_PROXY')) {
++				$class = 'Xoops'.ucfirst(XOOPS_DB_TYPE).'DatabaseSafe';
+ 			} else {
+-				return $this-&gt;prefix;
++				$class = 'Xoops'.ucfirst(XOOPS_DB_TYPE).'DatabaseProxy';
+ 			}
++			$database =&amp; new $class();
+ 		}
++		return $database;
+ 	}
+ }
+ 
+ 
+ /**
+- * Only for backward compatibility
+- * 
+  * @deprecated
+  */
+-class Database
+-{
+-
++class Database {
+ 	function &amp;getInstance() {
+-		$inst =&amp; XoopsDatabaseFactory::getDatabaseConnection();
+-		return $inst;
++		return $GLOBALS['xoops']-&gt;loadService( 'legacydb' );
+ 	}
+ }
+ 
++
++}
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/databasefactory.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/databasefactory.php	2006-01-18 13:38:21 UTC (rev 133)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/class/database/databasefactory.php	2006-01-18 13:48:56 UTC (rev 134)
+@@ -1,66 +1,11 @@
+ &lt;?php
+-class XoopsDatabaseFactory
+-{
+ 
+-	function XoopsDatabaseFactory()
+-	{
+-	}
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_ROOT_PATH' ) ) exit();
+ 
+-	/**
+-	 * Get a reference to the only instance of database class and connects to DB
+-     * 
+-     * if the class has not been instantiated yet, this will also take 
+-     * care of that
+-	 * 
+-     * @static
+-     * @staticvar   object  The only instance of database class
+-     * @return      object  Reference to the only instance of database class
+-	 */
+-	function &amp;getDatabaseConnection()
+-	{
+-		static $instance;
+-		if (!isset($instance)) {
+-			$file = XOOPS_ROOT_PATH.'/class/database/'.XOOPS_DB_TYPE.'database.php';
+-			require_once $file;
+-			if (!defined('XOOPS_DB_PROXY')) {
+-				$class = 'Xoops'.ucfirst(XOOPS_DB_TYPE).'DatabaseSafe';
+-			} else {
+-				$class = 'Xoops'.ucfirst(XOOPS_DB_TYPE).'DatabaseProxy';
+-			}
+-			$instance =&amp; new $class();
+-			$instance-&gt;setLogger(XoopsLogger::instance());
+-			$instance-&gt;setPrefix(XOOPS_DB_PREFIX);
+-			if (!$instance-&gt;connect()) {
+-				trigger_error(&quot;Unable to connect to database&quot;, E_USER_ERROR);
+-			}
+-		}
+-		return $instance;
+-	}
++include_once XOOPS_ROOT_PATH . &quot;/class/database/database.php&quot;;
+ 
+-	/**
+-	 * Gets a reference to the only instance of database class. Currently
+-	 * only being used within the installer.
+-	 * 
+-     * @static
+-     * @staticvar   object  The only instance of database class
+-     * @return      object  Reference to the only instance of database class
+-	 */
+-	function &amp;getDatabase()
+-	{
+-		static $database;
+-		if (!isset($database)) {
+-			$file = XOOPS_ROOT_PATH.'/class/database/'.XOOPS_DB_TYPE.'database.php';
+-			require_once $file;
+-			if (!defined('XOOPS_DB_PROXY')) {
+-				$class = 'Xoops'.ucfirst(XOOPS_DB_TYPE).'DatabaseSafe';
+-			} else {
+-				$class = 'Xoops'.ucfirst(XOOPS_DB_TYPE).'DatabaseProxy';
+-			}
+-			$database =&amp; new $class();
+-		}
+-		return $database;
+-	}
+ 
+-
+-}
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000125.html">[Xoops4-svn] r133 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000127.html">[Xoops4-svn] r135 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#126">[ date ]</a>
+              <a href="thread.html#126">[ thread ]</a>
+              <a href="subject.html#126">[ subject ]</a>
+              <a href="author.html#126">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

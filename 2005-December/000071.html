@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r78 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . admin language/english
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r78%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system%3A%20.%20admin%20language/english&In-Reply-To=%3C200512032348.jB3Nm8O0020820%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000070.html">
+   <LINK REL="Next"  HREF="000072.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r78 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . admin language/english</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r78%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system%3A%20.%20admin%20language/english&In-Reply-To=%3C200512032348.jB3Nm8O0020820%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r78 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . admin language/english">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Dec  4 00:48:08 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000070.html">[Xoops4-svn] r77 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+        <LI>Next message: <A HREF="000072.html">[Xoops4-svn] r79 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-04 00:48:07 +0100 (Sun, 04 Dec 2005)
+New Revision: 78
+
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/tplsets/
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php
+Log:
+Removing the templates sets admin section (will be replaced by a new templates edition module)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php	2005-12-03 20:59:55 UTC (rev 77)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php	2005-12-03 23:48:07 UTC (rev 78)
+@@ -36,6 +36,5 @@
+ define(&quot;_MI_SYSTEM_ADMENU12&quot;, &quot;Find Users&quot;);
+ define(&quot;_MI_SYSTEM_ADMENU13&quot;, &quot;Images&quot;);
+ define(&quot;_MI_SYSTEM_ADMENU14&quot;, &quot;Avatars&quot;);
+-define(&quot;_MI_SYSTEM_ADMENU15&quot;, &quot;Templates&quot;);
+ define(&quot;_MI_SYSTEM_ADMENU16&quot;, &quot;Comments&quot;);
+ ?&gt;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php	2005-12-03 20:59:55 UTC (rev 77)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php	2005-12-03 23:48:07 UTC (rev 78)
+@@ -53,8 +53,6 @@
+ $adminmenu[10]['link'] = &quot;admin.php?fct=mailusers&quot;;
+ $adminmenu[11]['title'] = _MI_SYSTEM_ADMENU14;
+ $adminmenu[11]['link'] = &quot;admin.php?fct=avatars&quot;;
+-$adminmenu[12]['title'] = _MI_SYSTEM_ADMENU15;
+-$adminmenu[12]['link'] = &quot;admin.php?fct=tplsets&quot;;
+-$adminmenu[13]['title'] = _MI_SYSTEM_ADMENU16;
+-$adminmenu[13]['link'] = &quot;admin.php?fct=comments&quot;;
++$adminmenu[12]['title'] = _MI_SYSTEM_ADMENU16;
++$adminmenu[12]['link'] = &quot;admin.php?fct=comments&quot;;
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000070.html">[Xoops4-svn] r77 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+	<LI>Next message: <A HREF="000072.html">[Xoops4-svn] r79 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

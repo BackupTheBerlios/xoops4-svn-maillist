@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r176 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS XOOPS/Boot XOOPS/StartupItems XOOPS/StartupItems/site-closed htdocs/include
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r176%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup%3A%20XOOPS%20XOOPS/Boot%20XOOPS/StartupItems%20XOOPS/StartupItems/site-closed%20htdocs/include&In-Reply-To=%3C200601211243.k0LChw4O009720%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000167.html">
+   <LINK REL="Next"  HREF="000169.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r176 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS XOOPS/Boot XOOPS/StartupItems XOOPS/StartupItems/site-closed htdocs/include</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r176%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup%3A%20XOOPS%20XOOPS/Boot%20XOOPS/StartupItems%20XOOPS/StartupItems/site-closed%20htdocs/include&In-Reply-To=%3C200601211243.k0LChw4O009720%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r176 - in XoopsCore/branches/tasks/123218-arch-cleanup: XOOPS XOOPS/Boot XOOPS/StartupItems XOOPS/StartupItems/site-closed htdocs/include">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 21 13:43:58 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000167.html">[Xoops4-svn] r175 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000169.html">[Xoops4-svn] r177 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#168">[ date ]</a>
+              <a href="thread.html#168">[ thread ]</a>
+              <a href="subject.html#168">[ subject ]</a>
+              <a href="author.html#168">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-21 13:43:56 +0100 (Sat, 21 Jan 2006)
+New Revision: 176
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/site-closed/
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/site-closed/site-closed.php
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php
+Log:
+Enhanced common.php so it doesn't have to be included from the global scope anymore, and moved the &quot;Site closed&quot; code in a Startup Item
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php	2006-01-21 12:40:27 UTC (rev 175)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot/kernel.php	2006-01-21 12:43:56 UTC (rev 176)
+@@ -192,6 +192,10 @@
+ 			if ( !empty($this-&gt;bootFile) ) {
+ 				require_once $this-&gt;path( &quot;/XOOPS/Boot/$this-&gt;bootFile&quot; );
+ 			}
++			// @TODO-2.3: This shouldn't be there but is kept temporarily until the
++			// old common.php has been cleaned up as it should
++			include_once XOOPS_ROOT_PATH.&quot;/include/common.php&quot;;
++
+ 			if ( isset( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] ) ) {
+ 				$this-&gt;acceptUser( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] );
+ 			}
+@@ -310,7 +314,11 @@
+ 	 * @param boolean $permanent Whether to accept this user permanently or for the current request only
+ 	 * @return boolean
+ 	 */
+-	function acceptUser( $login, $permanent = false ) {
++	function acceptUser( $login = '', $permanent = false ) {
++		if ( empty( $login ) &amp;&amp; isset( $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'] ) ) {
++			$login = $_SESSION[$this-&gt;xoBundleIdentifier]['currentUser'];
++			$permanent = true;
++		}
+ 		// @TODO-2.3: Clean this up later... This handler stuff is so, so lame... :-(
+ 		$handler =&amp; xoops_gethandler('member');
+ 	
+@@ -364,9 +372,16 @@
+ 		return $this-&gt;path( $url, true );
+ 	}
+ 
+-	
+-	
+ } // class xoops_kernel_Xoops2
+ 
++/**
++ * Returns a translated string
++ */
++function XO_( $str ) {
++	global $xoops;
++	return $xoops-&gt;services['lang'] ? $xoops-&gt;services['lang']-&gt;translate( $str ) : $str;	
++}
+ 
++
++
+ ?&gt;
+\ No newline at end of file
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/site-closed/site-closed.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/site-closed/site-closed.php	2006-01-21 12:40:27 UTC (rev 175)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/site-closed/site-closed.php	2006-01-21 12:43:56 UTC (rev 176)
+@@ -0,0 +1,40 @@
++&lt;?php
++//
++// Startup item providing the &quot;site closed&quot; functionality
++//
++// IMO this is messy and shouldn't be done like that but at least it works
++//
++// Better way in case somebody would want to do it:
++// - Make the closesite and closesite_okgrp new kernel properties (overridable by modifying hosts.php)
++// - End the request with a 503 (service unavailable) when somebody wants to access a closed site
++// - Let the ErrorDocuments module display the appropriate page
++//
++	global $xoopsConfig, $xoopsUser;
++
++    if ($xoopsConfig['closesite'] == 1) {
++        $allowed = false;
++        if (is_object($xoopsUser)) {
++            foreach ($xoopsUser-&gt;getGroups() as $group) {
++                if (in_array($group, $xoopsConfig['closesite_okgrp']) || XOOPS_GROUP_ADMIN == $group) {
++                    $allowed = true;
++                    break;
++                }
++            }
++        } elseif (!empty($_POST['xoops_login'])) {
++            include_once XOOPS_ROOT_PATH.'/include/checklogin.php';
++            exit();
++        }
++        if (!$allowed) {
++            include_once XOOPS_ROOT_PATH.'/class/template.php';
++            $xoopsTpl = new XoopsTpl();
++            $xoopsTpl-&gt;assign(array('sitename' =&gt; $xoopsConfig['sitename'], 'xoops_themecss' =&gt; xoops_getcss(), 'xoops_imageurl' =&gt; XOOPS_THEME_URL.'/'.$xoopsConfig['theme_set'].'/', 'lang_login' =&gt; _LOGIN, 'lang_username' =&gt; _USERNAME, 'lang_password' =&gt; _PASSWORD, 'lang_siteclosemsg' =&gt; $xoopsConfig['closesite_text']));
++            $xoopsTpl-&gt;xoops_setCaching(1);
++            $xoopsTpl-&gt;display('db:system_siteclosed.html');
++            exit();
++        }
++        unset($allowed, $group);
++    }
++
++	return true;
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/StartupItems/site-closed/site-closed.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php	2006-01-21 12:40:27 UTC (rev 175)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include/common.php	2006-01-21 12:43:56 UTC (rev 176)
+@@ -28,19 +28,20 @@
+ if (!defined(&quot;XOOPS_MAINFILE_INCLUDED&quot;)) {
+     exit();
+ } else {
+-    //Instantiate security object
++	if ( defined( 'XOOPS_COMMON_INCLUDED' ) )	return;
++	define( 'XOOPS_COMMON_INCLUDED', 1 );
++	
++	// Initialize the old XOOPS global vars
++	// This ensures this file can be included from within a function with no prob
++	$GLOBALS['xoopsUser'] = $GLOBALS['xoopsUserId'] = $GLOBALS['xoopsUserGroups'] = $GLOBALS['xoopsUserIsAdmin'] = false;
++	$GLOBALS['xoopsDB'] = $GLOBALS['xoopsConfig'] = $GLOBALS['xoopsModule'] = $GLOBALS['xoopsModuleConfig'] = null;
++
++	global $xoops;
++
++	//Instantiate security object
+     require_once XOOPS_ROOT_PATH.&quot;/class/xoopssecurity.php&quot;;
+-    $xoopsSecurity = new XoopsSecurity();
+-    global $xoopsSecurity;
+-    //Check super globals
+-    $xoopsSecurity-&gt;checkSuperglobals();
++    $GLOBALS['xoopsSecurity'] = new XoopsSecurity();
+     
+-    // ############## Activate error handler ##############
+-    //include_once XOOPS_ROOT_PATH . '/class/errorhandler.php';
+-    //$xoopsErrorHandler =&amp; XoopsErrorHandler::getInstance();
+-    // Turn on error handler by default (until config value obtained from DB)
+-    //$xoopsErrorHandler-&gt;activate(true);
+-
+     define(&quot;XOOPS_SIDEBLOCK_LEFT&quot;,0);
+     define(&quot;XOOPS_SIDEBLOCK_RIGHT&quot;,1);
+     define(&quot;XOOPS_SIDEBLOCK_BOTH&quot;,2);
+@@ -70,7 +71,7 @@
+     define(&quot;XOOPS_UPLOAD_URL&quot;, XOOPS_URL.&quot;/uploads&quot;);
+     set_magic_quotes_runtime(0);
+     include_once XOOPS_ROOT_PATH.'/class/logger.php';
+-    $xoopsLogger =&amp; XoopsLogger::instance();
++    $GLOBALS['xoopsLogger'] =&amp; XoopsLogger::instance();
+     if (!defined('XOOPS_XMLRPC')) {
+         define('XOOPS_DB_CHKREF', 1);
+     } else {
+@@ -83,9 +84,8 @@
+     // #################### Connect to DB ##################
+     require_once XOOPS_ROOT_PATH.'/class/database/database.php';
+ 
+-    global $xoops;
+-    $xoopsDB =&amp; $xoops-&gt;loadService( 'legacydb' );
+-    if ( !$xoopsDB-&gt;allowWebChanges ) {
++	$GLOBALS['xoopsDB'] = $xoops-&gt;loadService( 'legacydb' );
++	if ( !$GLOBALS['xoopsDB']-&gt;allowWebChanges ) {
+         define('XOOPS_DB_PROXY', 1);
+     }
+     
+@@ -97,10 +97,12 @@
+     include_once XOOPS_ROOT_PATH.&quot;/class/module.textsanitizer.php&quot;;
+ 
+     // ################# Load Config Settings ##############
+-    $config_handler =&amp; xoops_gethandler('config');
+-    $xoopsConfig =&amp; $config_handler-&gt;getConfigsByCat(XOOPS_CONF);
++    $GLOBALS['config_handler'] =&amp; xoops_gethandler('config');
++    global $config_handler;
++    $GLOBALS['xoopsConfig'] = $config_handler-&gt;getConfigsByCat(XOOPS_CONF);
++    global $xoopsConfig;
+ 
+-    $xoopsSecurity-&gt;checkBadips();
++    $GLOBALS['xoopsSecurity']-&gt;checkBadips();
+ 
+     // ################# Include version info file ##############
+     include_once XOOPS_ROOT_PATH.&quot;/include/version.php&quot;;
+@@ -149,11 +151,10 @@
+             $_SERVER[ 'REQUEST_URI' ] .= '?' . $_SERVER[ 'QUERY_STRING' ];
+         }
+     }
+-    $xoopsRequestUri = $_SERVER[ 'REQUEST_URI' ];       // Deprecated (use the corrected $_SERVER variable now)
++    $GLOBALS['xoopsRequestUri'] = $_SERVER[ 'REQUEST_URI' ];       // Deprecated (use the corrected $_SERVER variable now)
+     /**#@-*/
+ 
+-    $xoopsUser = '';
+-    $xoopsUserIsAdmin = false;
++    $GLOBALS['xoopsUser'] = '';
+     $member_handler =&amp; xoops_gethandler('member');
+ 
+ 	// NB: SSL login has been temporarily disabled until the birth of the user-login module
+@@ -161,16 +162,16 @@
+     //if ($xoopsConfig['use_ssl'] &amp;&amp; isset($_POST[$xoopsConfig['sslpost_name']]) &amp;&amp; $_POST[$xoopsConfig['sslpost_name']] != '') {
+ 	//session_id($_POST[$xoopsConfig['sslpost_name']]);
+ 
+-    if ( !empty( $_SESSION['xoopsUserId'] ) ) {
+-        $xoopsUser =&amp; $member_handler-&gt;getUser( $_SESSION['xoopsUserId'] );
+-        if (!is_object($xoopsUser)) {
+-            $xoopsUser = '';
+-            $_SESSION = array();
+-        } else {
+-            $xoopsUser-&gt;setGroups( $_SESSION['xoopsUserGroups'] );
+-            $xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin();
+-        }
+-    }
++	// NB: User mgmt is not stabilized, so keep using $xoopsUser for the moment
++	if ( !@empty( $_SESSION ) ) {
++		$xoops-&gt;acceptUser();
++		if ( $xoops-&gt;currentUser ) {
++			$GLOBALS['xoopsUser'] = $xoops-&gt;currentUser;
++			//$xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin();
++		}
++	}
++	global $xoopsUser;
++	
+     if (!empty($_REQUEST['xoops_theme_select']) &amp;&amp; in_array($_REQUEST['xoops_theme_select'], $xoopsConfig['theme_set_allowed'])) {
+         $xoopsConfig['theme_set'] = $_REQUEST['xoops_theme_select'];
+         $_SESSION['xoopsUserTheme'] = $_REQUEST['xoops_theme_select'];
+@@ -178,34 +179,11 @@
+         $xoopsConfig['theme_set'] = $_SESSION['xoopsUserTheme'];
+     }
+ 
+-    if ($xoopsConfig['closesite'] == 1) {
+-        $allowed = false;
+-        if (is_object($xoopsUser)) {
+-            foreach ($xoopsUser-&gt;getGroups() as $group) {
+-                if (in_array($group, $xoopsConfig['closesite_okgrp']) || XOOPS_GROUP_ADMIN == $group) {
+-                    $allowed = true;
+-                    break;
+-                }
+-            }
+-        } elseif (!empty($_POST['xoops_login'])) {
+-            include_once XOOPS_ROOT_PATH.'/include/checklogin.php';
+-            exit();
+-        }
+-        if (!$allowed) {
+-            include_once XOOPS_ROOT_PATH.'/class/template.php';
+-            $xoopsTpl = new XoopsTpl();
+-            $xoopsTpl-&gt;assign(array('sitename' =&gt; $xoopsConfig['sitename'], 'xoops_themecss' =&gt; xoops_getcss(), 'xoops_imageurl' =&gt; XOOPS_THEME_URL.'/'.$xoopsConfig['theme_set'].'/', 'lang_login' =&gt; _LOGIN, 'lang_username' =&gt; _USERNAME, 'lang_password' =&gt; _PASSWORD, 'lang_siteclosemsg' =&gt; $xoopsConfig['closesite_text']));
+-            $xoopsTpl-&gt;xoops_setCaching(1);
+-            $xoopsTpl-&gt;display('db:system_siteclosed.html');
+-            exit();
+-        }
+-        unset($allowed, $group);
+-    }
+-
+     if ( file_exists('./xoops_version.php') ) {
+         $url_arr = explode( '/', strstr( $_SERVER['SCRIPT_NAME'], '/modules/' ) );
+         $module_handler =&amp; xoops_gethandler('module');
+-        $xoopsModule =&amp; $module_handler-&gt;getByDirname($url_arr[2]);
++        $GLOBALS['xoopsModule'] = $module_handler-&gt;getByDirname($url_arr[2]);
++        global $xoopsModule;
+         unset($url_arr);
+         if (!$xoopsModule || !$xoopsModule-&gt;getVar('isactive')) {
+             include_once XOOPS_ROOT_PATH.&quot;/header.php&quot;;
+@@ -219,7 +197,7 @@
+                 redirect_header(XOOPS_URL.&quot;/user.php&quot;,1,_NOPERM);
+                 exit();
+             }
+-            $xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin($xoopsModule-&gt;getVar('mid'));
++            $GLOBALS['xoopsUserIsAdmin'] = $xoopsUser-&gt;isAdmin($xoopsModule-&gt;getVar('mid'));
+         } else {
+             if (!$moduleperm_handler-&gt;checkRight('module_read', $xoopsModule-&gt;getVar('mid'), XOOPS_GROUP_ANONYMOUS)) {
+                 redirect_header(XOOPS_URL.&quot;/user.php&quot;,1,_NOPERM);
+@@ -234,10 +212,10 @@
+             }
+         }
+         if ($xoopsModule-&gt;getVar('hasconfig') == 1 || $xoopsModule-&gt;getVar('hascomments') == 1 || $xoopsModule-&gt;getVar( 'hasnotification' ) == 1) {
+-            $xoopsModuleConfig =&amp; $config_handler-&gt;getConfigsByCat(0, $xoopsModule-&gt;getVar('mid'));
++            $GLOBALS['xoopsModuleConfig'] = $config_handler-&gt;getConfigsByCat(0, $xoopsModule-&gt;getVar('mid'));
+         }
+     } elseif($xoopsUser) {
+-        $xoopsUserIsAdmin = $xoopsUser-&gt;isAdmin(1);
++        $GLOBALS['xoopsUserIsAdmin'] = $xoopsUser-&gt;isAdmin(1);
+     }
+     
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000167.html">[Xoops4-svn] r175 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000169.html">[Xoops4-svn] r177 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#168">[ date ]</a>
+              <a href="thread.html#168">[ thread ]</a>
+              <a href="subject.html#168">[ subject ]</a>
+              <a href="author.html#168">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

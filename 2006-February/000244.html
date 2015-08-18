@@ -1,0 +1,503 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r252 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r252%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins&In-Reply-To=%3C200602191856.k1JIuna7001918%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000243.html">
+   <LINK REL="Next"  HREF="000245.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r252 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r252%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins&In-Reply-To=%3C200602191856.k1JIuna7001918%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r252 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 19:56:49 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000243.html">[Xoops4-svn] r251 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore: . AppServices AppServices/PageController.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000245.html">[Xoops4-svn] r253 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#244">[ date ]</a>
+              <a href="thread.html#244">[ thread ]</a>
+              <a href="subject.html#244">[ subject ]</a>
+              <a href="author.html#244">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 19:56:43 +0100 (Sun, 19 Feb 2006)
+New Revision: 252
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.foreachq.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.includeq.php
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoImgUrl.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php
+Log:
+Enhanced the XOOPS smarty plug-ins documentation, and added 2 new compiler plug-ins: foreachq and includeq (they do the same as the Smarty foreach and include functions, but generate more optimized code)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.foreachq.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.foreachq.php	2006-02-19 18:53:19 UTC (rev 251)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.foreachq.php	2006-02-19 18:56:43 UTC (rev 252)
+@@ -0,0 +1,104 @@
++&lt;?php
++/**
++ * foreachq Smarty compiler plug-in
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @since       2.3.0
++ * @version		$Id$
++ */
++
++/**
++ * Quick foreach template plug-in
++ *
++ * This plug-in works as a direct replacement for the original Smarty
++ * {@link <A HREF="http://smarty.php.net/manual/en/language.function.foreach.php">http://smarty.php.net/manual/en/language.function.foreach.php</A> foreach} function.
++ * 
++ * The difference with &lt;var&gt;foreach&lt;/var&gt; is minimal in terms of functionality, but can boost your templates
++ * a lot: foreach duplicates the content of the variable that is iterated, to ensure non-array
++ * variables can be specified freely. This implementation does not do that, but as a consequence
++ * requires that the variable you specify in the &lt;var&gt;from&lt;/var&gt; parameter is an array or
++ * (when using PHP5) an object. Check the difference between the code generated by foreach
++ * and foreachq to understand completely.
++ * 
++ * &lt;b&gt;Note:&lt;/b&gt; to use foreachq, only the opening tag has to be replaced. The closing tab still
++ * remains {/foreach}
++ * 
++ * &lt;code&gt;
++ * // Iterate, slow version
++ * {foreach from=$array item=elt}
++ *   {$elt}
++ * {/foreach}
++ * // Iterate, fast version
++ * {foreachq from=$array item=elt}
++ *   {$elt}
++ * {/foreach}
++ * &lt;/code&gt;
++ */
++function smarty_compiler_foreachq( $argStr, &amp;$comp ) {
++
++	$comp-&gt;_push_tag('foreach');
++
++	$attrs = $comp-&gt;_parse_attrs( $argStr, false );
++
++    $arg_list = array();
++
++    if (empty($attrs['from'])) {
++        return $comp-&gt;_syntax_error(&quot;foreachq: missing 'from' attribute&quot;, E_USER_ERROR, __FILE__, __LINE__);
++    }
++    $from = $attrs['from'];
++
++    if (empty($attrs['item'])) {
++        return $comp-&gt;_syntax_error(&quot;foreachq: missing 'item' attribute&quot;, E_USER_ERROR, __FILE__, __LINE__);
++    }
++    $item = $comp-&gt;_dequote($attrs['item']);
++    if (!preg_match('~^\w+$~', $item)) {
++        return $comp-&gt;_syntax_error(&quot;'foreachq: item' must be a variable name (literal string)&quot;, E_USER_ERROR, __FILE__, __LINE__);
++    }
++
++    if (isset($attrs['key'])) {
++        $key  = $comp-&gt;_dequote($attrs['key']);
++        if (!preg_match('~^\w+$~', $key)) {
++            return $comp-&gt;_syntax_error(&quot;foreachq: 'key' must to be a variable name (literal string)&quot;, E_USER_ERROR, __FILE__, __LINE__);
++        }
++        $key_part = &quot;\$this-&gt;_tpl_vars['$key'] =&gt; &quot;;
++    } else {
++        $key = null;
++        $key_part = '';
++    }
++
++    if (isset($attrs['name'])) {
++        $name = $attrs['name'];
++    } else {
++        $name = null;
++    }
++
++    $output = '';
++    //$output .= &quot;\$_from = $from; if (!is_array(\$_from) &amp;&amp; !is_object(\$_from)) { settype(\$_from, 'array'); }&quot;;
++    if (isset($name)) {
++        $foreach_props = &quot;\$this-&gt;_foreach[$name]&quot;;
++        $output .= &quot;{$foreach_props} = array('total' =&gt; count($from), 'iteration' =&gt; 0);\n&quot;;
++        //$output .= &quot;{$foreach_props} = array('total' =&gt; count(\$_from), 'iteration' =&gt; 0);\n&quot;;
++        $output .= &quot;if ({$foreach_props}['total'] &gt; 0):\n&quot;;
++        $output .= &quot;    foreach ($from as $key_part\$this-&gt;_tpl_vars['$item']):\n&quot;;
++        //$output .= &quot;    foreach (\$_from as $key_part\$this-&gt;_tpl_vars['$item']):\n&quot;;
++        $output .= &quot;        {$foreach_props}['iteration']++;\n&quot;;
++    } else {
++        $output .= &quot;if (count($from)):\n&quot;;
++        $output .= &quot;    foreach ($from as $key_part\$this-&gt;_tpl_vars['$item']):\n&quot;;
++        //$output .= &quot;if (count(\$_from)):\n&quot;;
++        //$output .= &quot;    foreach (\$_from as $key_part\$this-&gt;_tpl_vars['$item']):\n&quot;;
++    }
++    //$output .= '';
++
++    return $output;
++
++}
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.foreachq.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.includeq.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.includeq.php	2006-02-19 18:53:19 UTC (rev 251)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.includeq.php	2006-02-19 18:56:43 UTC (rev 252)
+@@ -0,0 +1,86 @@
++&lt;?php
++/**
++ * includeq Smarty compiler plug-in
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @since       2.3.0
++ * @version		$Id$
++ */
++
++/**
++ * Quick include template plug-in
++ *
++ * Like {@link smarty_compiler_foreachq() foreachq}, this plug-in has been written to provide
++ * a faster version of an already existing Smarty function. &lt;var&gt;includeq&lt;/var&gt; can be used
++ * as a replacement for the Smarty 
++ * {@link <A HREF="http://smarty.php.net/manual/en/language.function.include.php">http://smarty.php.net/manual/en/language.function.include.php</A> include} function as long
++ * as you are aware of the differences between them.
++ * 
++ * Normally, when you include a template, Smarty does the following:
++ * - Backup all your template variables in an array
++ * - Include the template you specified
++ * - Restore the template variables from the previously created backup array
++ * 
++ * The advantage of this method is that it makes the main template variables &lt;i&gt;safe&lt;/i&gt;: if your
++ * main template uses a variable called &lt;var&gt;$stuff&lt;/var&gt; and the included template modifies it
++ * value, the main template will recover the original value automatically.
++ * 
++ * While this can be useful in some cases (for example, when you include templates you have absolutely
++ * no control over), some may consider this a limitation and it has the disadvantage of slowing down
++ * the inclusion mechanism a lot.
++ * 
++ * &lt;var&gt;includeq&lt;/var&gt; fixes that: the code it generates doesn't contain the variables backup/recovery
++ * mechanism and thus makes templates inclusion faster. Note that however, this new behavior may
++ * create problems in some cases (but you can prevent them most of the times, for example by always
++ * using a &lt;var&gt;tmp_&lt;/var&gt; prefix for the variables you create in included templates looping sections).
++ */
++function smarty_compiler_includeq( $tag_args, &amp;$comp ) {
++
++	$attrs = $comp-&gt;_parse_attrs($tag_args);
++    $arg_list = array();
++
++    if (empty($attrs['file'])) {
++        $comp-&gt;_syntax_error(&quot;missing 'file' attribute in includeq tag&quot;, E_USER_ERROR, __FILE__, __LINE__);
++    }
++
++    foreach ($attrs as $arg_name =&gt; $arg_value) {
++        if ($arg_name == 'file') {
++            $include_file = $arg_value;
++            continue;
++        } else if ($arg_name == 'assign') {
++            $assign_var = $arg_value;
++            continue;
++        }
++        if (is_bool($arg_value))
++            $arg_value = $arg_value ? 'true' : 'false';
++        $arg_list[] = &quot;'$arg_name' =&gt; $arg_value&quot;;
++    }
++
++    $output = '';
++
++    if (isset($assign_var)) {
++        $output .= &quot;ob_start();\n&quot;;
++    }
++
++    //$output .= &quot;\$_smarty_tpl_vars = \$this-&gt;_tpl_vars;\n&quot;;
++    $_params = &quot;array('smarty_include_tpl_file' =&gt; &quot; . $include_file . &quot;, 'smarty_include_vars' =&gt; array(&quot;.implode(',', (array)$arg_list).&quot;))&quot;;
++    $output .= &quot;\$this-&gt;_smarty_include($_params);\n&quot;;
++    //&quot;\$this-&gt;_tpl_vars = \$_smarty_tpl_vars;\n&quot; .
++    //&quot;unset(\$_smarty_tpl_vars);\n&quot;;
++
++    if (isset($assign_var)) {
++        $output .= &quot;\$this-&gt;assign(&quot; . $assign_var . &quot;, ob_get_contents()); ob_end_clean();\n&quot;;
++    }
++    //$output .= '';
++    return $output;
++}
++
++    
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.includeq.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-02-19 18:53:19 UTC (rev 251)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-02-19 18:56:43 UTC (rev 252)
+@@ -1,39 +1,61 @@
+ &lt;?php
+ /**
+-* xoAppUrl Smarty compiler plug-in
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @package		xoops_template
+-* @subpackage	xoops_template_Smarty
+-* @since        2.3.0
+-* @version		$Id$
+-*/
++ * xoAppUrl Smarty compiler plug-in
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @since       2.3.0
++ * @version		$Id$
++ */
+ 
+-function smarty_compiler_xoAppUrl( $argStr, &amp;$smarty ) {
++/**
++ * Inserts the URL of an application page
++ * 
++ * This plug-in allows you to generate a module location URL. It uses any URL rewriting
++ * mechanism and rules you'll have configured for the system.
++ * 
++ * To ensure this can be as optimized as possible, it accepts 2 modes of operation:
++ * 
++ * &lt;b&gt;Static address generation&lt;/b&gt;:&lt;br&gt;
++ * This is the default mode and fastest mode. When used, the URL is generated during
++ * the template compilation, and statically written in the compiled template file.
++ * To use it, you just need to provide a location in a format XOOPS understands.
++ * 
++ * &lt;code&gt;
++ * // Generate an URL using a physical path (not recommended)
++ * ([xoAppUrl /modules/something/yourpage.php])
++ * // Generate an URL using a module+location identifier
++ * ([xoAppUrl mod_xoops_Identification#logout])
++ * &lt;/code&gt;
++ * 
++ * &lt;b&gt;Dynamic address generation&lt;/b&gt;:&lt;br&gt;
++ * The is the slowest mode, and its use should be prevented unless necessary. Here,
++ * the URL is generated dynamically each time the template is displayed, thus allowing
++ * you to use the value of a template variable in the location string. To use it, you
++ * must surround your location with double-quotes (&quot;), and use the
++ * {@link <A HREF="http://smarty.php.net/manual/en/language.syntax.quotes.php">http://smarty.php.net/manual/en/language.syntax.quotes.php</A> Smarty quoted strings}
++ * syntax to insert variables values.
++ * 
++ * &lt;code&gt;
++ * // Use the value of the $sortby template variable in the URL
++ * ([xoAppUrl &quot;/modules/something/yourpage.php?order=`$sortby`&quot;])
++ * &lt;/code&gt;
++ */
++function smarty_compiler_xoAppUrl( $argStr, &amp;$compiler ) {
+ 	global $xoops;
+ 	
+ 	$argStr = trim( $argStr );
+-/*
+-	@list( $modId, $location ) = explode( '#', $argStr, 2 );
+-	if ( isset( $location ) ) {
+-		if ( $module = $xoops-&gt;loadModule( $modId ) ) {
+-			$uri = $module-&gt;xoBundleRoot;
+-			if ( isset( $location ) &amp;&amp; isset( $module-&gt;moduleLocations[$location] ) ) {
+-				$uri .= $module-&gt;moduleLocations[$location]['scriptFile'];
+-			}
+-		}
+-	} else {
+-		$uri = $argStr;
++	if ( substr( $argStr, 0, 1 ) == '&quot;' ) {
++		$argStr = $compiler-&gt;_expand_quoted_text( $argStr );
++		return &quot;echo \$GLOBALS['xoops']-&gt;path( $argStr, true );&quot;;
+ 	}
+-*/
+-	$uri = $argStr;
+-	return &quot;\necho '&quot; . addslashes( $xoops-&gt;path( $uri, true ) ) . &quot;';&quot;;
+-
++	return &quot;echo '&quot; . addslashes( $xoops-&gt;path( $argStr, true ) ) . &quot;';&quot;;
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoImgUrl.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoImgUrl.php	2006-02-19 18:53:19 UTC (rev 251)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoImgUrl.php	2006-02-19 18:56:43 UTC (rev 252)
+@@ -1,19 +1,35 @@
+ &lt;?php
+ /**
+-* xoImgUrl Smarty compiler plug-in
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @package		xoops_template
+-* @subpackage	xoops_template_Smarty
+-* @since        2.3.0
+-* @version		$Id$
+-*/
++ * xoImgUrl Smarty compiler plug-in
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @since       2.3.0
++ * @version		$Id$
++ */
+ 
++/**
++ * Inserts the URL of a file resource customizable by themes
++ *
++ * This plug-in works like the {@link smarty_compiler_xoAppUrl() xoAppUrl} plug-in,
++ * except that it is intended to generate the URL of resource files customizable by
++ * themes.
++ * 
++ * Here the current theme is asked to check if a custom version of the requested file exists, and
++ * if one is found its URL is returned. Otherwise, the request will be passed to the
++ * theme parents one by one. Ultimately, if no custom version has been found, the resource
++ * default URL location will be returned.
++ * 
++ * &lt;b&gt;Note:&lt;/b&gt; the themes inheritance system can generate many filesystem accesses depending
++ * on your themes configuration. Because of this, the use of the dynamic syntax with this plug-in
++ * is really not recommended.
++ */
+ function smarty_compiler_xoImgUrl( $argStr, &amp;$smarty ) {
+ 	global $xoops;
+ 	
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php	2006-02-19 18:53:19 UTC (rev 251)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj/plugins/compiler.xoWidget.php	2006-02-19 18:56:43 UTC (rev 252)
+@@ -1,23 +1,37 @@
+ &lt;?php
+ /**
+-* xoWidget Smarty compiler plug-in
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @package		xoops_template
+-* @subpackage	xoops_template_Smarty
+-* @since        2.3.0
+-* @version		$Id$
+-*/
++ * xoWidget Smarty compiler plug-in
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package		xoops_opal
++ * @subpackage	xoops_opal_Smarty
++ * @since       2.3.0
++ * @version		$Id$
++ */
+ 
++/**
++ * Inserts/renders a widget
++ *
++ * The xoWidget plug-in generates the code to instanciate and/or render a widget. Depending on
++ * the parameters you specify, it can do three different things:
++ * - Instanciate a widget, and render it in-place
++ * - Instanciate a widget, and assign the created object to a template variable
++ * - Render an already created widget instance
++ * 
++ * In-place instanciation/rendering:
++ * 
++ * 
++ * 
++ */
+ function smarty_compiler_xoWidget( $argStr, &amp;$compiler ) {
+ 	global $xoops;
+ 	
+-	$args = $compiler-&gt;_parse_attrs( trim( $argStr ) );
++	$args = $compiler-&gt;_parse_attrs( trim( $argStr ), false );
+ 	array_map( array( &amp;$compiler, '_expand_quoted_text' ), $args );
+ 	
+ 	if ( isset( $args['tplVar'] ) ) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000243.html">[Xoops4-svn] r251 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore: . AppServices AppServices/PageController.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000245.html">[Xoops4-svn] r253 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/OutputRendering/Opal.xofrm/Smarty.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#244">[ date ]</a>
+              <a href="thread.html#244">[ thread ]</a>
+              <a href="subject.html#244">[ subject ]</a>
+              <a href="author.html#244">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

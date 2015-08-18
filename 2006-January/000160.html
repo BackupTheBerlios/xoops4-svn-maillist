@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r168 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r168%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601201921.k0KJLa2o031825%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000159.html">
+   <LINK REL="Next"  HREF="000161.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r168 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r168%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm&In-Reply-To=%3C200601201921.k0KJLa2o031825%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r168 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 20:21:36 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000159.html">[Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000161.html">[Xoops4-svn] r169 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#160">[ date ]</a>
+              <a href="thread.html#160">[ thread ]</a>
+              <a href="subject.html#160">[ subject ]</a>
+              <a href="author.html#160">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 20:21:34 +0100 (Fri, 20 Jan 2006)
+New Revision: 168
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+Log:
+Implemented logger output and fixed a typo in the errorhandler
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php	2006-01-20 18:02:34 UTC (rev 167)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/errorhandler.php	2006-01-20 19:21:34 UTC (rev 168)
+@@ -47,7 +47,7 @@
+ 	 * Default error reporting levels is $errorReporting is not specified
+ 	 * @var array
+ 	 */
+-	var $defaultReporting = array( XO_MOD_PROD =&gt; 0, XO_MODE_DEBUG =&gt; E_ALL ^ E_NOTICE, XO_MODE_DEV =&gt; E_ALL );
++	var $defaultReporting = array( XO_MODE_PROD =&gt; 0, XO_MODE_DEBUG =&gt; 2039, XO_MODE_DEV =&gt; E_ALL );
+ 	/**
+ 	 * The reporting level that was set before the handler has been activated
+ 	 * @var integer
+@@ -106,7 +106,7 @@
+ 			$file = $this-&gt;sanitizePaths( $file );
+ 			$str = &quot;$name: $str in $file on line $line&quot;;
+ 			if ( $xoops-&gt;services['logger'] ) {
+-				$xoops-&gt;services['logger']-&gt;logError( $str );
++				$xoops-&gt;services['logger']-&gt;logEvent( $str, 'error' );
+ 			} else {
+ 				echo &quot;$str&lt;br /&gt;\r\n&quot;;
+ 			}
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-20 18:02:34 UTC (rev 167)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/logger.php	2006-01-20 19:21:34 UTC (rev 168)
+@@ -35,7 +35,7 @@
+ 	 * Whether or not to keep record of events
+ 	 * @var boolean
+ 	 */
+- 	var $activated = false;
++ 	var $activated = true;
+ 	/**
+ 	 * Recorded events, grouped by category
+ 	 * @var array
+@@ -74,6 +74,8 @@
+ 		}
+ 		if ( $this-&gt;activated ) {
+ 			$this-&gt;renderEvents( $output );
++		} else {
++			echo $output;
+ 		}
+ 	}
+ 	/**
+@@ -125,7 +127,19 @@
+ 	 * @param string $output The content generated during the current request
+ 	 */
+ 	function renderEvents( $output ) {
+-		$log = &quot;events log&quot;;
++		$log = &quot;\n&lt;div class=\&quot;xo-logger-output\&quot;&gt;\n&quot;;
++		foreach ( $this-&gt;events as $category =&gt; $events ) {
++			$log .= &quot;&lt;div class=\&quot;xo-events $category\&quot;&gt;\n&quot;;
++			foreach ( $events as $event ) {
++				$date = date( &quot;H:i:s&quot;, intval( $event['time'] ) );
++				$date .= substr( sprintf( '%.04f', $event['time'] - ceil( $event['time'] ) ), 2 );
++				$msg = htmlspecialchars( $event['message'], ENT_QUOTES );
++				$log .= &quot;&lt;div class=\&quot;xo-event\&quot;&gt;\n&lt;span class=\&quot;time\&quot;&gt;$date&lt;/span&gt;\n&lt;span class=\&quot;message\&quot;&gt;$msg&lt;/span&gt;\n&lt;/div&gt;&quot;;
++			}
++			$log .= &quot;&lt;/div&gt;&quot;;
++		}
++		$log .= &quot;&lt;/div&gt;&quot;;
++				
+ 		$pattern = '&lt;!--{xo-logger-output}--&gt;';
+ 		$pos = strpos( $output, $pattern );
+ 		if ( $pos !== false ) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000159.html">[Xoops4-svn] r167 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000161.html">[Xoops4-svn] r169 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#160">[ date ]</a>
+              <a href="thread.html#160">[ thread ]</a>
+              <a href="subject.html#160">[ subject ]</a>
+              <a href="author.html#160">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r159 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Authentication.xofrom
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r159%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation%3A%20.%20Authentication.xofrom&In-Reply-To=%3C200601200831.k0K8V8wJ021379%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000150.html">
+   <LINK REL="Next"  HREF="000152.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r159 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Authentication.xofrom</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r159%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation%3A%20.%20Authentication.xofrom&In-Reply-To=%3C200601200831.k0K8V8wJ021379%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r159 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation: . Authentication.xofrom">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 09:31:08 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000150.html">[Xoops4-svn] r158 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000152.html">[Xoops4-svn] r160 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#151">[ date ]</a>
+              <a href="thread.html#151">[ thread ]</a>
+              <a href="subject.html#151">[ subject ]</a>
+              <a href="author.html#151">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 09:31:08 +0100 (Fri, 20 Jan 2006)
+New Revision: 159
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/auth.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xo-info.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php
+Log:
+Adding the new xoops_auth framework (yet untested)
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/auth.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/auth.php	2006-01-20 05:21:13 UTC (rev 158)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/auth.php	2006-01-20 08:31:08 UTC (rev 159)
+@@ -0,0 +1,99 @@
++&lt;?php
++/**
++ * xoops_auth_AuthenticationService main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_auth
++ * @package		xoops_auth_AuthenticationService
++ * @version		$Id$
++ */
++
++/**
++ * XOOPS default authentication service
++ * @package		xoops_auth
++ * @subpackage	xoops_auth_AuthenticationService
++ */
++class xoops_auth_AuthenticationService {
++ 	/**
++	 * The authentication drivers used to check credentials (will be checked in order)
++	 * @var object
++	 */
++	var $authDrivers = array();
++
++	function xoInit( $options = array() ) {
++		// Always check the database first
++		array_unshift( $this-&gt;authDrivers, 'xoops_auth_DatabaseDriver' );
++		return true;
++	}
++
++    /**
++     * Check the validity of the specified user credentials
++     * 
++     * &lt;p&gt;
++     * The authentication service asks every driver configured in the
++     * xoops_auth_AuthenticationService::authDrivers property to check the specified
++     * credentials, until one positively recognizes the user.
++     * &lt;/p&gt;&lt;p&gt;
++     * It returns the XOOPS login of the authenticated user if one is identified, or false otherwise
++     * &lt;/p&gt;
++     *
++     * @param string $login User name to provide to auth drivers
++     * @param string $password Password to provide to auth drivers
++     * @param string $hash Hash function used to encrypt the provided password (if any)
++     * @return string XOOPS login of the identified user (false if all drivers failed to authenticate the user)
++     */
++	function checkCredentials( $login, $password, $hash = '' ) {
++		// Check each auth 
++		foreach ( $this-&gt;authDrivers as $k =&gt; $driver ) {
++			if ( !is_object( $driver ) ) {
++				if ( !$instance = XOS::create( $driver ) ) {
++					trigger_error( &quot;Cannot instanciate authentication driver $driver&quot;, E_USER_WARNING );
++					unset( $this-&gt;authDrivers[$k] );
++					continue;
++				}
++				$driver = $this-&gt;authDrivers[$k] = $instance;
++			}
++			if ( $xoopsLogin = $driver-&gt;checkCredentials( $login, $password, $hash ) ) {
++				return is_string($xoopsLogin) ? $xoopsLogin : true;
++			}
++		}
++		return false;
++	}
++
++}
++
++/**
++ * Base class for authentication drivers
++ *
++ * Authentication drivers can check given credentials using specific services or sources.
++ * @package		xoops_auth
++ * @subpackage	xoops_auth_AuthenticationDriver
++ */
++class xoops_auth_AuthenticationDriver {
++	/**
++	 * Hash function(s) supported by this driver
++	 * @var string[]
++	 */
++	var $hashFunctions = array();
++	/**
++	 * Checks user credentials validity
++	 *
++	 * @var string	login		User login
++	 * @var string	password	User password (optionally encrypted)
++	 * @var string	hash		Name of the function used to hash the password (if any)
++	 * @return bool
++	 */
++	function checkCredentials( $login, $password, $hash = '' ) {
++		return false;
++	}
++}
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/auth.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xo-info.php	2006-01-20 05:21:13 UTC (rev 158)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xo-info.php	2006-01-20 08:31:08 UTC (rev 159)
+@@ -0,0 +1,40 @@
++&lt;?php
++/**
++* xoops_auth framework bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_auth
++* @version		$Id$
++*/
++
++return array(
++	'xoBundleDisplayName'			=&gt; 'XOOPS Authentication framework',
++	'xoBundleIdentifier'			=&gt; 'xoops_auth',
++
++	'xoServices' =&gt; array(
++		'xoops_auth_AuthenticationService' =&gt; array (
++			'xoBundleDisplayName'			=&gt; 'XOOPS default authentication service',
++			'xoClassPath' =&gt; '/auth.php',
++		),
++		'xoops_auth_DatabaseDriver' =&gt; array (
++			'xoBundleDisplayName'			=&gt; 'XOOPS database authentication driver',
++			'xoClassPath' =&gt; '/xoopsdb.php',
++		),
++		'xoops_auth_LdapDriver' =&gt; array (
++			'xoBundleDisplayName'			=&gt; 'XOOPS LDAP authentication driver',
++			'xoClassPath' =&gt; '/ldap.php',
++		),
++		'xoops_auth_ActiveDirectoryDriver' =&gt; array (
++			'xoBundleDisplayName'			=&gt; 'XOOPS ActiveDirectory Service (tm) authentication driver',
++			'xoClassPath' =&gt; '/ads.php',
++		),
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php	2006-01-20 05:21:13 UTC (rev 158)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php	2006-01-20 08:31:08 UTC (rev 159)
+@@ -0,0 +1,56 @@
++&lt;?php
++/**
++ * xoops_auth_Database main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_auth
++ * @package		xoops_auth_DatabaseDriver
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++XOS::import( 'xoops_auth_AuthenticationService' );
++
++/**
++ * xoops_auth_DatabaseDriver authentication driver
++ * 
++ * This driver checks if the specified user exists in the database
++ */
++class xoops_auth_DatabaseDriver extends xoops_auth_AuthenticationDriver {
++
++	var $hashFunctions = array( 'md5' );
++
++	function checkCredentials( $login, $password, $hash = '' ) {
++		if ( empty( $hash ) ) {
++			$password = md5( $password );
++		}
++		$db =&amp; XOS::create( 'xoops_db_Database' );
++		$stmt = $db-&gt;prepare( &quot;SELECT COUNT(*) FROM `users` WHERE `uname`=:login AND `pass`=:pwd&quot; );
++		$stmt-&gt;bindValue( ':login', $login );
++		$stmt-&gt;bindValue( ':pass', $pass );
++		if ( $stmt-&gt;execute() ) {
++			list( $count ) = $stmt-&gt;fetch( PDO_FETCH_NUM );
++			$stmt-&gt;closeCursor();
++		}
++		return @$count ? true : false;
++	}
++
++
++}
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Authentication.xofrom/xoopsdb.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000150.html">[Xoops4-svn] r158 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000152.html">[Xoops4-svn] r160 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#151">[ date ]</a>
+              <a href="thread.html#151">[ thread ]</a>
+              <a href="subject.html#151">[ subject ]</a>
+              <a href="author.html#151">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

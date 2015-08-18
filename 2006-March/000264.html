@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r274 - XoopsCore/branches/2.0.x/2.0.14/htdocs/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r274%20-%20XoopsCore/branches/2.0.x/2.0.14/htdocs/class&In-Reply-To=%3C200603231404.k2NE4WjI007406%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000263.html">
+   <LINK REL="Next"  HREF="000265.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r274 - XoopsCore/branches/2.0.x/2.0.14/htdocs/class</H1>
+    <B>phppp at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r274%20-%20XoopsCore/branches/2.0.x/2.0.14/htdocs/class&In-Reply-To=%3C200603231404.k2NE4WjI007406%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r274 - XoopsCore/branches/2.0.x/2.0.14/htdocs/class">phppp at berlios.de
+       </A><BR>
+    <I>Thu Mar 23 15:04:32 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000263.html">[Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class
+</A></li>
+        <LI>Next message: <A HREF="000265.html">[Xoops4-svn] r275 - XoopsCore/branches/tasks/123542-admin/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#264">[ date ]</a>
+              <a href="thread.html#264">[ thread ]</a>
+              <a href="subject.html#264">[ subject ]</a>
+              <a href="author.html#264">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: phppp
+Date: 2006-03-23 15:04:30 +0100 (Thu, 23 Mar 2006)
+New Revision: 274
+
+Modified:
+   XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php
+Log:
+security update for review: 
+1 Added verification with getimagesize() for uploaded file with mime type of &quot;image/***&quot; 
+2 Added multiple extension sanitizing
+
+Modified: XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php
+===================================================================
+--- XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php	2006-03-23 14:02:50 UTC (rev 273)
++++ XoopsCore/branches/2.0.x/2.0.14/htdocs/class/uploader.php	2006-03-23 14:04:30 UTC (rev 274)
+@@ -115,6 +115,10 @@
+     var $savedFileName;
+ 
+ 	var $extensionToMime = array();
++	
++	var $extensionsToBeSanitized = array(&quot;php&quot;, &quot;php3&quot;, &quot;php5&quot;);
++	var $checkImageType = true;
++	
+     /**
+      * Constructor
+      *
+@@ -167,7 +171,7 @@
+             $this-&gt;mediaType = $_FILES[$media_name]['type'][$index];
+             $this-&gt;mediaSize = $_FILES[$media_name]['size'][$index];
+             $this-&gt;mediaTmpName = $_FILES[$media_name]['tmp_name'][$index];
+-            $this-&gt;mediaError = !empty($_FILES[$media_name]['error'][$index]) ? $_FILES[$media_name]['errir'][$index] : 0;
++            $this-&gt;mediaError = !empty($_FILES[$media_name]['error'][$index]) ? $_FILES[$media_name]['error'][$index] : 0;
+         } else {
+             $media_name =&amp; $_FILES[$media_name];
+ 			$this-&gt;mediaName = (get_magic_quotes_gpc()) ? stripslashes($media_name['name']) : $media_name['name'];
+@@ -178,20 +182,13 @@
+             $this-&gt;mediaError = !empty($media_name['error']) ? $media_name['error'] : 0;
+         }
+ 		if ( ($ext = strrpos( $this-&gt;mediaName, '.' )) !== false ) {
+-			$ext = substr( $this-&gt;mediaName, $ext + 1 );
++			$ext = strtolower(substr( $this-&gt;mediaName, $ext + 1 ));
+ 			if ( isset( $this-&gt;extensionToMime[$ext] ) ) {
+ 				$this-&gt;mediaRealType = $this-&gt;extensionToMime[$ext];
+ 				//trigger_error( &quot;XoopsMediaUploader: Set mediaRealType to {$this-&gt;mediaRealType} (file extension is $ext)&quot;, E_USER_NOTICE );
+ 			}
+ 		}
+         $this-&gt;errors = array();
+-		if ( $ext &amp;&amp; in_array( $ext, array( 'gif', 'jpg', 'jpeg', 'png', 'bmp', 'xbm' ) ) ) {
+-	   		// Prevent sending of invalid images that would crash IE
+-			if ( ! ( $info = getimagesize( $this-&gt;mediaTmpName ) ) ) {
+-				$this-&gt;setErrors( 'Invalid file content' );
+-				return false;
+-			}
+-		}
+         if (intval($this-&gt;mediaSize) &lt; 0) {
+             $this-&gt;setErrors('Invalid File Size');
+             return false;
+@@ -304,6 +301,8 @@
+         if (!is_writeable($this-&gt;uploadDir)) {
+             $this-&gt;setErrors('Failed opening directory with write permission: '.$this-&gt;uploadDir);
+         }
++        $this-&gt;sanitizeMultipleExtensions();
++        
+         if (!$this-&gt;checkMaxFileSize()) {
+             $this-&gt;setErrors('File size too large: '.$this-&gt;mediaSize);
+         }
+@@ -316,6 +315,9 @@
+         if (!$this-&gt;checkMimeType()) {
+             $this-&gt;setErrors('MIME type not allowed: '.$this-&gt;mediaType);
+         }
++        if (!$this-&gt;checkImageType()) {
++            $this-&gt;setErrors('Invalid image file');
++        }
+         if (count($this-&gt;errors) &gt; 0) {
+             return false;
+         }
+@@ -421,6 +423,41 @@
+ 	}
+ 
+     /**
++     * Check whether or not the uploaded image type is valid
++     *
++     * @return  bool
++     **/
++    function checkImageType()
++    {
++	    if(empty($this-&gt;checkImageType)) return true;
++
++        if( (&quot;image&quot; == substr($this-&gt;mediaType, 0, strpos($this-&gt;mediaType, &quot;/&quot;))) || 
++        	(!empty($this-&gt;mediaRealType) &amp;&amp; &quot;image&quot; == substr($this-&gt;mediaRealType, 0, strpos($this-&gt;mediaRealType, &quot;/&quot;)))
++        ){
++			if ( ! ( $info = @getimagesize( $this-&gt;mediaTmpName ) ) ) {
++				return false;
++			}
++		}
++		return true;
++	}
++
++    /**
++     * Sanitize executable filename with multiple extensions
++     *
++     **/
++    function sanitizeMultipleExtensions()
++    {
++	    if(empty($this-&gt;extensionsToBeSanitized)) return;
++	    $patterns = array();
++	    $replaces = array();
++	    foreach($this-&gt;extensionsToBeSanitized as $ext){
++		    $patterns[] = &quot;/\.&quot;.preg_quote($ext).&quot;\./i&quot;;
++		    $replaces[] = &quot;_&quot;.$ext.&quot;.&quot;;
++	    }
++        $this-&gt;mediaName = preg_replace($patterns, $replaces, $this-&gt;mediaName);
++	}
++
++    /**
+      * Add an error
+      * 
+      * @param   string  $error
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000263.html">[Xoops4-svn] r273 - XoopsCore/branches/2.2.x/2.2.5/html/class
+</A></li>
+	<LI>Next message: <A HREF="000265.html">[Xoops4-svn] r275 - XoopsCore/branches/tasks/123542-admin/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#264">[ date ]</a>
+              <a href="thread.html#264">[ thread ]</a>
+              <a href="subject.html#264">[ subject ]</a>
+              <a href="author.html#264">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

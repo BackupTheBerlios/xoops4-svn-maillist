@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r44%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%3A%20.%20templates&In-Reply-To=%3C200511270958.jAR9wCa5001412%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000036.html">
+   <LINK REL="Next"  HREF="000038.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r44%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj%3A%20.%20templates&In-Reply-To=%3C200511270958.jAR9wCa5001412%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Nov 27 10:58:12 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000036.html">[Xoops4-svn] r43 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000038.html">[Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#37">[ date ]</a>
+              <a href="thread.html#37">[ thread ]</a>
+              <a href="subject.html#37">[ subject ]</a>
+              <a href="author.html#37">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-27 10:58:09 +0100 (Sun, 27 Nov 2005)
+New Revision: 44
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl
+Log:
+Added a new template that can be included by themes and takes care of rendering all the page metas
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl	2005-11-27 09:54:25 UTC (rev 43)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl	2005-11-27 09:58:09 UTC (rev 44)
+@@ -0,0 +1,28 @@
++
++
++([foreach from=$xoTheme-&gt;metas.meta key=name item=content])
++	&lt;meta name=&quot;([$name])&quot; content=&quot;([$content])&quot; /&gt;
++([/foreach])
++
++([foreach from=$xoTheme-&gt;metas.script item=attributes])
++	&lt;script([$xoTheme-&gt;renderAttributes($attributes)])&gt;([if !empty( $attributes._ ) ])
++	//&lt;[!CDATA[
++	([$attributes._])
++	//]]&gt;([/if])&lt;/script&gt;
++([/foreach])
++
++([foreach from=$xoTheme-&gt;metas.stylesheet item=attributes])
++([if empty( $attributes._ )])
++	&lt;link([$xoTheme-&gt;renderAttributes($attributes)]) /&gt;
++([else])
++	&lt;style([$xoTheme-&gt;renderAttributes($attributes)])&gt;
++	/* &lt;[!CDATA[ */
++	([$attributes._])
++	/* //]]&gt; */
++	&lt;/style&gt;
++([/if])
++([/foreach])
++	
++([foreach from=$xoTheme-&gt;metas.link key=rel item=attributes])
++	&lt;link rel=&quot;([$rel])&quot;([$xoTheme-&gt;renderAttributes($attributes)]) /&gt;
++([/foreach])
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000036.html">[Xoops4-svn] r43 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000038.html">[Xoops4-svn] r45 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore: . Logos Logos/PageBuilder.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#37">[ date ]</a>
+              <a href="thread.html#37">[ thread ]</a>
+              <a href="subject.html#37">[ subject ]</a>
+              <a href="author.html#37">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

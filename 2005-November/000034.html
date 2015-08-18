@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r41 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r41%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot&In-Reply-To=%3C200511270929.jAR9TBRB030543%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000033.html">
+   <LINK REL="Next"  HREF="000035.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r41 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r41%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot&In-Reply-To=%3C200511270929.jAR9TBRB030543%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r41 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Nov 27 10:29:11 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000033.html">[Xoops4-svn] r40 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000035.html">[Xoops4-svn] r42 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-27 10:29:09 +0100 (Sun, 27 Nov 2005)
+New Revision: 41
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php
+Log:
+Fixed the xoops_kernel_Xoops2::path() method URL generation logic
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php	2005-11-27 09:25:34 UTC (rev 40)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php	2005-11-27 09:29:09 UTC (rev 41)
+@@ -27,7 +27,7 @@
+ class xoops_kernel_Xoops2 {
+ 	var $xoBundleIdentifier		= 'xoops_kernel_Xoops2';
+ 	var $xoRunMode				= XO_MODE_PROD;
+-	var $xoShortVersionString	= 'XOOPS 2.3.0-dev';
++	var $xoShortVersionString	= 'XOOPS 2.3.0-dev (Mistrust)';
+ 
+ 	var $xoBundleRoot = 'XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm';
+ 	
+@@ -98,6 +98,12 @@
+ 	 * @access private
+ 	 */
+ 	var $hasShutdown			= false;
++	/**
++	 * Semi-relative URI to this XOOPS files
++	 *
++	 * @var string
++	 */
++	var $baseLocation			= '';
+ 
+ 	var $isVirtual				= false;
+ 
+@@ -131,6 +137,12 @@
+ 
+ 		$this-&gt;bootFile = str_replace( array( '/', '\\' ), '', $this-&gt;bootFile );		// Might be useless check, but this one won't hurt
+ 		
++		$this-&gt;baseLocation = $this-&gt;isSecure ? $this-&gt;secureLocation : $this-&gt;hostLocation;
++		if ( false !== ( $pos = strpos( $this-&gt;baseLocation, '/' ) ) ) {
++			$this-&gt;baseLocation = substr( $this-&gt;baseLocation, $pos );
++		} else {
++			$this-&gt;baseLocation = '';
++		}
+ 		//$this-&gt;services['logger'] = $this-&gt;services['errorhandler'] = $this;
+ 
+ 	}
+@@ -227,7 +239,13 @@
+ 			if ( !$virtual ) {
+ 				return !isset( $this-&gt;paths[$parts[0]] ) ? '' : ( $this-&gt;paths[$parts[0]][0] . '/' . $parts[1] );
+ 			} else {
+-				return !isset( $this-&gt;paths[$parts[0]][2] ) ? '' : ( $this-&gt;paths[$parts[0]][0][2] . '/' . $parts[1] );
++				if ( !isset( $this-&gt;paths[$parts[0]][1] ) ) {
++					return false;
++				}
++				if ( empty( $this-&gt;paths[$parts[0]][1] ) ) {
++					return $this-&gt;baseLocation . '/' . $parts[1];
++				}
++				return $this-&gt;baseLocation . '/' . $this-&gt;paths[$parts[0]][1] . '/' . $parts[1];
+ 			}
+ 		} else {
+ 			$root = XOS::classVar( $parts[0], 'xoBundleRoot' );
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000033.html">[Xoops4-svn] r40 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000035.html">[Xoops4-svn] r42 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

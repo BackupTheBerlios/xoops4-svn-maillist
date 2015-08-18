@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r43 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r43%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200511270954.jAR9sQ0q000619%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000035.html">
+   <LINK REL="Next"  HREF="000037.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r43 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r43%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj&In-Reply-To=%3C200511270954.jAR9sQ0q000619%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r43 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Nov 27 10:54:26 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000035.html">[Xoops4-svn] r42 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000037.html">[Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-27 10:54:25 +0100 (Sun, 27 Nov 2005)
+New Revision: 43
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+Log:
+Added a new meta-related method to add &lt;link&gt; metas
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2005-11-27 09:36:32 UTC (rev 42)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2005-11-27 09:54:25 UTC (rev 43)
+@@ -258,12 +258,7 @@
+ 		}
+ 		return $isWeb ? &quot;www/$path&quot; : $path;
+ 	}
+-
+ 	
+-	
+-	
+-	
+-	
+     /**
+     * Add Javascript file or JS code to the document head
+     *
+@@ -306,20 +301,33 @@
+     	$this-&gt;setMeta( 'stylesheet', $src, $attributes );
+     }
+ 	/**
+-	 * Change output page meta-information
+-	 *
++	 * Add a &lt;link&gt; to the header
+ 	 * 
++	 * @param string	$rel		Relationship from the current doc to the anchored one
++	 * @param string	$href		URI of the anchored document
++	 * @param array		$attributes	Additional attributes to add to the &lt;link&gt; element
+ 	 */
+-    function setMeta( $type = 'meta', $name = '', $content = '' ) {
++	function addLink( $rel, $href = '', $attributes = array() ) {
++		global $xoops;
++		if ( !empty( $href ) ) {
++			$attributes['href'] = $href;
++		}
++		$this-&gt;setMeta( 'link', $rel, $attributes );
++	}
++    
++	/**
++	 * Change output page meta-information
++	 */
++    function setMeta( $type = 'meta', $name = '', $value = '' ) {
+ 		if ( !isset( $this-&gt;metas[$type] ) ) {
+ 			$this-&gt;metas[$type] = array();
+ 		}
+     	if ( isset($name) ) {
+-			$this-&gt;metas[$type][$name] = $content;
++			$this-&gt;metas[$type][$name] = $value;
+ 		} else {
+-			$this-&gt;metas[$type][] = 	$content;
++			$this-&gt;metas[$type][] = 	$value;
+ 		}
+-		return $content;
++		return $value;
+     }
+ 	
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000035.html">[Xoops4-svn] r42 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000037.html">[Xoops4-svn] r44 - in XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj: . templates
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r263 - XoopsCore/branches/tasks/123542-admin/htdocs/class
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r263%20-%20XoopsCore/branches/tasks/123542-admin/htdocs/class&In-Reply-To=%3C200602191926.k1JJQF3K012312%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000254.html">
+   <LINK REL="Next"  HREF="000256.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r263 - XoopsCore/branches/tasks/123542-admin/htdocs/class</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r263%20-%20XoopsCore/branches/tasks/123542-admin/htdocs/class&In-Reply-To=%3C200602191926.k1JJQF3K012312%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r263 - XoopsCore/branches/tasks/123542-admin/htdocs/class">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 20:26:15 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000254.html">[Xoops4-svn] r262 - XoopsCore/branches/tasks/123542-admin/htdocs
+</A></li>
+        <LI>Next message: <A HREF="000256.html">[Xoops4-svn] r264 - XoopsCore/branches/tasks/123542-admin/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#255">[ date ]</a>
+              <a href="thread.html#255">[ thread ]</a>
+              <a href="subject.html#255">[ subject ]</a>
+              <a href="author.html#255">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 20:26:14 +0100 (Sun, 19 Feb 2006)
+New Revision: 263
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/htdocs/class/template.php
+Log:
+Fixed the legacy tpl class to deal with the renaming of the new one
+
+Modified: XoopsCore/branches/tasks/123542-admin/htdocs/class/template.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/htdocs/class/template.php	2006-02-19 19:25:02 UTC (rev 262)
++++ XoopsCore/branches/tasks/123542-admin/htdocs/class/template.php	2006-02-19 19:26:14 UTC (rev 263)
+@@ -15,7 +15,7 @@
+ if ( !defined( 'XOOPS_PATH' ) )	die();
+ 
+ 
+-XOS::import( 'xoops_template_Smarty' );
++XOS::import( 'xoops_opal_Smarty' );
+ 
+ /**
+  * Template engine
+@@ -26,12 +26,12 @@
+  * @copyright	(c) 2000-2003 The Xoops Project - www.xoops.org
+  * @deprecated
+  */
+-class XoopsTpl extends xoops_template_Smarty {
++class XoopsTpl extends xoops_opal_Smarty {
+ 
+ 	function XoopsTpl() {
+ 		global $xoopsConfig, $xoopsUser;
+ 
+-		$this-&gt;xoops_template_Smarty();
++		$this-&gt;xoops_opal_Smarty();
+ 		$this-&gt;assign( array(
+ 			'xoops_url' =&gt; XOOPS_URL,
+ 			'xoops_rootpath'	=&gt; XOOPS_ROOT_PATH,
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000254.html">[Xoops4-svn] r262 - XoopsCore/branches/tasks/123542-admin/htdocs
+</A></li>
+	<LI>Next message: <A HREF="000256.html">[Xoops4-svn] r264 - XoopsCore/branches/tasks/123542-admin/htdocs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#255">[ date ]</a>
+              <a href="thread.html#255">[ thread ]</a>
+              <a href="subject.html#255">[ subject ]</a>
+              <a href="author.html#255">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

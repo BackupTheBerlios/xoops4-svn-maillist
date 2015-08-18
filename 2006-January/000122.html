@@ -1,0 +1,683 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r130 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r130%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601181300.k0ID0clk032314%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000121.html">
+   <LINK REL="Next"  HREF="000123.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r130 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r130%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm&In-Reply-To=%3C200601181300.k0ID0clk032314%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r130 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Wed Jan 18 14:00:38 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000121.html">[Xoops4-svn] r129 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+        <LI>Next message: <A HREF="000123.html">[Xoops4-svn] r131 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#122">[ date ]</a>
+              <a href="thread.html#122">[ thread ]</a>
+              <a href="subject.html#122">[ subject ]</a>
+              <a href="author.html#122">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-18 14:00:23 +0100 (Wed, 18 Jan 2006)
+New Revision: 130
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/legacy.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/xo-info.php
+Log:
+Initial launch of the new xoops_db database drivers.
+
+The legacy driver is a XOOPS 2.0.x compatible class
+The mysql driver will be a PDO (almost) compatible class using the PHP 4.x mysql extension (it's been started but is unworkable for the moment)
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php	2006-01-18 12:53:55 UTC (rev 129)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/database.php	2006-01-18 13:00:23 UTC (rev 130)
+@@ -23,7 +23,7 @@
+ 	 */
+ 	var $availableStores = array(
+ 		'system' =&gt; array(
+-			'driverName' =&gt; 'xoops.legacy',
++			'driverName' =&gt; 'xoops.mysql',
+ 			'host' =&gt; XOOPS_DB_HOST,
+ 			'user' =&gt; XOOPS_DB_USER,
+ 			'password' =&gt; XOOPS_DB_PASS,
+@@ -64,22 +64,24 @@
+ 			$options = array_merge( $this-&gt;availableStores[$parsed[0]], $options );
+ 		} else {
+ 			// A real DSN was specified
+-			if ( substr( $parsed[0], 0, 5 ) != 'xoops' ) {
+-				trigger_error( &quot;Direct PDO drivers access is not implemented yet.&quot;, E_USER_WARNING );
+-				return $inst;
+-			} else {
+-				$driverName = substr( $parsed[0], 6 );
++			if ( substr( $parsed[0], 0, 5 ) == 'xoops' ) {
+ 				// Convert the rest of the dsn string to properties
+ 				$parsed = explode( ';', $parsed[1] );
+ 				foreach ( $parsed as $prop ) {
+ 					list( $name, $value ) = explode( '=', $prop, 2 );
+ 					$options[$name] = $value;		
+ 				}
+-				$options['driverName'] = $driverName;
++				$options['driverName'] = $parsed[0];
+ 			}
+ 		}
+-		$inst =&amp; XOS::createInstanceOf( &quot;xoops_db_Database_{$options['driverName']}&quot;, $options );
+-		$this-&gt;instances[$dsn] =&amp; $inst;
++		if ( substr( $options['driverName'], 0, 5 ) != 'xoops' ) {
++			trigger_error( &quot;Direct PDO drivers access is not implemented yet.&quot;, E_USER_WARNING );
++			return $inst;
++		} else {
++			$options['driverName'] = substr( $options['driverName'], 6 );
++			$inst =&amp; XOS::create( &quot;xoops_db_Database_{$options['driverName']}&quot;, $options );
++			$this-&gt;instances[$dsn] =&amp; $inst;
++		}
+ 		return $inst;
+ 	}
+ }
+@@ -124,8 +126,13 @@
+ 	 * @var boolean
+ 	 */
+ 	var $autoConnect = true;
+-
+ 	/**
++	 * If statements that modify the database are selected (see forceExec() to override this)
++	 * @var boolean
++	 */
++	var $allowWebChanges = false;
++	
++	/**
+ 	 * reference to a {@link XoopsLogger} object
+      * @see XoopsLogger
+ 	 * @var object XoopsLogger
+@@ -136,7 +143,8 @@
+ 	function xoInit( $options = array() ) {
+ 		global $xoops;
+ 
+-		$this-&gt;logger =&amp; $xoops-&gt;services['logger'];
++		$this-&gt;allowWebChanges = ( $_SERVER['REQUEST_METHOD'] != 'GET' );
++		//$this-&gt;logger =&amp; $xoops-&gt;services['logger'];
+ 		if ( $this-&gt;autoConnect ) {
+ 			return $this-&gt;connect();
+ 		}
+@@ -152,6 +160,23 @@
+ 	function connect( $selectdb = true ) {
+ 		return false;
+ 	}
++	/**
++	 * Send information about an event to the attached logger
++	 */
++	function logEvent( $msg ) {
++		if ( $this-&gt;logger ) {
++			$this-&gt;logger-&gt;logEvent( $msg, $this-&gt;xoBundleIdentifier );
++		}
++	}
++	/**
++	 * Send information about an error to the attached logger
++	 */
++	function logError() {
++		if ( $this-&gt;logger ) {
++			$error = $this-&gt;errorInfo();
++			$this-&gt;logger-&gt;logEvent( &quot;Error {$error[1]} ({$error[0]}): {$error[2]}&quot;, $this-&gt;xoBundleIdentifier );
++		}
++	}
+ 	
+ 	/**
+ 	 * Prefix a table name
+@@ -168,7 +193,45 @@
+ 		return empty($this-&gt;prefix) ? $table : ( $this-&gt;prefix . '_' . $table );
+ 	}
+ 	
+-	
++	/**
++	 * Fetch the SQLSTATE associated with the last operation on the database handle 
++	 */
++	function errorCode() {
++		return 'HY000';
++	}
++	/**
++	 * Fetch extended error information associated with the last operation on the database handle 
++	 * 
++	 * &lt;p&gt;errorInfo() returns an array of error information about the last operation performed 
++	 * by this database handle. The array consists of the following fields:&lt;br /&gt;
++	 * 0: SQLSTATE error code (a five-character alphanumeric identifier defined in the ANSI SQL standard).&lt;br /&gt;
++	 * 1: Driver-specific error code
++	 * 2: Driver-specific error message&lt;/p&gt;
++	 * 
++	 * &lt;p class=&quot;note&quot;&gt;This implementation doesn't support SQLSTATE (it will always be HY000)&lt;/p&gt;
++	 */
++	function errorInfo() {
++		return array( 'HY000', 0, 0 );
++	}	
++	/**
++	 * Execute an SQL statement and return the number of affected rows
++	 * 
++	 * PDO::exec() does not return results from a SELECT statement. For a SELECT statement that 
++	 * you only need to issue once during your program, consider issuing PDO::query().
++	 * For a statement that you need to issue multiple times, prepare a PDOStatement object 
++	 * with PDO::prepare() and issue the statement with PDOStatement::execute().
++	 * 
++	 * @param string $statement The SQL statement to prepare and execute
++	 */
++	function exec( $statement ) {
++		return false;	
++	}
++	/**
++	 * Returns the ID of the last inserted row or sequence value
++	 */
++	function lastInsertId( $name = '' ) {
++		return 0;
++	}
+ }
+ 
+ 
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/legacy.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/legacy.php	2006-01-18 12:53:55 UTC (rev 129)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/legacy.php	2006-01-18 13:00:23 UTC (rev 130)
+@@ -1,96 +1,45 @@
+ &lt;?php
+-// $Id$
+-//  ------------------------------------------------------------------------ //
+-//                XOOPS - PHP Content Management System                      //
+-//                    Copyright (c) 2000 XOOPS.org                           //
+-//                       &lt;<A HREF="http://www.xoops.org/">http://www.xoops.org/</A>&gt;                             //
+-//  ------------------------------------------------------------------------ //
+-//  This program is free software; you can redistribute it and/or modify     //
+-//  it under the terms of the GNU General Public License as published by     //
+-//  the Free Software Foundation; either version 2 of the License, or        //
+-//  (at your option) any later version.                                      //
+-//                                                                           //
+-//  You may not change or alter any portion of this comment or credits       //
+-//  of supporting developers from this source code or any supporting         //
+-//  source code which is considered copyrighted (c) material of the          //
+-//  original comment or credit authors.                                      //
+-//                                                                           //
+-//  This program is distributed in the hope that it will be useful,          //
+-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
+-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
+-//  GNU General Public License for more details.                             //
+-//                                                                           //
+-//  You should have received a copy of the GNU General Public License        //
+-//  along with this program; if not, write to the Free Software              //
+-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+-//  ------------------------------------------------------------------------ //
+-// Author: Kazumi Ono (AKA onokazu)                                          //
+-// URL: <A HREF="http://www.myweb.ne.jp/,">http://www.myweb.ne.jp/,</A> <A HREF="http://www.xoops.org/,">http://www.xoops.org/,</A> <A HREF="http://jp.xoops.org/">http://jp.xoops.org/</A> //
+-// Project: The XOOPS Project                                                //
+-// ------------------------------------------------------------------------- //
+-if (!defined(&quot;XOOPS_ROOT_PATH&quot;)) {
+-    die(&quot;XOOPS root path not defined&quot;);
+-}
+ /**
+- * @package     kernel
+- * @subpackage  database
+- * 
+- * @author	    Kazumi Ono	&lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright	copyright (c) 2000-2003 XOOPS.org
++ * Legacy (XOOPS 2.0.x) xoops_db_Database driver class definition
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Kazumi Ono &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_db
++ * @subpackage	xoops_db_Database
++ * @version		$Id$
+  */
+ 
+ /**
+- * base class
++ * This file cannot be requested directly
+  */
+-include_once XOOPS_ROOT_PATH.&quot;/class/database/database.php&quot;;
++if ( !defined( 'XOOPS_PATH' ) ) exit();
+ 
++XOS::import( 'xoops_db_Database_mysql' );
++
+ /**
+- * connection to a mysql database
+- * 
+- * @abstract
+- * 
+- * @author      Kazumi Ono  &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright   copyright (c) 2000-2003 XOOPS.org
+- * 
+- * @package     kernel
+- * @subpackage  database
++ * Legacy xoops_db_Database driver main class
+  */
+-class XoopsMySQLDatabase extends XoopsDatabase
+-{
++class xoops_db_Database_legacy extends xoops_db_Database_mysql {
+ 	/**
+-	 * Database connection
+-	 * @var resource
++	 * assign a {@link XoopsLogger} object to the database
++	 * @deprecated (assign the logger public property)
+ 	 */
+-	var $conn;
+-
++	function setLogger(&amp;$logger) {
++		$this-&gt;logger =&amp; $logger;
++	}
+ 	/**
+-	 * connect to the database
+-	 * 
+-     * @param bool $selectdb select the database now?
+-     * @return bool successful?
++	 * set the prefix for tables in the database
++	 * @deprecated (assign the prefix public property)
+ 	 */
+-	function connect($selectdb = true)
+-	{
+-		if (XOOPS_DB_PCONNECT == 1) {
+-			$this-&gt;conn = @mysql_pconnect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS);
+-		} else {
+-			$this-&gt;conn = @mysql_connect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS);
+-		}
+-	
+-		if (!$this-&gt;conn) {
+-			$this-&gt;logger-&gt;addQuery('', $this-&gt;error(), $this-&gt;errno());
+-			return false;
+-		}
+-		
+-		if($selectdb != false){
+-			if (!mysql_select_db(XOOPS_DB_NAME)) {
+-				$this-&gt;logger-&gt;addQuery('', $this-&gt;error(), $this-&gt;errno());
+-				return false;
+-			}
+-		}
+-		return true;
++	function setPrefix($value) {
++		$this-&gt;prefix = $value;
+ 	}
+-
+ 	/**
+ 	 * generate an ID for a new row
+      * 
+@@ -215,80 +164,11 @@
+      */
+     function quoteString($str)
+     {
+-         $str = &quot;'&quot;.str_replace('\\&quot;', '&quot;', addslashes($str)).&quot;'&quot;;
+-         return $str;
++         //return &quot;'&quot;.str_replace('\\&quot;', '&quot;', addslashes($str)).&quot;'&quot;;
++         return $this-&gt;quote( $str );
+     }
+ 
+     /**
+-     * perform a query on the database
+-     * 
+-     * @param string $sql a valid MySQL query
+-     * @param int $limit number of records to return
+-     * @param int $start offset of first record to return
+-     * @return resource query result or FALSE if successful
+-     * or TRUE if successful and no result
+-     */
+-    function queryF($sql, $limit=0, $start=0)
+-	{
+-		if ( !empty($limit) ) {
+-			if (empty($start)) {
+-				$start = 0;
+-			}
+-			$sql = $sql. ' LIMIT '.(int)$start.', '.(int)$limit;
+-		}
+-		$result = mysql_query($sql, $this-&gt;conn);
+-		if ( $result ) {
+-			$this-&gt;logger-&gt;addQuery($sql);
+-			return $result;
+-        } else {
+-			$this-&gt;logger-&gt;addQuery($sql, $this-&gt;error(), $this-&gt;errno());
+-			return false;
+-        }
+-    }
+-
+-	/**
+-	 * perform a query
+-     * 
+-     * This method is empty and does nothing! It should therefore only be
+-     * used if nothing is exactly what you want done! ;-)
+-	 * 
+-     * @param string $sql a valid MySQL query
+-     * @param int $limit number of records to return
+-     * @param int $start offset of first record to return
+-     * 
+-     * @abstract
+-	 */
+-	function query($sql, $limit=0, $start=0)
+-	{
+-
+-    }
+-
+-    /**
+-	 * perform queries from SQL dump file in a batch
+-	 * 
+-     * @param string $file file path to an SQL dump file
+-     * 
+-     * @return bool FALSE if failed reading SQL file or TRUE if the file has been read and queries executed
+-	 */
+-	function queryFromFile($file){
+-        if (false !== ($fp = fopen($file, 'r'))) {
+-			include_once XOOPS_ROOT_PATH.'/class/database/sqlutility.php';
+-            $sql_queries = trim(fread($fp, filesize($file)));
+-            SqlUtility::splitMySqlFile($pieces, $sql_queries);
+-            foreach ($pieces as $query) {
+-                // [0] contains the prefixed query
+-                // [4] contains unprefixed table name
+-                $prefixed_query = SqlUtility::prefixQuery(trim($query), $this-&gt;prefix());
+-                if ($prefixed_query != false) {
+-                    $this-&gt;query($prefixed_query[0]);
+-                }
+-            }
+-            return true;
+-        }
+-        return false;
+-    }
+-    
+-    /**
+ 	 * Get field name
+ 	 *
+      * @param resource $result query result
+@@ -322,22 +202,8 @@
+ 	{
+ 		return mysql_num_fields($result);
+ 	}
+-}
+ 
+-/**
+- * Safe Connection to a MySQL database.
+- * 
+- * 
+- * @author Kazumi Ono &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright copyright (c) 2000-2003 XOOPS.org
+- * 
+- * @package kernel
+- * @subpackage database
+- */
+-class XoopsMySQLDatabaseSafe extends XoopsMySQLDatabase
+-{
+-
+-    /**
++	/**
+      * perform a query on the database
+      * 
+      * @param string $sql a valid MySQL query
+@@ -346,47 +212,52 @@
+      * @return resource query result or FALSE if successful
+      * or TRUE if successful and no result
+      */
+-	function query($sql, $limit=0, $start=0)
+-	{
+-		return $this-&gt;queryF($sql, $limit, $start);
+-	}
+-}
++    function query($sql, $limit=0, $start=0) {
++	    $sql = ltrim($sql);
++		if ( !$this-&gt;allowWebChanges &amp;&amp; strtolower( substr($sql, 0, 6) ) != 'select' )  {
++			trigger_error( 'Database updates are not allowed during processing of a GET request', E_USER_WARNING );
++			return false;
++		}
++		return $this-&gt;queryF( $sql, $limit, $start );
++    }
++    
++    function queryF( $sql, $limit, $start = 0 ) {
++    	if ( !empty($limit) ) {
++			$sql = $sql . ' LIMIT ' . (int)$start . ', ' . (int)$limit;
++		}
++		if ( $result = mysql_query($sql, $this-&gt;conn) ) {
++			$this-&gt;logEvent($sql);
++        } else {
++        	$this-&gt;logError();
++        }
++        return $result;
++    }
+ 
+-/**
+- * Read-Only connection to a MySQL database.
+- * 
+- * This class allows only SELECT queries to be performed through its 
+- * {@link query()} method for security reasons.
+- * 
+- * 
+- * @author Kazumi Ono &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">onokazu at xoops.org</A>&gt;
+- * @copyright copyright (c) 2000-2003 XOOPS.org
+- * 
+- * @package kernel
+- * @subpackage database
+- */
+-class XoopsMySQLDatabaseProxy extends XoopsMySQLDatabase
+-{
+-
+     /**
+-     * perform a query on the database
++	 * perform queries from SQL dump file in a batch
++	 * 
++     * @param string $file file path to an SQL dump file
+      * 
+-     * this method allows only SELECT queries for safety.
+-     * 
+-     * @param string $sql a valid MySQL query
+-     * @param int $limit number of records to return
+-     * @param int $start offset of first record to return
+-     * @return resource query result or FALSE if unsuccessful
+-     */
+-	function query($sql, $limit=0, $start=0)
+-	{
+-	    $sql = ltrim($sql);
+-		if (strtolower(substr($sql, 0, 6)) == 'select') {
+-		//if (preg_match(&quot;/^SELECT.*/i&quot;, $sql)) {
+-			return $this-&gt;queryF($sql, $limit, $start);
+-		}
+-		$this-&gt;logger-&gt;addQuery($sql, 'Database update not allowed during processing of a GET request', 0);
+-		return false;
+-	}
++     * @return bool FALSE if failed reading SQL file or TRUE if the file has been read and queries executed
++	 */
++	function queryFromFile($file){
++        if (false !== ($fp = fopen($file, 'r'))) {
++			include_once XOOPS_ROOT_PATH.'/class/database/sqlutility.php';
++            $sql_queries = trim(fread($fp, filesize($file)));
++            SqlUtility::splitMySqlFile($pieces, $sql_queries);
++            foreach ($pieces as $query) {
++                // [0] contains the prefixed query
++                // [4] contains unprefixed table name
++                $prefixed_query = SqlUtility::prefixQuery(trim($query), $this-&gt;prefix());
++                if ($prefixed_query != false) {
++                    $this-&gt;query($prefixed_query[0]);
++                }
++            }
++            return true;
++        }
++        return false;
++    }
++    
+ }
++
+ ?&gt;
+\ No newline at end of file
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php	2006-01-18 12:53:55 UTC (rev 129)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php	2006-01-18 13:00:23 UTC (rev 130)
+@@ -0,0 +1,99 @@
++&lt;?php
++/**
++ * Mysql xoops_db_Database driver class definition
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_db
++ * @subpackage	xoops_db_Database
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++XOS::import( 'xoops_db_Database' );
++
++/**
++ * Legacy xoops_db_Database driver main class
++ */
++class xoops_db_Database_mysql extends xoops_db_Database {
++	/**
++	 * Link identifier to the connected database
++	 * @var resource
++	 */
++	var $conn = false;
++
++	/**
++	 * connect to the database
++	 * 
++     * @param bool $selectdb select the database now ?
++     * @return bool successful?
++	 */
++	function connect( $selectdb = true ) {
++		if ( $this-&gt;persistent ) {
++			$this-&gt;conn = @mysql_pconnect( $this-&gt;host, $this-&gt;user, $this-&gt;password );
++		} else {
++			$this-&gt;conn = @mysql_connect( $this-&gt;host, $this-&gt;user, $this-&gt;password );
++		}
++		if ( !$this-&gt;conn ) {
++			$this-&gt;logError();
++			return false;
++		}
++		if( $selectdb &amp;&amp; !mysql_select_db( $this-&gt;dbname ) ) {
++			$this-&gt;logError();
++			return false;
++		}
++		return true;
++	}
++	// --------- PDO implementation ---------
++	function errorInfo() {
++		return array( 'HY000', @mysql_errno( $this-&gt;conn ), @mysql_error( $this-&gt;conn ) );
++	}	
++
++	function exec( $statement ) {
++		if ( $this-&gt;allowWebChanges ) {
++			return mysql_query( $statement, $this-&gt;conn ) ? mysql_affected_rows( $this-&gt;conn ) : false;
++		} else {
++			trigger_error( 'Database updates are not allowed during processing of a GET request', E_USER_WARNING );
++			return false;
++		}
++	}
++	
++	function lastInsertId( $name = '' ) {
++		return mysql_insert_id( $this-&gt;conn );
++	}
++	
++	function quote( $string ) {
++		return &quot;'&quot; . mysql_real_escape_string( $string, $this-&gt;conn ) . &quot;'&quot;;
++	}
++
++}
++
++
++class xoops_db_Statement_mysql {
++
++	var $boundColumns = array();	
++	var $boundParams = array();
++	var $boundValues = array();
++	
++	
++	function bindColumn( $column, &amp;$variable, $type ) {
++		$this-&gt;boundColumns[$column] = array( &amp;$variable, $type );
++	}
++	function bindParam( $param, &amp;$variable, $type = 0, $length = 0, $options = array() ) {
++		$this-&gt;boundParams[$param] = array( &amp;$variable, $type, $length, $options );	
++	}
++	function bindValue( $param, $value, $type ) {
++	}
++}
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/mysql.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/xo-info.php	2006-01-18 12:53:55 UTC (rev 129)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm/xo-info.php	2006-01-18 13:00:23 UTC (rev 130)
+@@ -26,8 +26,12 @@
+ 			'xoBundleDisplayName' =&gt; 'Connection to a database',
+ 			'xoClassPath' =&gt; '/database.php',
+ 		),
++		'xoops_db_Database_mysql' =&gt; array(
++			'xoBundleDisplayName' =&gt; 'XOOPS MySQL database driver (PDO compatible)',
++			'xoClassPath' =&gt; '/mysql.php',
++		),
+ 		'xoops_db_Database_legacy' =&gt; array(
+-			'xoBundleDisplayName' =&gt; 'Legacy (XOOPS 2.0) database driver',
++			'xoBundleDisplayName' =&gt; 'XOOPS Legacy (XOOPS 2.0) database driver',
+ 			'xoClassPath' =&gt; '/legacy.php',
+ 		),
+ 	),
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000121.html">[Xoops4-svn] r129 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Boot
+</A></li>
+	<LI>Next message: <A HREF="000123.html">[Xoops4-svn] r131 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#122">[ date ]</a>
+              <a href="thread.html#122">[ thread ]</a>
+              <a href="subject.html#122">[ subject ]</a>
+              <a href="author.html#122">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,505 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r235 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm: . Theme.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r235%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm%3A%20.%20Theme.xoobj&In-Reply-To=%3C200602131530.k1DFUwX9025941%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000226.html">
+   <LINK REL="Next"  HREF="000228.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r235 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm: . Theme.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r235%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm%3A%20.%20Theme.xoobj&In-Reply-To=%3C200602131530.k1DFUwX9025941%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r235 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm: . Theme.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 16:30:58 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000226.html">[Xoops4-svn] r234 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . TreeWidget.xoobj TreeWidget.xoobj/www
+</A></li>
+        <LI>Next message: <A HREF="000228.html">[Xoops4-svn] r236 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#227">[ date ]</a>
+              <a href="thread.html#227">[ thread ]</a>
+              <a href="subject.html#227">[ subject ]</a>
+              <a href="author.html#227">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 16:30:56 +0100 (Mon, 13 Feb 2006)
+New Revision: 235
+
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/theme.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/widget.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/xo-info.php
+Log:
+Separating the low and high level interface building frameworks
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/theme.php	2006-02-13 15:10:36 UTC (rev 234)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/theme.php	2006-02-13 15:30:56 UTC (rev 235)
+@@ -1,25 +1,25 @@
+ &lt;?php
+ /**
+-* xoops_pyro_Theme component class file
++* xoops_opal_Theme component class file
+ *
+ * @copyright	The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+ * @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @package      xoops_pyro
+-* @subpackage   xoops_pyro_Theme
+ * @author       Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+ * @since        2.3.0
+ * @version		$Id$
++* @package 		xoops_opal
++* @subpackage 	xoops_opal_Theme
+ */
+ 
+ /**
+-* xoops_pyro_ThemeFactory
++* xoops_opal_ThemeFactory
+ *
+ * @author 		Skalpa Keo
+-* @package		xoops_pyro
+-* @subpackage	xoops_pyro_ThemeFactory
++* @package		xoops_opal
++* @subpackage	xoops_opal_Theme
+ * @since        2.3.0
+ */
+-class xoops_pyro_ThemeFactory {
++class xoops_opal_ThemeFactory {
+ 	/**
+ 	 * Currently enabled themes (if empty, all the themes in themes/ are allowed)
+ 	 * 
+@@ -43,7 +43,7 @@
+ 		} elseif ( !empty( $this-&gt;allowedThemes ) &amp;&amp; !in_array( $options['folderName'], $this-&gt;allowedThemes ) ) {
+ 			$options['folderName'] = $this-&gt;defaultTheme;
+ 		}
+-		$inst =&amp; XOS::createInstanceOf( &quot;xoops_pyro_Theme&quot;, $options, $initArgs );
++		$inst =&amp; XOS::createInstanceOf( &quot;xoops_opal_Theme&quot;, $options, $initArgs );
+ 		return $inst;
+ 	}
+ 
+@@ -56,7 +56,7 @@
+ 	function enumerate( $allowed = true ) {
+ 		global $xoops;
+ 		$themes = array();
+-		if ( $dh = opendir( $xoops2-&gt;path('/themes/') ) ) {
++		if ( $dh = opendir( $xoops-&gt;path('/themes/') ) ) {
+ 			while ( $file = readdir($dh) ) {
+ 				if ( $file{0} != '.' &amp;&amp; $file != 'CVS' ) {
+ 					$themes[] = $file;
+@@ -72,7 +72,7 @@
+ 
+ }
+ 
+-class xoops_pyro_Theme {
++class xoops_opal_Theme {
+    /**
+     * The name of this theme
+     * @var string
+@@ -84,17 +84,29 @@
+     */
+ 	var $path = '';
+ 	var $url = '';
+-   /**
+-   * Whether or not the theme engine should include the output generated by php
+-   * @var string
+-   */
+-	var $bufferOutput = true;
++
+ 	/**
+ 	* Default content-type of pages generated by this theme
+ 	* @var string
+ 	*/
+ 	var $contentType = 'text/html';
+ 	/**
++	* Output format doctype
++	* @var string
++	*/
++	var $doctype = 'html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;';
++	/**
++	* Document namespaces
++	* @var string
++	*/
++	var $namespaces = array();
++
++   /**
++    * Whether or not the theme engine should include the output generated by php
++    * @var string
++    */
++	var $bufferOutput = true;
++	/**
+ 	* Canvas-level template to use
+ 	* @var string
+ 	*/
+@@ -150,11 +162,6 @@
+ 		global $xoops;
+ 
+ 		$this-&gt;path	= $xoops-&gt;path( '/themes/' . $this-&gt;folderName );
+-
+-		$this-&gt;template =&amp; XOS::create( 'xoops_template_Smarty' );
+-		$this-&gt;template-&gt;currentTheme =&amp; $this;
+-		$this-&gt;template-&gt;compile_id = $this-&gt;folderName;
+-
+ 		if ( $info = @include &quot;$this-&gt;path/xo-info.php&quot; ) {
+ 			XOS::apply( $this, $info );
+ 			if ( isset( $_SESSION ) ) {
+@@ -165,6 +172,16 @@
+ 			$this-&gt;parentTheme = ( $this-&gt;folderName == 'xoops20' ? '' : 'xoops20' );
+ 			$_SESSION[$xoops-&gt;services['http']-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] = true;
+ 		}
++
++		
++		if ( $this-&gt;namespaces &amp;&amp; !is_array( $this-&gt;namespaces ) ) {
++			$this-&gt;namespaces = array( '' =&gt; $this-&gt;namespaces );
++		}
++
++		$this-&gt;template =&amp; XOS::create( 'xoops_opal_Smarty' );
++		$this-&gt;template-&gt;currentTheme =&amp; $this;
++		$this-&gt;template-&gt;compile_id = $this-&gt;folderName;
++		
+ 		if ( $this-&gt;bufferOutput ) {
+ 			ob_start();
+ 		}
+@@ -176,6 +193,20 @@
+ 	}
+ 
+ 	/**
++	 * Returns the document namespaces as an xmlns string that can be inserted in the main tag
++	 */	
++	function namespacesString() {
++		$str = array();
++		foreach ( $this-&gt;namespaces as $ns =&gt; $uri ) {
++			if ( !empty( $ns ) ) {
++				$ns = ':' . $ns;
++			}
++			$str[] = 'xmlns' . $ns . '=&quot;' . $uri . '&quot;';
++		}
++		return implode( ' ', $str );
++	}
++	
++	/**
+ 	 * Render the page
+ 	 *
+ 	 * The theme engine builds pages from 3 templates: canvas, page and content.
+@@ -224,6 +255,11 @@
+ 		/* this will be changed */
+ 		$vars['xoops_dirname'] = @!empty( $GLOBALS['xoopsModule'] ) ? $GLOBALS['xoopsModule']-&gt;getVar('dirname') : 'system';
+ 		$this-&gt;template-&gt;assign( $vars );
++		
++		if ( $xoops-&gt;services['http'] ) {
++			$xoops-&gt;services['http']-&gt;setEntityInfo( $this-&gt;contentType, 'iso-8859-1' );
++			$xoops-&gt;services['http']-&gt;addVariation( 'xo-theme', $this-&gt;xoBundleIdentifier );
++		}
+ 		$this-&gt;renderZone( 'canvas' );
+ 		$this-&gt;renderCount++;
+ 	}
+@@ -326,7 +362,7 @@
+ 		}
+ 		if ( !empty( $this-&gt;parentTheme ) ) {
+ 			if ( !is_object( $this-&gt;parentTheme ) ) {
+-				$this-&gt;parentTheme =&amp; XOS::create( 'xoops_pyro_Theme', array( 'folderName' =&gt; $this-&gt;parentTheme ) );
++				$this-&gt;parentTheme =&amp; XOS::create( 'xoops_opal_Theme', array( 'folderName' =&gt; $this-&gt;parentTheme ) );
+ 			}
+ 			if ( is_object( $this-&gt;parentTheme ) ) {
+ 				return $this-&gt;parentTheme-&gt;resourcePath( $path, $fromDocRoot );
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/xo-info.php	2006-02-13 15:10:36 UTC (rev 234)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/Theme.xoobj/xo-info.php	2006-02-13 15:30:56 UTC (rev 235)
+@@ -1,6 +1,6 @@
+ &lt;?php
+ /**
+-* xoops_pyro_Theme bundle information file
++* xoops_opal_Theme bundle information file
+ *
+ * See the enclosed file LICENSE for licensing information.
+ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+@@ -10,15 +10,17 @@
+ * @since        2.3.0
+ * @version		$Id$
+ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @package 		xoops_opal
++* @subpackage 	xoops_opal_Theme
+ */
+ 
+ return array(
+ 	'xoBundleDisplayName' =&gt; 'XOOPS Theme component',
+-	'xoBundleIdentifier' =&gt; 'xoops_pyro_Theme',
++	'xoBundleIdentifier' =&gt; 'xoops_opal_Theme',
+ 	'xoClassPath' =&gt; '/theme.php',
+-	'xoFactory' =&gt; 'xoops_pyro_ThemeFactory',
++	'xoFactory' =&gt; 'xoops_opal_ThemeFactory',
+ 	'xoServices' =&gt; array(
+-		'xoops_pyro_ThemeFactory' =&gt; array(
++		'xoops_opal_ThemeFactory' =&gt; array(
+ 			'xoClassPath' =&gt; '/theme.php',
+ 		),
+ 	),
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/widget.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/widget.php	2006-02-13 15:10:36 UTC (rev 234)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/widget.php	2006-02-13 15:30:56 UTC (rev 235)
+@@ -1,71 +1,104 @@
+ &lt;?php
+ /**
+-* xoops_pyro_Widget component class file
+-*
+-* @copyright	The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @package      xoops_pyro
+-* @subpackage   xoops_pyro_Widget
+-* @author       Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since        2.3.0
+-* @version		$Id$
+-*/
++ * xoops_opal_Widget component class file
++ *
++ * @copyright	The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author      Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since       2.3.0
++ * @version		$Id$
++ * @package     xoops_opal
++ * @subpackage  xoops_opal_Widget
++ */
+ 
+ /**
+-* xoops_pyro_Widget
+-*
+-* Widgets are user interface components that can be rendered to HTML
+-* 
+-* 
+-* 
+-* 
+-* @author 		Skalpa Keo
+-* @package		xoops_pyro
+-* @subpackage	xoops_pyro_Widget
+-* @since        2.3.0
+-*/
+-class xoops_pyro_Widget {
++ * Base class for User Interface widgets
++ *
++ * Widgets are configurable objects intended to be inserted inside the output.
++ * They provide a default rendering mechanism that can be overridden using templates
++ * for more flexibility if you want to.
++ * 
++ * You ensure widgets are instanciated by declaring them in the &lt;TemplateObjects&gt; section
++ * of XML templates, or by inserting them directly in your templates body using the
++ * ([xoWidget]) plug-in.
++ * 
++ * @author		Skalpa Keo
++ * @since       2.3.0
++ * @package     xoops_opal
++ * @subpackage  xoops_opal_Widget
++ */
++class xoops_opal_Widget {
+ 	/**
++	 * Main tag to use when rendering this widget
++	 */
++	var $tagName = '';
++	/**
+ 	 * XMLID given to this widget main output element
+-	 *
+ 	 * @var string
+ 	 */
+ 	var $elementId = '';
+ 	/**
+ 	 * Classes of this widget output element (when rendered to HTML)
+-	 *
+ 	 * @var string[]
+ 	 */
+ 	var $elementClasses = array();
+ 	/**
++	 * Attributes to add to this widget main tag
++	 */
++	var $attributes = array();
++	/**
+ 	 * Path to the stylesheet to add to the document when inserting this widget
+-	 *
+ 	 * @var string
+ 	 */
+ 	var $stylesheet = '';
+ 	/**
+ 	 * Path to the javascript file to add to the document when inserting this widget
+-	 *
+ 	 * @var string
+ 	 */
+ 	var $javascript = '';
+ 	/**
+-	 * Template to use to render this widget (use hardcoded rendering if left empty)
++	 * Template file to use to render this widget (use hardcoded rendering if left empty)
+ 	 *
+ 	 * @var string
+ 	 */
+ 	var $template = '';
++	
++	var $templateString = '';
++	
++	function xoInit( $options = array(), $attributes = array() ) {
++		if ( !empty( $attributes ) ) {
++			$this-&gt;attributes = array_merge( $this-&gt;attributes, $attributes );
++		}
++		return true;
++	}
++	
+ 	/**
+ 	 * Renders this widget
+ 	 */
+ 	function render() {
++		if ( !empty( $this-&gt;template ) ) {
++			trigger_error( &quot;Template rendering of widgets is not implemented yet (but you're welcome)&quot;, E_USER_WARNING );
++		} elseif ( !empty( $this-&gt;templateString ) ) {
++			return preg_replace_callback( '/{([0-9a-zA-Z_]*)}/', array( &amp;$this, 'renderStringProperty' ), $this-&gt;templateString );
++		}
+ 		return '';
+ 	}
++
++	function renderStringProperty( $matches ) {
++		return $matches[1];
++	}
++	
+ 	/**
+ 	 * Returns an XML opening tag with its 'id' and 'class' attributes set
+ 	 * @access protected
+ 	 */
+-	function renderOpeningTag( $tagName ) {
++	function renderTag( $tagName = null, $attributes = null, $empty = false ) {
++		if ( !isset($tagName) ) {
++			$tagName = $this-&gt;tagName;
++		}
++		if ( !isset( $attributes ) ) {
++			$attributes = $this-&gt;attributes;
++		}
+ 		$str = &quot;&lt;$tagName&quot;;
+ 		if ( $this-&gt;elementId ) {
+ 			$str .= ' id=&quot;' . $this-&gt;elementId . '&quot;';
+@@ -73,10 +106,26 @@
+ 		if ( !empty( $this-&gt;elementClasses ) ) {
+ 			$str .= ' class=&quot;' . implode( ' ', $this-&gt;elementClasses ) . '&quot;';
+ 		}
+-		return $str . '&gt;';
++		if ( $attrs = $this-&gt;attributesString( $attributes ) ) {
++			$str .= ' ' . $attrs;
++		}
++		$str .= $empty ? ' /&gt;' : '&gt;';
++		return $str;
+ 	}
++	/**
++	 * Renders a collection of attributes for HTML
++	 * @param array $attributes
++	 * @return string
++	 */
++	function attributesString( $attributes ) {
++		$rendered = array();
++		foreach ( $attributes as $name =&gt; $val ) {
++			if ( isset( $val ) ) {
++				$rendered[] = $name . '=&quot;' . htmlspecialchars( $val, ENT_QUOTES ) . '&quot;';
++			}
++		}
++		return implode( ' ', $rendered );
++	}
+ 
+-	
+-	
+ }
+ 
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/xo-info.php	2006-02-13 15:10:36 UTC (rev 234)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Pyro.xofrm/xo-info.php	2006-02-13 15:30:56 UTC (rev 235)
+@@ -1,33 +1,31 @@
+ &lt;?php
+ /**
+-* xoops_pyro bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @since        2.3.0
+-* @version		$Id$
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-*/
++ * xoops_opal bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright   The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license     <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since       2.3.0
++ * @version		$Id$
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @package 	xoops_opal
++ */
+ 
+ return array(
+-	'xoBundleDisplayName' =&gt; '&quot;Pyro&quot; user interface framework',
+-	'xoBundleIdentifier' =&gt; 'xoops_pyro',
++	'xoBundleDisplayName' =&gt; 'Opal output rendering framework',
++	'xoBundleIdentifier' =&gt; 'xoops_opal',
+ 	'xoServices' =&gt; array(
+-		'xoops_pyro_Theme'	=&gt; array (
++		'xoops_opal_Smarty'	=&gt; array (
++			'xoBundleRoot' =&gt; '/Smarty.xoobj'
++		),
++		'xoops_opal_Theme'	=&gt; array (
+ 			'xoBundleRoot' =&gt; '/Theme.xoobj'
+ 		),
+-		'xoops_pyro_Widget' =&gt; array(
++		'xoops_opal_Widget' =&gt; array(
+ 			'xoClassPath' =&gt; '/widget.php',
+ 		),
+-		'xoops_pyro_TreeWidget'	=&gt; array (
+-			'xoBundleRoot' =&gt; '/TreeWidget.xoobj'
+-		),
+-		'xoops_template_Smarty'	=&gt; array (
+-			'xoBundleRoot' =&gt; '/Smarty.xoobj'
+-		),
+ 	),
+ );
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000226.html">[Xoops4-svn] r234 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm: . TreeWidget.xoobj TreeWidget.xoobj/www
+</A></li>
+	<LI>Next message: <A HREF="000228.html">[Xoops4-svn] r236 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/UserExperience/Pyro.xofrm/TreeWidget.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#227">[ date ]</a>
+              <a href="thread.html#227">[ thread ]</a>
+              <a href="subject.html#227">[ subject ]</a>
+              <a href="author.html#227">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

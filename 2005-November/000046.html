@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r53 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r53%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj&In-Reply-To=%3C200511292325.jATNPuJP027480%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000045.html">
+   <LINK REL="Next"  HREF="000047.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r53 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r53%20-%20XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj&In-Reply-To=%3C200511292325.jATNPuJP027480%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r53 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Wed Nov 30 00:25:56 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000045.html">[Xoops4-svn] r52 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000047.html">[Xoops4-svn] r54 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-30 00:25:56 +0100 (Wed, 30 Nov 2005)
+New Revision: 53
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+Log:
+Small fix for custom blocks (the dummy tpl was not looked for correctly)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2005-11-29 23:24:13 UTC (rev 52)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2005-11-29 23:25:56 UTC (rev 53)
+@@ -83,7 +83,7 @@
+ 		if ( '' != ( $tplName = $xobject-&gt;getVar('template') ) ) {
+ 			$tplName = &quot;xotpl:modules/{$block['module']}/templates/blocks/$tplName&quot;;
+ 		} else {
+-			$tplName = &quot;xotpl:modules/system/templates/blocks/system_block_dummy.html&quot;;
++			$tplName = &quot;xotpl:modules/system/templates/system_block_dummy.html&quot;;
+ 		}
+ 		$cacheid = 'blk_' . $xobject-&gt;getVar('bid') . ':' . md5( serialize( $xobject-&gt;getVar( 'options', 'n' ) ) );
+              
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000045.html">[Xoops4-svn] r52 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000047.html">[Xoops4-svn] r54 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/class
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

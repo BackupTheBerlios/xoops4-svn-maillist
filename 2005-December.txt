@@ -1,0 +1,4615 @@
+From skalpa at berlios.de  Thu Dec  1 05:19:31 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Thu, 1 Dec 2005 05:19:31 +0100
+Subject: [Xoops4-svn] r55 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj
+Message-ID: <200512010419.jB14JVCo016273@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-01 05:19:28 +0100 (Thu, 01 Dec 2005)
+New Revision: 55
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty.php
+Log:
+Fixed old templates translation on PHP 4.x
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty.php	2005-11-30 12:24:33 UTC (rev 54)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/smarty.php	2005-12-01 04:19:28 UTC (rev 55)
+@@ -99,7 +99,7 @@
+ 	 * Compiler prefilter to change 2.0 style delimiters to new ones
+ 	 */
+     function filterOldTemplates( $data, &$compiler ) {
+-    	$file = ( substr( $compiler->_current_file, 0, 6 ) == 'xotpl:' ) ? $this->realTemplatePath : $compiler->_current_file;
++    	$file = ( substr( $compiler->_current_file, 0, 6 ) == 'xotpl:' ) ? $compiler->template_engine->realTemplatePath : $compiler->_current_file;
+ 		if ( substr( $file, -5 ) == '.html' ) {
+ 			$data = str_replace( array( '<{', '}>' ), array( '([', '])' ), $data );
+ 		}
+
+
+
+From skalpa at berlios.de  Thu Dec  1 05:21:13 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Thu, 1 Dec 2005 05:21:13 +0100
+Subject: [Xoops4-svn] r56 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+Message-ID: <200512010421.jB14LCU6017095@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-01 05:21:10 +0100 (Thu, 01 Dec 2005)
+New Revision: 56
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+Log:
+Enhanced the db: BC resource handler so it nows uses xotpl: (this makes all the db: templates themable too)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php	2005-12-01 04:19:28 UTC (rev 55)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.db.php	2005-12-01 04:21:10 UTC (rev 56)
+@@ -17,7 +17,7 @@
+ 
+ function smarty_resource_db_source($tpl_name, &$tpl_source, &$smarty) {
+ 
+-	if ( $tplPath = smarty_resource_db_lookup( $tpl_name ) ) {
++	if ( $tplPath = smarty_resource_db_lookup( $tpl_name, $smarty ) ) {
+ 		if ( $tpl_source = file_get_contents( $tplPath ) ) {
+ 			return true;
+ 		}
+@@ -27,7 +27,7 @@
+ 
+ function smarty_resource_db_timestamp($tpl_name, &$tpl_timestamp, &$smarty) {
+ 
+-	if ( $tplPath = smarty_resource_db_lookup( $tpl_name ) ) {
++	if ( $tplPath = smarty_resource_db_lookup( $tpl_name, $smarty ) ) {
+ 		if ( $tpl_timestamp = filemtime( $tplPath ) ) {
+ 			return true;
+ 		}
+@@ -51,7 +51,7 @@
+  * @param bool		$refresh	Set this to true to force regeneration of the cache
+  * @return string	Full path to the template (or false if not found)
+  */
+-function smarty_resource_db_lookup( $tplName, $refresh = false ) {
++function smarty_resource_db_lookup( $tplName, &$smarty, $refresh = false ) {
+ 	static $list = null;
+ 	global $xoops;
+ 
+@@ -89,12 +89,15 @@
+ 			trigger_error( "Cannot create db: resource handler templates list", E_USER_WARNING );
+ 		}
+ 	}
+-	
++	if ( !function_exists( 'smarty_resource_xotpl_getpath' ) ) {
++		$path = str_replace( DIRECTORY_SEPARATOR, '/', dirname( __FILE__ ) );
++		include_once "$path/resource.xotpl.php";
++	}
+ 	if ( $tplName == 'system_notification_select.html' ) {
+ 		$tplName = 'system_notification_select.xotpl';
+ 	}
+ 	if ( isset( $list[$tplName] ) ) {
+-		return $xoops->path( $list[$tplName] );
++		return smarty_resource_xotpl_getpath( $list[$tplName], $smarty );
+ 	}
+ 	return false;
+ }
+
+
+
+From skalpa at berlios.de  Thu Dec  1 05:23:18 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Thu, 1 Dec 2005 05:23:18 +0100
+Subject: [Xoops4-svn] r57 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+Message-ID: <200512010423.jB14NIhC017783@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-01 05:23:16 +0100 (Thu, 01 Dec 2005)
+New Revision: 57
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php
+Log:
+Enhanced the xotpl: template detection algo, to be extension independent (the themed version of a .html template can be a .xotpl template, and reverse)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php	2005-12-01 04:21:10 UTC (rev 56)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php	2005-12-01 04:23:16 UTC (rev 57)
+@@ -52,16 +52,22 @@
+ 		$themed = $smarty->currentTheme->resourcePath( $name );
+ 		if ( substr( $themed, 0, 7 ) == 'themes/' ) {
+ 			$tplName = $themed;
+-		} elseif ( substr( $tplName, -6 ) == '.xotpl' ) {
+-			// If the template is not in the theme folder,
+-			// check if it's not here, but with an .html extension
+-			$name = substr( $name, 0, -6 ) . '.html';
+-			$themed = $smarty->currentTheme->resourcePath( $name );
+-			if ( substr( $themed, 0, 7 ) == 'themes/' ) {
+-				$tplName = $themed;
++		} else {
++			if ( false !== ( $pos = strrpos( $tplName, '.' ) ) ) {
++				$name = substr( $tplName, 0, $pos );
++				$ext = substr( $tplName, $pos );
++				$name = ( $ext == '.xotpl' ) ? "$name.html" : "$name.xotpl";
++				$name = str_replace( '/templates/', '/', $name );
++				// If the template is not in the theme folder,
++				// check if it's not here, but with a different extension
++				$themed = $smarty->currentTheme->resourcePath( $name );
++				if ( substr( $themed, 0, 7 ) == 'themes/' ) {
++					$tplName = $themed;
++				}
+ 			}
+ 		}
+ 	}
++	//echo $xoops->path( $tplName ) . "<br />\n";
+ 	return $xoops->path( $tplName );
+ 
+ }
+
+
+
+From skalpa at berlios.de  Fri Dec  2 14:54:07 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 14:54:07 +0100
+Subject: [Xoops4-svn] r58 - in XoopsCore/branches/tasks/121627-refs/htdocs: class/database kernel modules/system/blocks
+Message-ID: <200512021354.jB2Ds7Q2010284@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 14:53:48 +0100 (Fri, 02 Dec 2005)
+New Revision: 58
+
+Modified:
+   XoopsCore/branches/tasks/121627-refs/htdocs/class/database/mysqldatabase.php
+   XoopsCore/branches/tasks/121627-refs/htdocs/kernel/config.php
+   XoopsCore/branches/tasks/121627-refs/htdocs/kernel/groupperm.php
+   XoopsCore/branches/tasks/121627-refs/htdocs/modules/system/blocks/system_blocks.php
+Log:
+Additional fixes for notices appearing only with PHP 4.4
+
+(And it's not finished... this thing is a nightmare :-( the guy who wrote the article saying "uses refs everywhere, it's faster" is a jerk )
+
+Modified: XoopsCore/branches/tasks/121627-refs/htdocs/class/database/mysqldatabase.php
+===================================================================
+--- XoopsCore/branches/tasks/121627-refs/htdocs/class/database/mysqldatabase.php	2005-12-01 04:23:16 UTC (rev 57)
++++ XoopsCore/branches/tasks/121627-refs/htdocs/class/database/mysqldatabase.php	2005-12-02 13:53:48 UTC (rev 58)
+@@ -236,7 +236,7 @@
+ 			}
+ 			$sql = $sql. ' LIMIT '.(int)$start.', '.(int)$limit;
+ 		}
+-		$result =& mysql_query($sql, $this->conn);
++		$result = mysql_query($sql, $this->conn);
+ 		if ( $result ) {
+ 			$this->logger->addQuery($sql);
+ 			return $result;
+
+Modified: XoopsCore/branches/tasks/121627-refs/htdocs/kernel/config.php
+===================================================================
+--- XoopsCore/branches/tasks/121627-refs/htdocs/kernel/config.php	2005-12-01 04:23:16 UTC (rev 57)
++++ XoopsCore/branches/tasks/121627-refs/htdocs/kernel/config.php	2005-12-02 13:53:48 UTC (rev 58)
+@@ -207,7 +207,7 @@
+      * 
+      * @return	array   array of {@link XoopsConfig}s 
+      */
+-    function getConfigsByCat($category, $module = 0)
++    function &getConfigsByCat($category, $module = 0)
+     {
+         static $_cachedConfigs;
+ 		if (!empty($_cachedConfigs[$module][$category])) {
+@@ -218,14 +218,14 @@
+         	if (!empty($category)) {
+             	$criteria->add(new Criteria('conf_catid', intval($category)));
+         	}
+-        	$configs =& $this->getConfigs($criteria, true);
++        	$configs = $this->getConfigs($criteria, true);
+ 			if (is_array($configs)) {
+             	foreach (array_keys($configs) as $i) {
+                 	$ret[$configs[$i]->getVar('conf_name')] = $configs[$i]->getConfValueForOutput();
+             	}
+         	}
+-			$_cachedConfigs[$module][$category] =& $ret;
+-        	return $ret;
++			$_cachedConfigs[$module][$category] = $ret;
++        	return $_cachedConfigs[$module][$category];
+ 		}
+     }
+ 
+
+Modified: XoopsCore/branches/tasks/121627-refs/htdocs/kernel/groupperm.php
+===================================================================
+--- XoopsCore/branches/tasks/121627-refs/htdocs/kernel/groupperm.php	2005-12-01 04:23:16 UTC (rev 57)
++++ XoopsCore/branches/tasks/121627-refs/htdocs/kernel/groupperm.php	2005-12-02 13:53:48 UTC (rev 58)
+@@ -374,7 +374,7 @@
+ 		} else {
+ 			$criteria->add(new Criteria('gperm_groupid', intval($gperm_groupid)));
+ 		}
+-		$perms =& $this->getObjects($criteria, true);
++		$perms = $this->getObjects($criteria, true);
+ 		foreach (array_keys($perms) as $i) {
+ 			$ret[] = $perms[$i]->getVar('gperm_itemid');
+ 		}
+@@ -396,7 +396,7 @@
+ 		$criteria = new CriteriaCompo(new Criteria('gperm_name', $gperm_name));
+ 		$criteria->add(new Criteria('gperm_itemid', intval($gperm_itemid)));
+ 		$criteria->add(new Criteria('gperm_modid', intval($gperm_modid)));
+-		$perms =& $this->getObjects($criteria, true);
++		$perms = $this->getObjects($criteria, true);
+ 		foreach (array_keys($perms) as $i) {
+ 			$ret[] = $perms[$i]->getVar('gperm_groupid');
+ 		}
+
+Modified: XoopsCore/branches/tasks/121627-refs/htdocs/modules/system/blocks/system_blocks.php
+===================================================================
+--- XoopsCore/branches/tasks/121627-refs/htdocs/modules/system/blocks/system_blocks.php	2005-12-01 04:23:16 UTC (rev 57)
++++ XoopsCore/branches/tasks/121627-refs/htdocs/modules/system/blocks/system_blocks.php	2005-12-02 13:53:48 UTC (rev 58)
+@@ -116,12 +116,12 @@
+     $modules =& $module_handler->getObjects($criteria, true);
+     $moduleperm_handler =& xoops_gethandler('groupperm');
+     $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
+-    $read_allowed =& $moduleperm_handler->getItemIds('module_read', $groups);
++    $read_allowed = $moduleperm_handler->getItemIds('module_read', $groups);
+     foreach (array_keys($modules) as $i) {
+         if (in_array($i, $read_allowed)) {
+             $block['modules'][$i]['name'] = $modules[$i]->getVar('name');
+             $block['modules'][$i]['directory'] = $modules[$i]->getVar('dirname');
+-            $sublinks =& $modules[$i]->subLink();
++            $sublinks = $modules[$i]->subLink();
+             if ((count($sublinks) > 0) && (!empty($xoopsModule)) && ($i == $xoopsModule->getVar('mid'))) {
+                 foreach($sublinks as $sublink){
+                     $block['modules'][$i]['sublinks'][] = array('name' => $sublink['name'], 'url' => XOOPS_URL.'/modules/'.$modules[$i]->getVar('dirname').'/'.$sublink['url']);
+
+
+
+From skalpa at berlios.de  Fri Dec  2 15:15:29 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 15:15:29 +0100
+Subject: [Xoops4-svn] r59 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . blocks templates templates/blocks
+Message-ID: <200512021415.jB2EFTom021213@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 15:15:26 +0100 (Fri, 02 Dec 2005)
+New Revision: 59
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php
+Log:
+Updated the main menu / user menu / theme block output to be more compliant.
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-02 14:15:26 UTC (rev 59)
+@@ -113,15 +113,15 @@
+     $criteria = new CriteriaCompo(new Criteria('hasmain', 1));
+     $criteria->add(new Criteria('isactive', 1));
+     $criteria->add(new Criteria('weight', 0, '>'));
+-    $modules =& $module_handler->getObjects($criteria, true);
++    $modules = $module_handler->getObjects($criteria, true);
+     $moduleperm_handler =& xoops_gethandler('groupperm');
+     $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
+-    $read_allowed =& $moduleperm_handler->getItemIds('module_read', $groups);
++    $read_allowed = $moduleperm_handler->getItemIds('module_read', $groups);
+     foreach (array_keys($modules) as $i) {
+         if (in_array($i, $read_allowed)) {
+             $block['modules'][$i]['name'] = $modules[$i]->getVar('name');
+             $block['modules'][$i]['directory'] = $modules[$i]->getVar('dirname');
+-            $sublinks =& $modules[$i]->subLink();
++            $sublinks = $modules[$i]->subLink();
+             if ((count($sublinks) > 0) && (!empty($xoopsModule)) && ($i == $xoopsModule->getVar('mid'))) {
+                 foreach($sublinks as $sublink){
+                     $block['modules'][$i]['sublinks'][] = array('name' => $sublink['name'], 'url' => XOOPS_URL.'/modules/'.$modules[$i]->getVar('dirname').'/'.$sublink['url']);
+@@ -479,9 +479,15 @@
+     return $form;
+ }
+ 
+-function b_system_themes_show($options)
+-{
++function b_system_themes_show($options) {
+     global $xoopsConfig;
++
++    $vars = array();
++    $vars['availableThemes'] = $xoopsConfig['theme_set_allowed'];
++    $vars['currentTheme'] = $xoopsConfig['theme_set'];
++    $vars['options'] = $options;
++    return $vars;
++    
+     $theme_options = '';
+     foreach ($xoopsConfig['theme_set_allowed'] as $theme) {
+         $theme_options .= '<option value="'.$theme.'"';
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,15 +0,0 @@
+-<table cellspacing="0">
+-  <tr>
+-    <td id="mainmenu">
+-      <a class="menuTop" href="<{$xoops_url}>/"><{$block.lang_home}></a>
+-      <!-- start module menu loop -->
+-      <{foreach item=module from=$block.modules}>
+-      <a class="menuMain" href="<{$xoops_url}>/modules/<{$module.directory}>/"><{$module.name}></a>
+-        <{foreach item=sublink from=$module.sublinks}>
+-          <a class="menuSub" href="<{$sublink.url}>"><{$sublink.name}></a>
+-        <{/foreach}>
+-      <{/foreach}>
+-      <!-- end module menu loop -->
+-    </td>
+-  </tr>
+-</table>
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,9 @@
++<ul>
++	<li><a rel="home" href="([xoAppUrl /www/])">([$block.lang_home])</a></li>
++	([foreach item=module from=$block.modules])
++	<li><a href="([$xoops->url("modules/`$module.directory`/") ])">([$module.name])</a></li>
++	([foreach item=sublink from=$module.sublinks])
++	<li class="menuSub"><a href="([$sublink.url])">([$sublink.name])</a></li>
++	([/foreach])
++	([/foreach])
++</ul>
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,5 +0,0 @@
+-<div style="text-align: center;">
+-<form action="index.php" method="post">
+-<{$block.theme_select}>
+-</form>
+-</div>
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,19 @@
++
++<form action="([xoAppUrl /www/index.php])" method="post">
++([if $block.options.0 == 1])
++	<img id="xo-theme-thumbImg" alt="Screenshot" style="width:([$block.options.1])px"
++		 src="([$xoops->url("themes/`$block.currentTheme`/shot.gif") ])" /><br />
++	<select name="xoops_theme_select"
++		onchange="document.getElementById('xo-theme-thumbImg').src='([xoAppUrl themes/])'+this.value+'/shot.gif')">
++([else])	
++	<select name="xoops_theme_select" size="3" onchange="this.form.submit()">
++([/if])
++([foreach from=$block.availableThemes item=theme])
++		<option value="([$theme])"([if $theme==$block.currentTheme]) selected="selected"([/if])>([$theme])</option>
++([/foreach])	
++	</select><br />
++	([$block.availableThemes|@count|string_format:$smarty.const._MB_SYSTEM_NUMTHEME])<br />
++([if $block.options.0 == 1])
++	<input type="submit" value="([$smarty.const._GO])" />	
++([/if])
++</form>
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,19 +0,0 @@
+-<table cellspacing="0">
+-  <tr>
+-    <td id="usermenu">
+-      <a class="menuTop" href="<{$xoops_url}>/user.php"><{$block.lang_youraccount}></a>
+-      <a href="<{$xoops_url}>/edituser.php"><{$block.lang_editaccount}></a>
+-      <a href="<{$xoops_url}>/notifications.php"><{$block.lang_notifications}></a>
+-      <a href="<{$xoops_url}>/user.php?op=logout"><{$block.lang_logout}></a>
+-      <{if $block.new_messages > 0}>
+-        <a class="highlight" href="<{$xoops_url}>/viewpmsg.php"><{$block.lang_inbox}> (<span style="color:#ff0000; font-weight: bold;"><{$block.new_messages}></span>)</a>
+-      <{else}>
+-        <a href="<{$xoops_url}>/viewpmsg.php"><{$block.lang_inbox}></a>
+-      <{/if}>
+-
+-      <{if $xoops_isadmin}>
+-        <a href="<{$xoops_url}>/admin.php"><{$block.lang_adminmenu}></a>
+-      <{/if}>
+-    </td>
+-  </tr>
+-</table>
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,14 @@
++<ul>
++	<li><a href="([xoAppUrl /www/user.php])">([$block.lang_youraccount])</a></li>
++	<li><a href="([xoAppUrl /www/edituser.php])">([$block.lang_editaccount])</a></li>
++	<li><a href="([xoAppUrl /www/notifications.php])">([$block.lang_notifications])</a></li>
++	<li><a href="([xoAppUrl /www/user.php?op=logout])">([$block.lang_logout])</a></li>
++	([if $block.new_messages eq 0])
++	<li><a href="([xoAppUrl /www/viewpmsg.php])"><em>([$block.lang_inbox]) (([$block.new_messages]))</em></a></li>
++	([else])
++	<li><a href="([xoAppUrl /www/viewpmsg.php])">([$block.lang_inbox])</a></li>
++	([/if])
++	([if $xoops_isadmin])
++	<li><a href="([xoAppUrl  /www/admin.php])">([$block.lang_adminmenu])</a></li>
++	([/if])
++</ul>
+\ No newline at end of file
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,36 +0,0 @@
+-<{if $xoops_notification.show}>
+-<form name="notification_select" action="<{$xoops_notification.target_page}>" method="post">
+-<h4 style="text-align:center;"><{$lang_activenotifications}></h4>
+-<input type="hidden" name="not_redirect" value="<{$xoops_notification.redirect_script}>" />
+-<input type="hidden" name="XOOPS_TOKEN_REQUEST" value="<{php}>echo $GLOBALS['xoopsSecurity']->createToken();<{/php}>" />
+-<table class="outer">
+-  <tr><th colspan="3"><{$lang_notificationoptions}></th></tr>
+-  <tr>
+-    <td class="head"><{$lang_category}></td>
+-    <td class="head"><input name="allbox" id="allbox" onclick="xoopsCheckAll('notification_select','allbox');" type="checkbox" value="<{$lang_checkall}>" /></td>
+-    <td class="head"><{$lang_events}></td>
+-  </tr>
+-  <{foreach name=outer item=category from=$xoops_notification.categories}>
+-  <{foreach name=inner item=event from=$category.events}>
+-  <tr>
+-    <{if $smarty.foreach.inner.first}>
+-    <td class="even" rowspan="<{$smarty.foreach.inner.total}>"><{$category.title}></td>
+-    <{/if}>
+-    <td class="odd">
+-    <{counter assign=index}>
+-    <input type="hidden" name="not_list[<{$index}>][params]" value="<{$category.name}>,<{$category.itemid}>,<{$event.name}>" />
+-    <input type="checkbox" id="not_list[]" name="not_list[<{$index}>][status]" value="1" <{if $event.subscribed}>checked="checked"<{/if}> />
+-    </td>
+-    <td class="odd"><{$event.caption}></td>
+-  </tr>
+-  <{/foreach}>
+-  <{/foreach}>
+-  <tr>
+-    <td class="foot" colspan="3" align="center"><input type="submit" name="not_submit" value="<{$lang_updatenow}>" /></td>
+-  </tr>
+-</table>
+-<div align="center">
+-<{$lang_notificationmethodis}>:&nbsp;<{$user_method}>&nbsp;&nbsp;[<a href="<{$editprofile_url}>"><{$lang_change}></a>]
+-</div>
+-</form>
+-<{/if}>
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,49 @@
++([if $xoops_notification.show])
++
++<div class="xo-block system-notification_select">
++	<div class="xo-blocktitle">
++		<div class="xo-expand-switch" onclick="switchBlockDisplay(this.parentNode.parentNode,this)">-</div>
++		([$lang_notificationoptions])
++	</div>
++	<div class="xo-blockcontent">
++	<form name="notification_select" action="([$xoops_notification.target_page])" method="post">
++	<input type="hidden" name="not_redirect" value="([$xoops_notification.redirect_script])" />
++	<input type="hidden" name="XOOPS_TOKEN_REQUEST" value="([php])echo $GLOBALS['xoopsSecurity']->createToken();([/php])" />
++	<table class="xo-form">
++	<thead>
++	<tr>
++		<th scope="col">([$lang_category])</th>
++		<th scope="col">([$lang_events])</th>
++		<th scope="col"><input type="checkbox" onclick="xoopsCheckAll(this.form,this);" /></th>
++	</tr>
++	</thead>			
++	<tbody>
++	([foreach name=outer item=category from=$xoops_notification.categories])
++	([foreach name=inner item=event from=$category.events])
++	<tr>
++	([if $smarty.foreach.inner.first])
++		<th scope="row" rowspan="([$smarty.foreach.inner.total])">([$category.title])</th>
++	([/if])
++		<td>([$event.caption])</td>
++		<td>
++			<input type="hidden" name="not_list[([$index])][params]" value="([$category.name]),([$category.itemid]),([$event.name])" />
++			<input type="checkbox" name="not_list[([$index])][status]" value="1" ([if $event.subscribed])checked="checked"([/if]) />			
++		</td>
++	</tr>
++	([/foreach])
++	([/foreach])
++	</tbody>
++	<tfoot>
++	<tr>
++		<td colspan="3"><button type="submit">([$lang_updatenow])</button></td>
++	</tr>
++	</tfoot>
++	</table>
++	</form>
++	([$lang_notificationmethodis]):
++	([$user_method])
++	(<a href="([$editprofile_url])">([$lang_change])</a>)
++	</div>
++</div>
++
++([/if])
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php	2005-12-02 14:15:26 UTC (rev 59)
+@@ -74,7 +74,7 @@
+ $modversion['templates'][12]['description'] = 'Dummy template file for holding non-template contents. This should not be edited.';
+ $modversion['templates'][13]['file'] = 'system_notification_list.html';
+ $modversion['templates'][13]['description'] = '';
+-$modversion['templates'][14]['file'] = 'system_notification_select.html';
++$modversion['templates'][14]['file'] = 'system_notification_select.xotpl';
+ $modversion['templates'][14]['description'] = '';
+ $modversion['templates'][15]['file'] = 'system_block_dummy.html';
+ $modversion['templates'][15]['description'] = 'Dummy template for custom blocks or blocks without templates';
+@@ -84,7 +84,7 @@
+ $modversion['blocks'][1]['name'] = _MI_SYSTEM_BNAME2;
+ $modversion['blocks'][1]['description'] = "Shows user block";
+ $modversion['blocks'][1]['show_func'] = "b_system_user_show";
+-$modversion['blocks'][1]['template'] = 'system_block_user.html';
++$modversion['blocks'][1]['template'] = 'system_block_user.xotpl';
+ 
+ $modversion['blocks'][2]['file'] = "system_blocks.php";
+ $modversion['blocks'][2]['name'] = _MI_SYSTEM_BNAME3;
+@@ -108,7 +108,7 @@
+ $modversion['blocks'][5]['name'] = _MI_SYSTEM_BNAME6;
+ $modversion['blocks'][5]['description'] = "Shows the main navigation menu of the site";
+ $modversion['blocks'][5]['show_func'] = "b_system_main_show";
+-$modversion['blocks'][5]['template'] = 'system_block_mainmenu.html';
++$modversion['blocks'][5]['template'] = 'system_block_mainmenu.xotpl';
+ 
+ $modversion['blocks'][6]['file'] = "system_blocks.php";
+ $modversion['blocks'][6]['name'] = _MI_SYSTEM_BNAME7;
+@@ -162,7 +162,7 @@
+ $modversion['blocks'][12]['show_func'] = "b_system_themes_show";
+ $modversion['blocks'][12]['options'] = "0|80";
+ $modversion['blocks'][12]['edit_func'] = "b_system_themes_edit";
+-$modversion['blocks'][12]['template'] = 'system_block_themes.html';
++$modversion['blocks'][12]['template'] = 'system_block_themes.xotpl';
+ 
+ // Menu
+ $modversion['hasMain'] = 0;
+
+
+
+From skalpa at berlios.de  Fri Dec  2 15:20:22 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 15:20:22 +0100
+Subject: [Xoops4-svn] r60 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class/database kernel
+Message-ID: <200512021420.jB2EKM62026621@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 15:20:11 +0100 (Fri, 02 Dec 2005)
+New Revision: 60
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php
+Log:
+Merged the latest refs fixes
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php	2005-12-02 14:15:26 UTC (rev 59)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/database/mysqldatabase.php	2005-12-02 14:20:11 UTC (rev 60)
+@@ -236,7 +236,7 @@
+ 			}
+ 			$sql = $sql. ' LIMIT '.(int)$start.', '.(int)$limit;
+ 		}
+-		$result =& mysql_query($sql, $this->conn);
++		$result = mysql_query($sql, $this->conn);
+ 		if ( $result ) {
+ 			$this->logger->addQuery($sql);
+ 			return $result;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php	2005-12-02 14:15:26 UTC (rev 59)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/config.php	2005-12-02 14:20:11 UTC (rev 60)
+@@ -207,7 +207,7 @@
+      * 
+      * @return	array   array of {@link XoopsConfig}s 
+      */
+-    function getConfigsByCat($category, $module = 0)
++    function &getConfigsByCat($category, $module = 0)
+     {
+         static $_cachedConfigs;
+ 		if (!empty($_cachedConfigs[$module][$category])) {
+@@ -218,14 +218,14 @@
+         	if (!empty($category)) {
+             	$criteria->add(new Criteria('conf_catid', intval($category)));
+         	}
+-        	$configs =& $this->getConfigs($criteria, true);
++        	$configs = $this->getConfigs($criteria, true);
+ 			if (is_array($configs)) {
+             	foreach (array_keys($configs) as $i) {
+                 	$ret[$configs[$i]->getVar('conf_name')] = $configs[$i]->getConfValueForOutput();
+             	}
+         	}
+-			$_cachedConfigs[$module][$category] =& $ret;
+-        	return $ret;
++			$_cachedConfigs[$module][$category] = $ret;
++        	return $_cachedConfigs[$module][$category];
+ 		}
+     }
+ 
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php	2005-12-02 14:15:26 UTC (rev 59)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/groupperm.php	2005-12-02 14:20:11 UTC (rev 60)
+@@ -374,7 +374,7 @@
+ 		} else {
+ 			$criteria->add(new Criteria('gperm_groupid', intval($gperm_groupid)));
+ 		}
+-		$perms =& $this->getObjects($criteria, true);
++		$perms = $this->getObjects($criteria, true);
+ 		foreach (array_keys($perms) as $i) {
+ 			$ret[] = $perms[$i]->getVar('gperm_itemid');
+ 		}
+@@ -396,7 +396,7 @@
+ 		$criteria = new CriteriaCompo(new Criteria('gperm_name', $gperm_name));
+ 		$criteria->add(new Criteria('gperm_itemid', intval($gperm_itemid)));
+ 		$criteria->add(new Criteria('gperm_modid', intval($gperm_modid)));
+-		$perms =& $this->getObjects($criteria, true);
++		$perms = $this->getObjects($criteria, true);
+ 		foreach (array_keys($perms) as $i) {
+ 			$ret[] = $perms[$i]->getVar('gperm_groupid');
+ 		}
+
+
+
+From skalpa at berlios.de  Fri Dec  2 15:24:39 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 15:24:39 +0100
+Subject: [Xoops4-svn] r61 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+Message-ID: <200512021424.jB2EOdpD030922@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 15:24:25 +0100 (Fri, 02 Dec 2005)
+New Revision: 61
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/xoops.js
+Log:
+Added the switchBlockDisplay() function for the block display switch onclick handler (not sure it will stay, but that does the trick right now)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/xoops.js
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/xoops.js	2005-12-02 14:20:11 UTC (rev 60)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/xoops.js	2005-12-02 14:24:25 UTC (rev 61)
+@@ -29,6 +29,7 @@
+ 	return;
+ }
+ 
++
+ function openWithSelfMain(url,name,width,height,returnwindow) {
+ 	var options = "width=" + width + ",height=" + height + ",toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no";
+ 
+@@ -394,3 +395,17 @@
+ 		return true;
+ 	}
+ }
++
++function switchBlockDisplay( blk, button ) {
++	if ( blk && typeof(blk) != 'object' )	blk=document.getElementById(blk);
++	if ( !blk ) return;
++	for (var i=0;i!=blk.childNodes.length;i++) {
++		if ( blk.childNodes[i].className && blk.childNodes[i].className.indexOf("xo-blockcontent") != -1 ) {
++			changeDisplay(blk.childNodes[i]);
++			button.innerHTML = (blk.childNodes[i].style.display=="none") ? "+" : "-";
++			return;
++		}
++	}
++}
++
++
+
+
+
+From skalpa at berlios.de  Fri Dec  2 15:27:21 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 15:27:21 +0100
+Subject: [Xoops4-svn] r62 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web
+Message-ID: <200512021427.jB2ERLQ1032668@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 15:27:04 +0100 (Fri, 02 Dec 2005)
+New Revision: 62
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-blocks.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-elements.css
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl
+Log:
+Reorganized stylesheets
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl	2005-12-02 14:24:25 UTC (rev 61)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/canvas-default.xotpl	2005-12-02 14:27:04 UTC (rev 62)
+@@ -8,8 +8,7 @@
+ 
+ 	<link rel="SHORTCUT ICON" href="([xoImgUrl favicon.ico])" />
+ 
+-	<link rel="stylesheet" type="text/css" media="screen" href="([xoImgUrl xoops.css])" />
+-	<link rel="stylesheet" type="text/css" media="screen" href="([xoImgUrl style.css])" />
++	<link rel="stylesheet" type="text/css" media="screen" href="([xoImgUrl page-default.css])" />
+ 
+ 	
+ 	<title>([$xoops_sitename]) - ([$xoops_pagetitle])</title>
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.css	2005-12-02 14:24:25 UTC (rev 61)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.css	2005-12-02 14:27:04 UTC (rev 62)
+@@ -0,0 +1,76 @@
++
++ at import url(style-blocks.css);
++ at import url(style-elements.css);
++
++
++html, body {
++	margin:					0px;
++	background:				#ffffff url(img/body_bg.png) repeat-x left top;
++	background-attachment:	fixed;
++	color:					#000000;
++	font:					10pt sans-serif;
++}
++
++#xo-canvas {
++	margin:			15px;
++	background:		#EEEEEE;
++}
++
++#xo-canvas-header {
++	border-bottom:	1px solid #CCCCCC;
++	background:		#FFFFFF;
++	padding:		3px 3px 3px;
++}
++
++#xo-banner {
++	height:			60px;
++	border:			1px solid #000000;
++	padding:		2px;
++	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
++}
++
++#xo-canvas-main {
++	border-top:		1px solid #FFFFFF;
++	padding:		6px;
++}
++
++.xo-canvas-column {
++	width:			160px;
++}
++
++#xo-canvas-leftcolumn {
++	float:			left;
++	border:			1px solid #666666;
++}
++
++#xo-canvas-rightcolumn {
++	float:			right;
++	padding-bottom:	96px;
++	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
++}
++
++#xo-page {
++	background:		#ffffff;
++	padding:		1em 0px;
++	border:			1px solid #CCCCCC;
++}
++
++#xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
++	margin-left:	176px;
++}
++
++#xo-canvas-rightcolumn + #xo-page {
++	margin-right:	176px;
++}
++
++#xo-canvas-footer {
++	padding:		1px;
++	background:		#DDDDDD;
++	text-align:		center;
++	font-size:		90%;
++	font-family:	monospace;
++}
++#xo-canvas-footer, #xo-canvas-footer a {
++	color:				#666666;
++	text-decoration:	none;
++}
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/page-default.css
+___________________________________________________________________
+Name: svn:keywords
+   + "Author Date Id Rev URL"
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-blocks.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-blocks.css	2005-12-02 14:24:25 UTC (rev 61)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-blocks.css	2005-12-02 14:27:04 UTC (rev 62)
+@@ -0,0 +1,138 @@
++
++/* --------- Rules for canvas blocks --------- */
++.xo-canvas-column ul {
++	margin:				0px;
++	padding:			0px;
++	list-style-type:	none;
++}
++
++.xo-canvas-column a {
++	display:			block;
++	padding:			1px .3em;
++	text-decoration:	none;
++	font:				80%;
++	color:				#CCCCCC;
++}
++.xo-canvas-column a:hover {
++	color:				#FFFFFF;
++}
++.xo-canvas-column .menuSub a {
++	padding-left:		1em;
++}
++
++
++
++#xo-canvas-leftcolumn .xo-blocktitle {
++	background:		url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
++	color:			#ffffff;
++	border-bottom:	1px solid #666666;
++	padding:		.2em .5em;
++	font-weight:	bold;
++	text-shadow:	1px 1px #000000;
++}
++
++#xo-canvas-leftcolumn .xo-blockcontent {
++	background:		#999999 url(img/canvas-blockcontent_bg_grey.png) repeat-x left top;
++}
++
++#xo-canvas-rightcolumn .xo-block {
++	padding:		8px 0px;
++	background:		url(img/separator.png) no-repeat center bottom;
++}
++#xo-canvas-rightcolumn :last-child {
++	background:		transparent none;
++}
++
++#xo-canvas-rightcolumn .xo-blocktitle {
++	font-weight:	bold;
++}
++#xo-canvas-rightcolumn .xo-blockcontent {
++	font-size:		90%;
++}
++
++#xo-canvas-leftcolumn a:hover {
++	color:				#EEEEEE;
++	background:			#555555;
++}
++
++#xo-canvas-rightcolumn a {
++	color:				#666666;
++}
++#xo-canvas-rightcolumn a:hover {
++	color:				#333333;
++	text-decoration:	underline;
++}
++
++/* --------- Rules for page blocks --------- */
++
++#xo-content .xo-block {
++	padding:		4px;
++}
++
++#xo-content .xo-blocktitle {
++	background:		#ecedef;
++	text-align:		left;
++	font-weight:	bold;
++	font-size:		90%;
++	padding:		3px 1em 3px 32px;
++	-moz-border-radius:	5px;
++}
++
++#xo-content .xo-blockcontent {
++	border:			1px solid #CCC;
++	border-top:		0px none #000;
++	margin:			0px 7px;
++	padding:		.5em;
++}
++
++.xo-expand-switch {
++	width:				1em;
++	height:				1em;
++	float:				left;
++	border:				1px solid #000000;
++	text-align:			center;
++	color:				#000000;
++	cursor:				default;
++	font:				10px monospace;
++	padding-top:		1px;
++	margin-right:		6px;
++}
++
++
++/* --------- Rules for specific blocks --------- */
++
++
++#xo-canvas-leftcolumn .system-main_menu .xo-blocktitle {
++	background:		url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
++}
++
++#xo-canvas-leftcolumn .system-main_menu .xo-blockcontent {
++	background:		#5E77D4 url(img/canvas-blockcontent_bg_blue.png) repeat-x left top;
++}
++
++#xo-canvas-leftcolumn .system-main_menu  a {
++	color:				#B6C6EC;
++}
++#xo-canvas-leftcolumn .system-main_menu  a:hover {
++	background:			#2044A0;
++}
++
++
++
++.system-themes .xo-blockcontent {
++	padding:			.5em;
++	text-align:			center;
++}
++
++#xo-content .system-notification_select .xo-blocktitle {
++	background-image:		url(icons/notify.png);
++	background-repeat:		no-repeat;
++	background-position: 	8px center;
++}
++
++#xo-content .system-notification_select .xo-blockcontent {
++	text-align:				right;
++}
++
++
++
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-blocks.css
+___________________________________________________________________
+Name: svn:keywords
+   + "Author Date Id Rev URL"
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-elements.css (from rev 48, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-11-28 10:50:18 UTC (rev 48)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style-elements.css	2005-12-02 14:27:04 UTC (rev 62)
+@@ -0,0 +1,135 @@
++
++table {
++	border-collapse:	collapse;
++}
++img {
++	border-style:		none;
++}
++a {
++	text-decoration:	none;
++}
++a:hover {
++	text-decoration:	underline;
++}
++
++
++/* Web resources lists */
++
++.xo-mentas-list .xo-menta {
++	margin:				.5em 0px;
++	border:				1px solid #98ABCA;
++	-moz-border-radius:	5px;
++}
++
++.xo-mentas-list .xo-menta .xo-head {
++	border-bottom:		1px solid #98ABCA;
++	padding:			1px .5em;
++	background:			#E3EEF5;
++	color:				#000000;
++}
++
++.xo-mentas-list .xo-menta .xo-body {
++	padding:			.5em;
++}
++
++.xo-mentas-list .xo-menta .xo-foot {
++	padding:			1px .5em;
++	text-align:			right;
++}
++
++
++
++table.xo-form {
++	width:					100%;
++	border-collapse:		collapse;
++	border:					1px outset #cacbd0;
++	text-align:				left;
++}
++
++table.xo-form tbody tr {
++	vertical-align:			top;
++	background:				#eef0f4;
++}
++
++table.xo-form tfoot tr {
++	text-align:				right;
++	background:				#e6eaee;
++}
++
++table.xo-form tbody th {
++	text-align:				center;
++}
++
++
++thead td, thead th {
++	background:			#e5e6ec url(img/thead_bg.png) repeat-x left bottom;
++	border:				1px solid #cacbd0;
++	border-top-color:	#e9eaef;
++	border-left-color:	#e9eaef;
++	padding:			1px 0px 1px 1em;
++}
++
++table.xo-form tfoot {
++	border-top:			1px solid #dddddd;
++	text-align:			center;
++}
++table.xo-form tfoot td, table.xo-form tfoot th {
++	padding:			3px 4px;
++}
++
++
++table.xo-form tfoot button {
++	border:				1px solid #CCCCCC;
++	
++	color:				#405A80;
++	background:			#f7f7f7;
++	font-size:			80%;
++	font-weight:		bold;
++	background:			#d9d9d9 url(img/button_bg.png) repeat-x left top;
++	padding:			1px 3px;
++}	
++table.xo-form tfoot button:hover {
++	color:				#eeeeee;
++}
++
++
++/* ----------- old XOOPS 2.0 crappy mark-up rules ----------- */
++td.head {
++	background:			#EEEEEE;
++}
++table.outer th {
++	background:			#e5e6ec url(img/thead_bg.png) repeat-x left bottom;
++}
++
++
++.itemHead {
++	margin:				2px;
++	border:				1px solid #E0E2F2;
++	background:			#EFF1FB;
++	font-size:			105%;
++	font-weight:		bold;
++	color:				#000000;
++	padding:			3px 2px;
++}
++
++.itemHead a {
++	color:				#000000;
++	text-decoration:	none;
++}
++.itemHead a:hover {
++	text-decoration:	underline;
++}
++
++.item {
++	width:				100%;
++	border:				1px solid #999999;
++}
++
++.itemFoot {
++	background:			#f5f5f5;
++	border-top:			#e5e5e5;
++	padding:			3px 2px;
++}
++
++
++
+
+
+
+From skalpa at berlios.de  Fri Dec  2 15:28:37 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 15:28:37 +0100
+Subject: [Xoops4-svn] r63 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img
+Message-ID: <200512021428.jB2ESbX1000674@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 15:28:21 +0100 (Fri, 02 Dec 2005)
+New Revision: 63
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/button_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/thead_bg.png
+Log:
+Minor visual enhancements (bgs for buttons and tables headers)
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/button_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/button_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/thead_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/thead_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+
+
+From skalpa at berlios.de  Fri Dec  2 19:18:22 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 19:18:22 +0100
+Subject: [Xoops4-svn] r64 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj
+Message-ID: <200512021818.jB2IIML3016990@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 19:18:16 +0100 (Fri, 02 Dec 2005)
+New Revision: 64
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+Log:
+Refs fix
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2005-12-02 14:28:21 UTC (rev 63)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Logos/PageBuilder.xoobj/builder.php	2005-12-02 18:18:16 UTC (rev 64)
+@@ -52,7 +52,7 @@
+ 
+ 		$xoopsblock = new XoopsBlock();
+     	$block_arr = array();
+-	    $block_arr =& $xoopsblock->getAllByGroupModule( $groups, $mid, $isStart, XOOPS_BLOCK_VISIBLE);
++	    $block_arr = $xoopsblock->getAllByGroupModule( $groups, $mid, $isStart, XOOPS_BLOCK_VISIBLE);
+ 	    foreach ( $block_arr as $block ) {
+ 	    	$side = $oldzones[ $block->getVar('side') ];
+ 	    	if ( $var = $this->buildBlock( $block ) ) {
+
+
+
+From skalpa at berlios.de  Fri Dec  2 19:20:18 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Fri, 2 Dec 2005 19:20:18 +0100
+Subject: [Xoops4-svn] r65 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates
+Message-ID: <200512021820.jB2IKIRv017737@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-02 19:20:16 +0100 (Fri, 02 Dec 2005)
+New Revision: 65
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl
+Log:
+Fixed typo in CDATA
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl	2005-12-02 18:18:16 UTC (rev 64)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/templates/metas.xotpl	2005-12-02 18:20:16 UTC (rev 65)
+@@ -6,17 +6,17 @@
+ 
+ ([foreach from=$xoTheme->metas.script item=attributes])
+ 	<script([$xoTheme->renderAttributes($attributes)])>([if !empty( $attributes._ ) ])
+-	//<[!CDATA[
++	//<![CDATA[
+ 	([$attributes._])
+ 	//]]>([/if])</script>
+ ([/foreach])
+ 
+ ([foreach from=$xoTheme->metas.stylesheet item=attributes])
+ ([if empty( $attributes._ )])
+-	<link([$xoTheme->renderAttributes($attributes)]) />
++	<link rel="stylesheet"([$xoTheme->renderAttributes($attributes)]) />
+ ([else])
+ 	<style([$xoTheme->renderAttributes($attributes)])>
+-	/* <[!CDATA[ */
++	/* <![CDATA[ */
+ 	([$attributes._])
+ 	/* //]]> */
+ 	</style>
+
+
+
+From skalpa at berlios.de  Sat Dec  3 00:40:57 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 00:40:57 +0100
+Subject: [Xoops4-svn] r66 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img
+Message-ID: <200512022340.jB2NeveP025409@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 00:40:53 +0100 (Sat, 03 Dec 2005)
+New Revision: 66
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-rightcolumn_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/xoops-logo.png
+Log:
+New logo :-)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/canvas-rightcolumn_bg.png
+===================================================================
+(Binary files differ)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/img/xoops-logo.png
+===================================================================
+(Binary files differ)
+
+
+
+From skalpa at berlios.de  Sat Dec  3 00:42:41 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 00:42:41 +0100
+Subject: [Xoops4-svn] r67 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops20
+Message-ID: <200512022342.jB2NgfbW025844@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 00:42:07 +0100 (Sat, 03 Dec 2005)
+New Revision: 67
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/modules/
+Log:
+Renamed the old theme 'xoops20'
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20 (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default)
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/modules (from rev 47, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/modules)
+
+
+
+From skalpa at berlios.de  Sat Dec  3 00:44:36 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 00:44:36 +0100
+Subject: [Xoops4-svn] r68 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default-web
+Message-ID: <200512022344.jB2NiaLq026878@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 00:44:35 +0100 (Sat, 03 Dec 2005)
+New Revision: 68
+
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/
+Log:
+Renamed the old theme 'xoops20'
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-12-02 23:42:07 UTC (rev 67)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-12-02 23:44:35 UTC (rev 68)
+@@ -1,139 +0,0 @@
+-
+-html, body {
+-	margin:			0px;
+-	background:		#ffffff url(img/body_bg.png) repeat-x left top;
+-	background-attachment:	fixed;
+-	color:			#000000;
+-	font:			11pt sans-serif;
+-}
+-
+-#xo-canvas {
+-	margin:			15px;
+-	background:		#EEEEEE;
+-}
+-
+-#xo-canvas-header {
+-	border-bottom:	1px solid #CCCCCC;
+-	background:		#FFFFFF;
+-	padding:		3px 3px 3px;
+-}
+-
+-#xo-banner {
+-	height:			60px;
+-	border:			1px solid #000000;
+-	padding:		2px;
+-	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
+-}
+-
+-#xo-canvas-main {
+-	border-top:		1px solid #FFFFFF;
+-	padding:		6px;
+-}
+-
+-.xo-canvas-column {
+-	width:			160px;
+-}
+-#xo-canvas-leftcolumn {
+-	float:			left;
+-	border:			1px solid #666666;
+-}
+-#xo-canvas-rightcolumn {
+-	float:			right;
+-	padding-bottom:	128px;
+-	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
+-}
+-
+-#xo-page {
+-	background:		#ffffff;
+-	padding:		1em 0px;
+-	border:			1px solid #CCCCCC;
+-}
+-
+-#xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
+-	margin-left:	176px;
+-}
+-
+-#xo-canvas-rightcolumn + #xo-page {
+-	margin-right:	176px;
+-}
+-
+-#xo-canvas-footer {
+-	padding:		1px;
+-	background:		#DDDDDD;
+-	text-align:		center;
+-	font-size:		80%;
+-	font-family:	monospace;
+-}
+-#xo-canvas-footer, #xo-canvas-footer a {
+-	color:			#666666;
+-	text-decoration:	none;
+-}
+-
+-
+-#xo-canvas-leftcolumn .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
+-	color:			#ffffff;
+-	border-bottom:	1px solid #666666;
+-	padding:		.2em .5em;
+-	font-weight:	bold;
+-	text-shadow:	1px 1px #000000;
+-}
+-
+-#xo-canvas-leftcolumn .xo-blockcontent {
+-	background:		#999999 url(img/canvas-blockcontent_bg_grey.png) repeat-x left top;
+-}
+-
+-
+-#xo-canvas-rightcolumn .xo-block {
+-	padding:		8px 0px;
+-	background:		url(img/separator.png) no-repeat center bottom;
+-}
+-#xo-canvas-rightcolumn :last-child {
+-	background:		transparent none;
+-}
+-
+-
+-#xo-canvas-rightcolumn .xo-blocktitle {
+-	font-size:		90%;
+-	font-weight:	bold;
+-}
+-#xo-canvas-rightcolumn .xo-blockcontent {
+-	font-size:		80%;
+-}
+-
+-
+-#xo-canvas-rightcolumn a {
+-	color:				#666666;
+-}
+-#xo-canvas-rightcolumn a:hover {
+-	text-decoration:	underline;
+-}
+-
+-
+-
+-.xo-canvas-column a {
+-	text-decoration:	none;
+-	font:				80%;
+-	color:				#CCCCCC;
+-}
+-.xo-canvas-column a:hover {
+-	color:				#FFFFFF;
+-}
+-
+-.system-main_menu .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
+-}
+-
+-.system-main_menu .xo-blockcontent {
+-	background:		#5E77D4 url(img/canvas-blockcontent_bg_blue.png) repeat-x left top;
+-}
+-
+-.xo-canvas-column .system-main_menu  a {
+-	color:				#B6C6EC;
+-}
+-
+-.xo-block ul {
+-	margin:				0px;
+-	padding:			0px;
+-	list-style-type:	none;
+-}
+\ No newline at end of file
+
+
+
+From skalpa at berlios.de  Sat Dec  3 00:45:58 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 00:45:58 +0100
+Subject: [Xoops4-svn] r69 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . default
+Message-ID: <200512022345.jB2NjweD027780@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 00:45:57 +0100 (Sat, 03 Dec 2005)
+New Revision: 69
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/style.css
+Log:
+Renamed the new default theme as 'default'
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default (from rev 67, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web)
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/style.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default-web/style.css	2005-12-02 23:42:07 UTC (rev 67)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/style.css	2005-12-02 23:45:57 UTC (rev 69)
+@@ -1,139 +0,0 @@
+-
+-html, body {
+-	margin:			0px;
+-	background:		#ffffff url(img/body_bg.png) repeat-x left top;
+-	background-attachment:	fixed;
+-	color:			#000000;
+-	font:			11pt sans-serif;
+-}
+-
+-#xo-canvas {
+-	margin:			15px;
+-	background:		#EEEEEE;
+-}
+-
+-#xo-canvas-header {
+-	border-bottom:	1px solid #CCCCCC;
+-	background:		#FFFFFF;
+-	padding:		3px 3px 3px;
+-}
+-
+-#xo-banner {
+-	height:			60px;
+-	border:			1px solid #000000;
+-	padding:		2px;
+-	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
+-}
+-
+-#xo-canvas-main {
+-	border-top:		1px solid #FFFFFF;
+-	padding:		6px;
+-}
+-
+-.xo-canvas-column {
+-	width:			160px;
+-}
+-#xo-canvas-leftcolumn {
+-	float:			left;
+-	border:			1px solid #666666;
+-}
+-#xo-canvas-rightcolumn {
+-	float:			right;
+-	padding-bottom:	128px;
+-	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
+-}
+-
+-#xo-page {
+-	background:		#ffffff;
+-	padding:		1em 0px;
+-	border:			1px solid #CCCCCC;
+-}
+-
+-#xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
+-	margin-left:	176px;
+-}
+-
+-#xo-canvas-rightcolumn + #xo-page {
+-	margin-right:	176px;
+-}
+-
+-#xo-canvas-footer {
+-	padding:		1px;
+-	background:		#DDDDDD;
+-	text-align:		center;
+-	font-size:		80%;
+-	font-family:	monospace;
+-}
+-#xo-canvas-footer, #xo-canvas-footer a {
+-	color:			#666666;
+-	text-decoration:	none;
+-}
+-
+-
+-#xo-canvas-leftcolumn .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_grey.png) repeat-x left top;
+-	color:			#ffffff;
+-	border-bottom:	1px solid #666666;
+-	padding:		.2em .5em;
+-	font-weight:	bold;
+-	text-shadow:	1px 1px #000000;
+-}
+-
+-#xo-canvas-leftcolumn .xo-blockcontent {
+-	background:		#999999 url(img/canvas-blockcontent_bg_grey.png) repeat-x left top;
+-}
+-
+-
+-#xo-canvas-rightcolumn .xo-block {
+-	padding:		8px 0px;
+-	background:		url(img/separator.png) no-repeat center bottom;
+-}
+-#xo-canvas-rightcolumn :last-child {
+-	background:		transparent none;
+-}
+-
+-
+-#xo-canvas-rightcolumn .xo-blocktitle {
+-	font-size:		90%;
+-	font-weight:	bold;
+-}
+-#xo-canvas-rightcolumn .xo-blockcontent {
+-	font-size:		80%;
+-}
+-
+-
+-#xo-canvas-rightcolumn a {
+-	color:				#666666;
+-}
+-#xo-canvas-rightcolumn a:hover {
+-	text-decoration:	underline;
+-}
+-
+-
+-
+-.xo-canvas-column a {
+-	text-decoration:	none;
+-	font:				80%;
+-	color:				#CCCCCC;
+-}
+-.xo-canvas-column a:hover {
+-	color:				#FFFFFF;
+-}
+-
+-.system-main_menu .xo-blocktitle {
+-	background:		url(img/canvas-blocktitle_bg_blue.png) repeat-x left top;
+-}
+-
+-.system-main_menu .xo-blockcontent {
+-	background:		#5E77D4 url(img/canvas-blockcontent_bg_blue.png) repeat-x left top;
+-}
+-
+-.xo-canvas-column .system-main_menu  a {
+-	color:				#B6C6EC;
+-}
+-
+-.xo-block ul {
+-	margin:				0px;
+-	padding:			0px;
+-	list-style-type:	none;
+-}
+\ No newline at end of file
+
+
+
+From skalpa at berlios.de  Sat Dec  3 15:08:24 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 15:08:24 +0100
+Subject: [Xoops4-svn] r70 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+Message-ID: <200512031408.jB3E8Oja017371@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 15:08:05 +0100 (Sat, 03 Dec 2005)
+New Revision: 70
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_select.php
+Log:
+YARF (Yet another references fix)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_select.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_select.php	2005-12-02 23:45:57 UTC (rev 69)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_select.php	2005-12-03 14:08:05 UTC (rev 70)
+@@ -44,7 +44,7 @@
+ 			$section['description'] = $category['description'];
+ 			$section['itemid'] = $category['item_id'];
+ 			$section['events'] = array();
+-			$subscribed_events =& $notification_handler->getSubscribedEvents($category['name'], $category['item_id'], $xoopsModule->getVar('mid'), $xoopsUser->getVar('uid'));
++			$subscribed_events = $notification_handler->getSubscribedEvents($category['name'], $category['item_id'], $xoopsModule->getVar('mid'), $xoopsUser->getVar('uid'));
+ 			foreach (notificationEvents($category['name'], true) as $event) {
+             	if (!empty($event['admin_only']) && !$xoopsUser->isAdmin($xoopsModule->getVar('mid'))) {
+                 	continue;
+
+
+
+From skalpa at berlios.de  Sat Dec  3 15:11:32 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 15:11:32 +0100
+Subject: [Xoops4-svn] r71 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks
+Message-ID: <200512031411.jB3EBWsG018584@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 15:11:17 +0100 (Sat, 03 Dec 2005)
+New Revision: 71
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+Log:
+YARF
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-03 14:08:05 UTC (rev 70)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-03 14:11:17 UTC (rev 71)
+@@ -383,7 +383,7 @@
+         $section['description'] = $category['description'];
+         $section['itemid'] = $category['item_id'];
+         $section['events'] = array();
+-        $subscribed_events =& $notification_handler->getSubscribedEvents ($category['name'], $category['item_id'], $xoopsModule->getVar('mid'), $xoopsUser->getVar('uid'));
++        $subscribed_events = $notification_handler->getSubscribedEvents ($category['name'], $category['item_id'], $xoopsModule->getVar('mid'), $xoopsUser->getVar('uid'));
+         foreach (notificationEvents($category['name'], true) as $event) {
+             if (!empty($event['admin_only']) && !$xoopsUser->isAdmin($xoopsModule->getVar('mid'))) {
+                 continue;
+
+
+
+From skalpa at berlios.de  Sat Dec  3 15:14:36 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 15:14:36 +0100
+Subject: [Xoops4-svn] r72 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+Message-ID: <200512031414.jB3EEaDI019147@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 15:13:53 +0100 (Sat, 03 Dec 2005)
+New Revision: 72
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/canvas-default.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl
+Log:
+Ensure the blocks template is included using xotpl:
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/canvas-default.xotpl	2005-12-03 14:11:17 UTC (rev 71)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/canvas-default.xotpl	2005-12-03 14:13:53 UTC (rev 72)
+@@ -33,7 +33,7 @@
+ 		([if !empty($xoBlocks.canvas_left)])
+ 		<div class="xo-canvas-column xo-blockszone" id="xo-canvas-leftcolumn">
+ 		([foreach from=$xoBlocks.canvas_left key=n item=block])
+-			([include file="`$xoTheme->folderName`/block.xotpl"])
++			([include file="xotpl:block.xotpl"])
+ 		([/foreach])
+ 		</div>
+ 		([/if])
+@@ -41,7 +41,7 @@
+ 		([if !empty($xoBlocks.canvas_right)])
+ 		<div class="xo-canvas-column xo-blockszone" id="xo-canvas-rightcolumn">
+ 		([foreach from=$xoBlocks.canvas_right key=n item=block])
+-			([include file="`$xoTheme->folderName`/block.xotpl"])
++			([include file="xotpl:block.xotpl"])
+ 		([/foreach])
+ 		</div>
+ 		([/if])
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl	2005-12-03 14:11:17 UTC (rev 71)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl	2005-12-03 14:13:53 UTC (rev 72)
+@@ -3,21 +3,21 @@
+ 		([if !empty($xoops_ccblocks)])
+ 		<div class="xo-blockszone" id="xo-page-topblocks">
+ 		([foreach item=block from=$xoops_ccblocks])
+-			([include file="default-web/block.html"])
++			([include file="xotpl:block.xotpl"])
+ 		([/foreach])
+ 		</div>
+ 		([/if])
+ 		([if !empty($xoops_clblocks)])
+ 		<div class="xo-blockszone" id="xo-page-topleftblocks">
+ 		([foreach item=block from=$xoops_clblocks])
+-			([include file="default-web/block.html"])
++			([include file="xotpl:block.xotpl"])
+ 		([/foreach])
+ 		</div>
+ 		([/if])
+ 		([if !empty($xoops_crblocks)])
+ 		<div class="xo-blockszone" id="xo-page-toprightblocks">
+ 		([foreach item=block from=$xoops_crblocks])
+-			([include file="default-web/block.html"])
++			([include file="xotpl:block.xotpl"])
+ 		([/foreach])
+ 		</div>
+ 		([/if])
+
+
+
+From skalpa at berlios.de  Sat Dec  3 15:17:46 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 15:17:46 +0100
+Subject: [Xoops4-svn] r73 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes: . xoops-devteam xoops-devteam/img xoops-devteam/modules xoops-devteam/modules/articles
+Message-ID: <200512031417.jB3EHkcF020892@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 15:17:25 +0100 (Sat, 03 Dec 2005)
+New Revision: 73
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/canvas-rightcolumn_bg.png
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php
+Log:
+Added the devteam site theme to the repository, to have a showcase for the themes inheritance system
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/canvas-rightcolumn_bg.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/img/canvas-rightcolumn_bg.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/article_index.xotpl	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,50 @@
++([*
++articles
++    topic
++        article
++        article
++    /topic
++/articles
++*])
++
++<h3>([$category_list_title])</h3>
++
++([foreach from=$categories item=category])
++<div class="xo-block xo-mentas-list articles-topic-items">
++	<div class="xo-blocktitle">
++		<a href="index.php?cat_id=([$category.id])" title="([$category.cat_description])">
++			([$category.cat_name]) (([$category.number_articles]) ([$number_articles_caption]))
++		</a>
++	</div>
++	<div class="xo-blockcontent">
++	([foreach from=$category.articles item=article])
++		<div class="xo-menta articles-article">
++			<div class="xo-head">
++	            <a class="title" href="article.php?id=([$article.id])">([$article.title])</a>
++			</div>
++			<div class="xo-body description">
++				([$article.article_description])
++			</div>
++			<div class="xo-foot">
++            ([if $index_reads eq 1])
++              [([$article.article_views]) ([$article_views_caption])]
++            ([/if])
++			</div>
++		</div>
++	([/foreach])
++	</div>
++</div>
++([/foreach])
++
++([if $show_pagin eq 1])
++<div class="pager-widget">
++	([$articles_num]) ([$articles_numstart]) ([$articles_to]) ([$articles_numend]) ([$articles_of]) ([$articles_numtotal])
++	([$articles_prev]) ([$articles_sep]) ([$articles_next])
++</div>
++([/if])
++
++<!-- notification -->
++([include file='db:system_notification_select.html'])
++<!--  end notification -->
++
++
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/modules/articles/news_item.xotpl	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,32 @@
++
++<div class="xo-menta news-item">
++
++
++([$story.news_title])
++rr
++
++</div>
++
++
++<table cellpadding="0" cellspacing="0" class="item">
++<tr>
++	<td>
++		<table cellpadding="0" cellspacing="0" width="98%">
++		<tr>
++			<td class="itemHead"><span class="itemTitle"><{$story.title}></span></td>
++		</tr>
++		<tr>
++			<td class="itemInfo"><{if $story.files_attached}><{$story.attached_link}>&nbsp;<{/if}>
++			<{if $story.poster != ''}><span class="itemPoster"><{$lang_postedby}> <{$story.poster}></span>
++			<{/if}> <span class="itemPostDate"><{$lang_on}> <{$story.posttime}></span> (<span class="itemStats"><{$story.hits}> <{$lang_reads}></span>) <{$news_by_the_same_author_link}></td>
++		</tr>
++		<tr>
++			<td><div class="itemBody"><{$story.imglink}><p class="itemText"><{$story.text}></p></div></td>
++		</tr>
++		<tr>
++			<td class="itemFoot"><span class="itemAdminLink"><{$story.adminlink}></span><{if $rates}><b><{$lang_ratingc}></b> <{$story.rating}> (<{$story.votes}>) - <a href="<{$xoops_url}>/modules/news/ratenews.php?storyid=<{$story.id}>" rel="nofollow"><{$lang_ratethisnews}></a> - <{/if}><span class="itemPermaLink"><{$story.morelink}></span></td>
++		</tr>
++		</table>
++	</td>
++</tr>
++</table>
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,14 @@
++
++ at import url(../default/page-default.css);
++
++
++#xo-canvas-leftcolumn {
++	float:			right;
++}
++
++#xo-canvas-rightcolumn {
++	float:			left;
++	background-image:		url(img/canvas-rightcolumn_bg.png);
++}
++
++
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+___________________________________________________________________
+Name: svn:keywords
+   + "Author Date Id Rev URL"
+
+Added: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php	2005-12-03 14:13:53 UTC (rev 72)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php	2005-12-03 14:17:25 UTC (rev 73)
+@@ -0,0 +1,28 @@
++<?php
++
++
++
++
++return array(
++	'xoBundleIdentifier'	=> 'theme_xoops__devteam',
++	'xoBundleDisplayName'	=> 'devteam.xoops.org theme',
++	'parentTheme'			=> 'default',
++	// This theme default templates
++	// templates paths must start with a "." to be considered relative to the theme folder
++	'canvasTemplate' => './canvas-default.xotpl',
++	'pageTemplate' => './page-default.xotpl',
++);
++
++
++
++
++
++
++
++
++
++
++
++
++
++?>
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + "Author Date Id Rev URL"
+
+
+
+From skalpa at berlios.de  Sat Dec  3 15:19:17 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 15:19:17 +0100
+Subject: [Xoops4-svn] r74 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs
+Message-ID: <200512031419.jB3EJH9Y021533@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 15:19:06 +0100 (Sat, 03 Dec 2005)
+New Revision: 74
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+Log:
+YARF
+
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-12-03 14:17:25 UTC (rev 73)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/header.php	2005-12-03 14:19:06 UTC (rev 74)
+@@ -59,7 +59,7 @@
+     $config_handler =& xoops_gethandler('config');
+     $criteria = new CriteriaCompo(new Criteria('conf_modid', 0));
+     $criteria->add(new Criteria('conf_catid', XOOPS_CONF_METAFOOTER));
+-    $config =& $config_handler->getConfigs($criteria, true);
++    $config = $config_handler->getConfigs($criteria, true);
+     foreach ( array_keys($config) as $i ) {
+     	if ( substr( $config[$i]->getVar('conf_name'), 0, 5 ) == 'meta_' ) {
+     		$xoops->services['theme']->setMeta( 'meta',
+@@ -145,7 +145,6 @@
+         include XOOPS_ROOT_PATH.'/include/old_theme_functions.php';
+         // need this also
+         $xoopsTheme['thename'] = $xoopsConfig['theme_set'];
+-        ob_start();
+     }
+ 
+ ?>
+\ No newline at end of file
+
+
+
+From skalpa at berlios.de  Sat Dec  3 15:26:20 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 15:26:20 +0100
+Subject: [Xoops4-svn] r75 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+Message-ID: <200512031426.jB3EQKN6026165@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 15:26:17 +0100 (Sat, 03 Dec 2005)
+New Revision: 75
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+Log:
+Implemented themes inheritance: if a themed resource is not found in the current theme folder, the theme engine will look for it in this theme parent folder (if any) before returning the default path.
+Old 2.0 themes (with no xo-info.php file) automatically inherit from the 'xoops20' theme.
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2005-12-03 14:19:06 UTC (rev 74)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj/theme.php	2005-12-03 14:26:17 UTC (rev 75)
+@@ -152,6 +152,7 @@
+ 			XOS::apply( $this, $info );
+ 		} else {
+ 			$this->themeAPI = '2.0';
++			$this->parentTheme = ( $this->folderName == 'xoops20' ? '' : 'xoops20' );
+ 		}
+ 		if ( $this->bufferOutput ) {
+ 			ob_start();
+@@ -217,13 +218,15 @@
+ 	 * @param string $zone
+ 	 */	
+ 	function renderZone( $zone ) {
++		global $xoops;
++
+ 		$zones = array( 'canvas' => 0, 'page' => 1, 'content' => 2 );
+ 		if ( isset( $zones[$zone] ) ) {
+ 			$tpl = $zone . 'Template';
+ 			$tpl = $this->$tpl;
+ 			if ( !empty( $tpl ) ) {
+ 				if ( $tpl{0} == '.' ) {
+-					$tpl = $this->path . substr( $tpl, 1 );
++					$tpl = $xoops->path( $this->resourcePath( substr( $tpl, 1 ) ) );
+ 				}
+ 				$this->template->display( $tpl );
+ 			} elseif ( $zone != 'content' ) {
+@@ -245,17 +248,24 @@
+ 	}
+ 	
+ 	
+-	function resourcePath( $path ) {
++	function resourcePath( $path, $fromDocRoot = true ) {
+ 		global $xoops;
+-		$isWeb = true;
+ 		if ( $path{0} == '/' ) {
+ 			$path = substr( $path, 1 );
+-			$isWeb = false;
++			$fromDocRoot = false;
+ 		}
+ 		if ( file_exists( "$this->path/$path" ) ) {
+ 			return "themes/$this->folderName/$path";
+ 		}
+-		return $isWeb ? "www/$path" : $path;
++		if ( !empty( $this->parentTheme ) ) {
++			if ( !is_object( $this->parentTheme ) ) {
++				$this->parentTheme =& XOS::create( 'xoops_pyro_Theme', array( 'folderName' => $this->parentTheme ) );
++			}
++			if ( is_object( $this->parentTheme ) ) {
++				return $this->parentTheme->resourcePath( $path, $fromDocRoot );
++			}
++		}
++		return $fromDocRoot ? "www/$path" : "themes/$this->folderName/$path";
+ 	}
+ 	
+     /**
+
+
+
+From skalpa at berlios.de  Sat Dec  3 21:58:31 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 21:58:31 +0100
+Subject: [Xoops4-svn] r76 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20
+Message-ID: <200512032058.jB3KwVIS023891@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 21:58:31 +0100 (Sat, 03 Dec 2005)
+New Revision: 76
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html
+Log:
+Fixed the blocks templates path
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html	2005-12-03 14:26:17 UTC (rev 75)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops20/theme.html	2005-12-03 20:58:31 UTC (rev 76)
+@@ -38,7 +38,7 @@
+       <td id="leftcolumn">
+         <!-- Start left blocks loop -->
+         <{foreach item=block from=$xoops_lblocks}>
+-          <{include file="default/theme_blockleft.html"}>
++          <{include file="xoops20/theme_blockleft.html"}>
+         <{/foreach}>
+         <!-- End left blocks loop -->
+ 
+@@ -55,7 +55,7 @@
+ 
+             <!-- Start center-center blocks loop -->
+             <{foreach item=block from=$xoops_ccblocks}>
+-              <{include file="default/theme_blockcenter_c.html"}>
++              <{include file="xoops20/theme_blockcenter_c.html"}>
+             <{/foreach}>
+             <!-- End center-center blocks loop -->
+ 
+@@ -66,7 +66,7 @@
+ 
+             <!-- Start center-left blocks loop -->
+               <{foreach item=block from=$xoops_clblocks}>
+-                <{include file="default/theme_blockcenter_l.html"}>
++                <{include file="xoops20/theme_blockcenter_l.html"}>
+               <{/foreach}>
+             <!-- End center-left blocks loop -->
+ 
+@@ -74,7 +74,7 @@
+ 
+             <!-- Start center-right blocks loop -->
+               <{foreach item=block from=$xoops_crblocks}>
+-                <{include file="default/theme_blockcenter_r.html"}>
++                <{include file="xoops20/theme_blockcenter_r.html"}>
+               <{/foreach}>
+             <!-- End center-right blocks loop -->
+ 
+@@ -95,7 +95,7 @@
+       <td id="rightcolumn">
+         <!-- Start right blocks loop -->
+         <{foreach item=block from=$xoops_rblocks}>
+-          <{include file="default/theme_blockright.html"}>
++          <{include file="xoops20/theme_blockright.html"}>
+         <{/foreach}>
+         <!-- End right blocks loop -->
+       </td>
+
+
+
+From skalpa at berlios.de  Sat Dec  3 21:59:56 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sat, 3 Dec 2005 21:59:56 +0100
+Subject: [Xoops4-svn] r77 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+Message-ID: <200512032059.jB3KxuLk024099@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-03 21:59:55 +0100 (Sat, 03 Dec 2005)
+New Revision: 77
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl
+Log:
+Removed the news block inclusion (did that for testing and forgot to remove it)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl	2005-12-03 20:58:31 UTC (rev 76)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.xotpl	2005-12-03 20:59:55 UTC (rev 77)
+@@ -22,8 +22,6 @@
+ 		</div>
+ 		([/if])
+ 		
+-		([include file='xotpl:modules/news/templates/blocks/news_block_topics.html'])
+-
+ 		<div id="xo-content">
+ 			([$xoTheme->renderZone('content')])
+ 		</div>
+
+
+
+From skalpa at berlios.de  Sun Dec  4 00:48:08 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sun, 4 Dec 2005 00:48:08 +0100
+Subject: [Xoops4-svn] r78 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . admin language/english
+Message-ID: <200512032348.jB3Nm8O0020820@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-04 00:48:07 +0100 (Sun, 04 Dec 2005)
+New Revision: 78
+
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/tplsets/
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php
+Log:
+Removing the templates sets admin section (will be replaced by a new templates edition module)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php	2005-12-03 20:59:55 UTC (rev 77)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/language/english/modinfo.php	2005-12-03 23:48:07 UTC (rev 78)
+@@ -36,6 +36,5 @@
+ define("_MI_SYSTEM_ADMENU12", "Find Users");
+ define("_MI_SYSTEM_ADMENU13", "Images");
+ define("_MI_SYSTEM_ADMENU14", "Avatars");
+-define("_MI_SYSTEM_ADMENU15", "Templates");
+ define("_MI_SYSTEM_ADMENU16", "Comments");
+ ?>
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php	2005-12-03 20:59:55 UTC (rev 77)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/menu.php	2005-12-03 23:48:07 UTC (rev 78)
+@@ -53,8 +53,6 @@
+ $adminmenu[10]['link'] = "admin.php?fct=mailusers";
+ $adminmenu[11]['title'] = _MI_SYSTEM_ADMENU14;
+ $adminmenu[11]['link'] = "admin.php?fct=avatars";
+-$adminmenu[12]['title'] = _MI_SYSTEM_ADMENU15;
+-$adminmenu[12]['link'] = "admin.php?fct=tplsets";
+-$adminmenu[13]['title'] = _MI_SYSTEM_ADMENU16;
+-$adminmenu[13]['link'] = "admin.php?fct=comments";
++$adminmenu[12]['title'] = _MI_SYSTEM_ADMENU16;
++$adminmenu[12]['link'] = "admin.php?fct=comments";
+ ?>
+\ No newline at end of file
+
+
+
+From skalpa at berlios.de  Sun Dec  4 01:00:56 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sun, 4 Dec 2005 01:00:56 +0100
+Subject: [Xoops4-svn] r79 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin
+Message-ID: <200512040000.jB400uD7025343@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-04 00:59:53 +0100 (Sun, 04 Dec 2005)
+New Revision: 79
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blockform.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blocksadmin.php
+Log:
+Removed old templates sets stuff from the blocks admin
+(NB: does anybody have a clue of what the 'clone_block' function is here for ?)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blockform.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blockform.php	2005-12-03 23:48:07 UTC (rev 78)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blockform.php	2005-12-03 23:59:53 UTC (rev 79)
+@@ -55,16 +55,7 @@
+     $form->addElement($ctype_select);
+ } else {
+     if ($block['template'] != '') {
+-        $tplfile_handler =& xoops_gethandler('tplfile');
+-        $btemplate =& $tplfile_handler->find($GLOBALS['xoopsConfig']['template_set'], 'block', $block['bid']);
+-        if (count($btemplate) > 0) {
+-            $form->addElement(new XoopsFormLabel(_AM_CONTENT, '<a href="'.XOOPS_URL.'/modules/system/admin.php?fct=tplsets&op=edittpl&id='.$btemplate[0]->getVar('tpl_id').'">'._AM_EDITTPL.'</a>'));
+-        } else {
+-            $btemplate2 =& $tplfile_handler->find('default', 'block', $block['bid']);
+-            if (count($btemplate2) > 0) {
+-                $form->addElement(new XoopsFormLabel(_AM_CONTENT, '<a href="'.XOOPS_URL.'/modules/system/admin.php?fct=tplsets&op=edittpl&id='.$btemplate2[0]->getVar('tpl_id').'" target="_blank">'._AM_EDITTPL.'</a>'));
+-            }
+-        }
++		$form->addElement( new XoopsFormLabel(_AM_CONTENT, '@TODO-2.3: Add a link to the new tpl editor module') );
+     }
+     if ($block['edit_form'] != false) {
+         $form->addElement(new XoopsFormLabel(_AM_OPTIONS, $block['edit_form']));
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blocksadmin.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blocksadmin.php	2005-12-03 23:48:07 UTC (rev 78)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/blocksadmin/blocksadmin.php	2005-12-03 23:59:53 UTC (rev 79)
+@@ -343,14 +343,7 @@
+     {
+         $myblock = new XoopsBlock($bid);
+         $myblock->delete();
+-        if ($myblock->getVar('template') != '') {
+-            $tplfile_handler =& xoops_gethandler('tplfile');
+-            $btemplate =& $tplfile_handler->find($GLOBALS['xoopsConfig']['template_set'], 'block', $bid);
+-            if (count($btemplate) > 0) {
+-                $tplfile_handler->delete($btemplate[0]);
+-            }
+-        }
+-        redirect_header('admin.php?fct=blocksadmin&amp;t='.time(),1,_AM_DBUPDATED);
++        redirect_header( 'admin.php?fct=blocksadmin&amp;t=' . time(), 1, _AM_DBUPDATED );
+         exit();
+     }
+ 
+@@ -418,16 +411,6 @@
+             xoops_cp_footer();
+             exit();
+         }
+-        if ($clone->getVar('template') != '') {
+-            $tplfile_handler =& xoops_gethandler('tplfile');
+-            $btemplate =& $tplfile_handler->find($GLOBALS['xoopsConfig']['template_set'], 'block', $bid);
+-            if (count($btemplate) > 0) {
+-                $tplclone =& $btemplate[0]->xoopsClone();
+-                $tplclone->setVar('tpl_id', 0);
+-                $tplclone->setVar('tpl_refid', $newid);
+-                $tplman->insert($tplclone);
+-            }
+-        }
+         $db =& Database::getInstance();
+         foreach ($bmodule as $bmid) {
+             $sql = 'INSERT INTO '.$db->prefix('block_module_link').' (block_id, module_id) VALUES ('.$newid.', '.$bmid.')';
+
+
+
+From skalpa at berlios.de  Sun Dec  4 02:58:50 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sun, 4 Dec 2005 02:58:50 +0100
+Subject: [Xoops4-svn] r80 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install: . sql
+Message-ID: <200512040158.jB41wolQ031803@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-04 02:58:42 +0100 (Sun, 04 Dec 2005)
+New Revision: 80
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/index.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/sql/mysql.structure.sql
+Log:
+Removed traces of the old templates sets system from the installer
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/index.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/index.php	2005-12-03 23:59:53 UTC (rev 79)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/index.php	2005-12-04 01:58:42 UTC (rev 80)
+@@ -622,42 +622,17 @@
+ 	// default the default theme
+ 
+     $time = time();
+-    $dbm->insert('tplset', " VALUES (1, 'default', 'XOOPS Default Theme', '', ".$time.")");
+ 
+-//	include_once './class/cachemanager.php';
+-//    $cm = new cache_manager;
+-//	$skinfiles = array('1' => 'skin.html', '2' => 'style.css'
+-//                        , '3' => 'styleNN.css','4' =>  'styleMAC.css'
+-//                        , '5' => 'skin_blockleft.html', '6' => 'skin_blockright.html'
+-//                        , '7' => 'skin_blockcenter_l.html', '8' => 'skin_blockcenter_c.html'
+-//                        , '9' => 'skin_blockcenter_r.html');
+-//    foreach ($skinfiles as $key => $skinfile) {
+-//        if(preg_match('/\.css$/', $skinfile)) {
+-//            $type = 'css';
+-//        }else{
+-//            $type = 'skin';
+-//        }
+-//        $dbm->insert('tplfile', " VALUES ($key, 0, '', 'default', '$skinfile', '', $time, $time, '$type')");
++    $dbm->query("INSERT INTO ".$dbm->prefix('group_permission')." (gperm_groupid, gperm_itemid) SELECT groupid, block_id FROM ".$dbm->prefix('groups_blocks_link'));
++	$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_name = 'block_read'");
++	$dbm->query("INSERT INTO ".$dbm->prefix('group_permission')." (gperm_groupid, gperm_itemid) SELECT groupid, mid FROM ".$dbm->prefix('groups_modules_link') ." WHERE type='A'");
++	$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_name = 'module_admin' WHERE gperm_name = ''");
++	$dbm->query("INSERT INTO ".$dbm->prefix('group_permission')." (gperm_groupid, gperm_itemid) SELECT groupid, mid FROM ".$dbm->prefix('groups_modules_link')." WHERE type='R'");
++	$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_name = 'module_read' WHERE gperm_name = ''");
++	$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_modid = 1");
++	$dbm->query('DROP TABLE '.$dbm->prefix('groups_blocks_link'));
++	$dbm->query('DROP TABLE '.$dbm->prefix('groups_modules_link'));
+ 
+-//        $fp = fopen('./templates/default_skin/'.$skinfile, 'r');
+-//        $skinsource = fread($fp, filesize('./templates/default_skin/'.$skinfile));
+-//        fclose($fp);
+-//        $dbm->insert('tplsource', " (tpl_id, tpl_source) VALUES ($key, '".addslashes($skinsource)."')");
+-//        if(preg_match('/\.css$/',$skinfile)) {
+-//            $cm->write($skinfile, $skinsource);
+-//        }
+-//    }
+-
+-        $dbm->query("INSERT INTO ".$dbm->prefix('group_permission')." (gperm_groupid, gperm_itemid) SELECT groupid, block_id FROM ".$dbm->prefix('groups_blocks_link'));
+-		$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_name = 'block_read'");
+-    	$dbm->query("INSERT INTO ".$dbm->prefix('group_permission')." (gperm_groupid, gperm_itemid) SELECT groupid, mid FROM ".$dbm->prefix('groups_modules_link') ." WHERE type='A'");
+-		$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_name = 'module_admin' WHERE gperm_name = ''");
+-    	$dbm->query("INSERT INTO ".$dbm->prefix('group_permission')." (gperm_groupid, gperm_itemid) SELECT groupid, mid FROM ".$dbm->prefix('groups_modules_link')." WHERE type='R'");
+-		$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_name = 'module_read' WHERE gperm_name = ''");
+-		$dbm->query("UPDATE ".$dbm->prefix('group_permission')." SET gperm_modid = 1");
+-		$dbm->query('DROP TABLE '.$dbm->prefix('groups_blocks_link'));
+-		$dbm->query('DROP TABLE '.$dbm->prefix('groups_modules_link'));
+-
+ 	// insert some more data
+ 	$result = $dbm->queryFromFile('./sql/'.XOOPS_DB_TYPE.'.data.sql');
+ 
+@@ -723,39 +698,6 @@
+ 				$newmid = $modules[$mid]->getVar('mid');
+ 				$msgs = array();
+ 				$msgs[] = 'Module data updated.';
+-				$tplfile_handler =& xoops_gethandler('tplfile');
+-				$templates = $modules[$mid]->getInfo('templates');
+-				if ($templates != false) {
+-					$msgs[] = 'Generating templates...';
+-					foreach ($templates as $tpl) {
+-						$tpl['file'] = trim($tpl['file']);
+-						$tpldata =& xoops_module_gettemplate($dirname, $tpl['file']);
+-						$tplfile =& $tplfile_handler->create();
+-						$tplfile->setVar('tpl_refid', $newmid);
+-						$tplfile->setVar('tpl_lastimported', 0);
+-						$tplfile->setVar('tpl_lastmodified', time());
+-						if (preg_match("/\.css$/i", $tpl['file'])) {
+-							$tplfile->setVar('tpl_type', 'css');
+-						} else {
+-							$tplfile->setVar('tpl_type', 'module');
+-							//if ($xoopsConfig['default_theme'] == 'default') {
+-							//	include_once XOOPS_ROOT_PATH.'/class/template.php';
+-							//	xoops_template_touch($tplfile->getVar('tpl_id'));
+-							//}
+-						}
+-						$tplfile->setVar('tpl_source', $tpldata, true);
+-						$tplfile->setVar('tpl_module', $dirname);
+-						$tplfile->setVar('tpl_tplset', 'default');
+-						$tplfile->setVar('tpl_file', $tpl['file'], true);
+-						$tplfile->setVar('tpl_desc', $tpl['description'], true);
+-						if (!$tplfile_handler->insert($tplfile)) {
+-							$msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$tpl['file'].'</b> to the database.</span>';
+-						} else {
+-							$msgs[] = '&nbsp;&nbsp;Template <b>'.$tpl['file'].'</b> inserted to the database.';
+-						}
+-						unset($tpldata);
+-					}
+-				}
+ 				$blocks = $modules[$mid]->getInfo('blocks');
+ 				$msgs[] = 'Rebuilding blocks...';
+ 				$showfuncs = array();
+@@ -768,14 +710,11 @@
+ 							$editfunc = isset($blocks[$i]['edit_func']) ? $blocks[$i]['edit_func'] : '';
+ 							$showfuncs[] = $blocks[$i]['show_func'];
+ 							$funcfiles[] = $blocks[$i]['file'];
++							$content = '';
+ 							$template = '';
+-							if ((isset($blocks[$i]['template']) && trim($blocks[$i]['template']) != '')) {
+-								$content =& xoops_module_gettemplate($dirname, $blocks[$i]['template'], true);
++							if ( isset($blocks[$i]['template']) && @is_readable( XOOPS_ROOT_PATH . "/modules/$dirname/templates/blocks/" . $blocks[$i]['template'] ) ) {
+ 								$template = $blocks[$i]['template'];
+ 							}
+-							if (!$content) {
+-								$content = '';
+-							}
+ 							$options = '';
+ 							if (isset($blocks[$i]['options']) && $blocks[$i]['options'] != '') {
+ 								$options = $blocks[$i]['options'];
+@@ -791,30 +730,6 @@
+ 									$msgs[] = '&nbsp;&nbsp;ERROR: Could not update '.$fblock['name'];
+ 								} else {
+ 									$msgs[] = '&nbsp;&nbsp;Block <b>'.$fblock['name'].'</b> updated. Block ID: <b>'.$fblock['bid'].'</b>';
+-									if ($template != '') {
+-										$tplfile =& $tplfile_handler->create();
+-										$tplfile->setVar('tpl_refid', $fblock['bid']);
+-										$tplfile->setVar('tpl_source', $content, true);
+-										$tplfile->setVar('tpl_tplset', 'default');
+-										$tplfile->setVar('tpl_file', $blocks[$i]['template']);
+-										$tplfile->setVar('tpl_module', $dirname);
+-										$tplfile->setVar('tpl_type', 'block');
+-										$tplfile->setVar('tpl_desc', $blocks[$i]['description'], true);
+-										$tplfile->setVar('tpl_lastimported', 0);
+-										$tplfile->setVar('tpl_lastmodified', time());
+-										if (!$tplfile_handler->insert($tplfile)) {
+-											$msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$blocks[$i]['template'].'</b> to the database.</span>';
+-										} else {
+-											$msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> inserted to the database.';
+-											//if ($xoopsConfig['default_theme'] == 'default') {
+-											//	if (!xoops_template_touch($tplfile[0]->getVar('tpl_id'))) {
+-											//		$msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not recompile template <b>'.$blocks[$i]['template'].'</b>.</span>';
+-											//	} else {
+-											//		$msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> recompiled.';
+-											//	}
+-											//}
+-										}
+-									}
+ 								}
+ 							}
+ 							if ($fcount == 0) {
+@@ -828,23 +743,6 @@
+ 									if (empty($newbid)) {
+ 										$newbid = $xoopsDB->getInsertId();
+ 									}
+-									if ($template != '') {
+-										$tplfile =& $tplfile_handler->create();
+-										$tplfile->setVar('tpl_module', $dirname);
+-										$tplfile->setVar('tpl_refid', $newbid);
+-										$tplfile->setVar('tpl_source', $content, true);
+-										$tplfile->setVar('tpl_tplset', 'default');
+-										$tplfile->setVar('tpl_file', $blocks[$i]['template'], true);
+-										$tplfile->setVar('tpl_type', 'block');
+-										$tplfile->setVar('tpl_lastimported', 0);
+-										$tplfile->setVar('tpl_lastmodified', time());
+-										$tplfile->setVar('tpl_desc', $blocks[$i]['description'], true);
+-										if (!$tplfile_handler->insert($tplfile)) {
+-											$msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$blocks[$i]['template'].'</b> to the database.</span>';
+-										} else {
+-											$msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> inserted to the database.';
+-										}
+-									}
+ 									$msgs[] = '&nbsp;&nbsp;Block <b>'.$blocks[$i]['name'].'</b> created. Block ID: <b>'.$newbid.'</b>';
+ 								}
+ 							}
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php	2005-12-03 23:59:53 UTC (rev 79)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php	2005-12-04 01:58:42 UTC (rev 80)
+@@ -89,7 +89,6 @@
+     // default theme
+ 
+     $time = time();
+-    $dbm->insert('tplset', " VALUES (1, 'default', 'XOOPS Default Template Set', '', ".$time.")");
+ 
+     // system modules
+ 
+@@ -107,16 +106,6 @@
+ 	// RMV-NOTIFY (updated for extra column in table)
+     $dbm->insert("modules", " VALUES (1, '"._MI_SYSTEM_NAME."', 100, ".$time.", 0, 1, 'system', 0, 1, 0, 0, 0, 0)");
+ 
+-    foreach ($modversion['templates'] as $tplfile) {
+-        if ($fp = fopen('../modules/system/templates/'.$tplfile['file'], 'r')) {
+-            $newtplid = $dbm->insert('tplfile', " VALUES (0, 1, 'system', 'default', '".addslashes($tplfile['file'])."', '".addslashes($tplfile['description'])."', ".$time.", ".$time.", 'module')");
+-            //$newtplid = $xoopsDB->getInsertId();
+-            $tplsource = fread($fp, filesize('../modules/system/templates/'.$tplfile['file']));
+-            fclose($fp);
+-            $dbm->insert('tplsource', " (tpl_id, tpl_source) VALUES (".$newtplid.", '".addslashes($tplsource)."')");
+-        }
+-    }
+-
+     foreach ($modversion['blocks'] as $func_num => $newblock) {
+         if ($fp = fopen('../modules/system/templates/blocks/'.$newblock['template'], 'r')) {
+             if (in_array($newblock['template'], array('system_block_user.html', 'system_block_login.html', 'system_block_mainmenu.html'))) {
+@@ -128,11 +117,7 @@
+             $edit_func = !isset($newblock['edit_func']) ? '' : trim($newblock['edit_func']);
+             $newbid = $dbm->insert('newblocks', " VALUES (0, 1, ".$func_num.", '".addslashes($options)."', '".addslashes($newblock['name'])."', '".addslashes($newblock['name'])."', '', 0, 0, ".$visible.", 'S', 'H', 1, 'system', '".addslashes($newblock['file'])."', '".addslashes($newblock['show_func'])."', '".addslashes($edit_func)."', '".addslashes($newblock['template'])."', 0, ".$time.")");
+             //$newbid = $xoopsDB->getInsertId();
+-            $newtplid = $dbm->insert('tplfile', " VALUES (0, ".$newbid.", 'system', 'default', '".addslashes($newblock['template'])."', '".addslashes($newblock['description'])."', ".$time.", ".$time.", 'block')");
+-            //$newtplid = $xoopsDB->getInsertId();
+-            $tplsource = fread($fp, filesize('../modules/system/templates/blocks/'.$newblock['template']));
+             fclose($fp);
+-            $dbm->insert('tplsource', " (tpl_id, tpl_source) VALUES (".$newtplid.", '".addslashes($tplsource)."')");
+             $dbm->insert("group_permission", " VALUES (0, ".$gruops['XOOPS_GROUP_ADMIN'].", ".$newbid.", 1, 'block_read')");
+             //$dbm->insert("group_permission", " VALUES (0, ".$gruops['XOOPS_GROUP_ADMIN'].", ".$newbid.", 'xoops_blockadmiin')");
+             $dbm->insert("group_permission", " VALUES (0, ".$gruops['XOOPS_GROUP_USERS'].", ".$newbid.", 1, 'block_read')");
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/sql/mysql.structure.sql
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/sql/mysql.structure.sql	2005-12-03 23:59:53 UTC (rev 79)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/sql/mysql.structure.sql	2005-12-04 01:58:42 UTC (rev 80)
+@@ -479,51 +479,6 @@
+ ) TYPE=MyISAM;
+ # --------------------------------------------------------
+ 
+-#
+-# Table structure for table `tplset`
+-#
+-
+-CREATE TABLE tplset (
+-  tplset_id int(7) unsigned NOT NULL auto_increment,
+-  tplset_name varchar(50) NOT NULL default '',
+-  tplset_desc varchar(255) NOT NULL default '',
+-  tplset_credits text NOT NULL,
+-  tplset_created int(10) unsigned NOT NULL default '0',
+-  PRIMARY KEY  (tplset_id)
+-) TYPE=MyISAM;
+-# --------------------------------------------------------
+-
+-#
+-# Table structure for table `tplfile`
+-#
+-
+-CREATE TABLE tplfile (
+-  tpl_id mediumint(7) unsigned NOT NULL auto_increment,
+-  tpl_refid smallint(5) unsigned NOT NULL default '0',
+-  tpl_module varchar(25) NOT NULL default '',
+-  tpl_tplset varchar(50) NOT NULL default '',
+-  tpl_file varchar(50) NOT NULL default '',
+-  tpl_desc varchar(255) NOT NULL default '',
+-  tpl_lastmodified int(10) unsigned NOT NULL default '0',
+-  tpl_lastimported int(10) unsigned NOT NULL default '0',
+-  tpl_type varchar(20) NOT NULL default '',
+-  PRIMARY KEY  (tpl_id),
+-  KEY tpl_refid (tpl_refid,tpl_type),
+-  KEY tpl_tplset (tpl_tplset,tpl_file(10))
+-) TYPE=MyISAM;
+-# --------------------------------------------------------
+-
+-#
+-# Table structure for table `tplsource`
+-#
+-
+-CREATE TABLE tplsource (
+-  tpl_id mediumint(7) unsigned NOT NULL default '0',
+-  tpl_source mediumtext NOT NULL,
+-  KEY tpl_id (tpl_id)
+-) TYPE=MyISAM;
+-# --------------------------------------------------------
+-
+ # RMV-NOTIFY (added two columns)
+ # Table structure for table `users`
+ #
+
+
+
+From skalpa at berlios.de  Sun Dec  4 02:59:56 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sun, 4 Dec 2005 02:59:56 +0100
+Subject: [Xoops4-svn] r81 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class
+Message-ID: <200512040159.jB41xuoR032138@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-04 02:59:50 +0100 (Sun, 04 Dec 2005)
+New Revision: 81
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php
+Log:
+Removed traces of the old templates sets system from the installer
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php	2005-12-04 01:58:42 UTC (rev 80)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/template.php	2005-12-04 01:59:50 UTC (rev 81)
+@@ -78,20 +78,10 @@
+ }
+ 
+ /**
+- * Useless... just kept for compatibility, just in case
++ * Those have been removed. Please tell us if your module use them
+  **/
+ function xoops_template_create ($resource_type, $resource_name, &$template_source, &$template_timestamp, &$smarty_obj) {
+-	if ( $resource_type == 'db' ) {
+-		$file_handler =& xoops_gethandler('tplfile');
+-		$tpl =& $file_handler->find('default', null, null, null, $resource_name, true);
+-		if (count($tpl) > 0 && is_object($tpl[0])) {
+-			$template_source = $tpl[0]->getSource();
+-			$template_timestamp = $tpl[0]->getLastModified();
+-			return true;
+-		}
+-	} else {
+-	}
+-	return false;
++	trigger_error( "Function removed", E_USER_ERROR );
+ }
+ 
+ /**
+@@ -101,22 +91,8 @@
+  * @param   boolean $clear_old
+  * @return  boolean
+  **/
+-function xoops_template_touch($tpl_id, $clear_old = true)
+-{
+-	$tpl = new XoopsTpl();
+-	$tpl->force_compile = true;
+-	$tplfile_handler =& xoops_gethandler('tplfile');
+-	$tplfile =& $tplfile_handler->get($tpl_id);
+-	if ( is_object($tplfile) ) {
+-		$file = $tplfile->getVar('tpl_file');
+-		if ($clear_old) {
+-			$tpl->clear_cache('db:'.$file);
+-			$tpl->clear_compiled_tpl('db:'.$file);
+-		}
+-		$tpl->fetch('db:'.$file);
+-		return true;
+-	}
+-	return false;
++function xoops_template_touch($tpl_id, $clear_old = true) {
++	trigger_error( "Function removed", E_USER_ERROR );
+ }
+ 
+ /**
+@@ -125,18 +101,7 @@
+  * @param   int $mid    Module ID
+  * @return 
+  **/
+-function xoops_template_clear_module_cache($mid)
+-{
+-	$block_arr =& XoopsBlock::getByModule($mid);
+-	$count = count($block_arr);
+-	if ($count > 0) {
+-		$xoopsTpl = new XoopsTpl();	
+-		$xoopsTpl->xoops_setCaching(2);
+-		for ($i = 0; $i < $count; $i++) {
+-			if ($block_arr[$i]->getVar('template') != '') {
+-				$xoopsTpl->clear_cache('db:'.$block_arr[$i]->getVar('template'), 'blk_'.$block_arr[$i]->getVar('bid'));
+-			}
+-		}
+-	}
++function xoops_template_clear_module_cache($mid) {
++	trigger_error( "Function removed", E_USER_ERROR );
+ }
+ ?>
+\ No newline at end of file
+
+
+
+From skalpa at berlios.de  Sun Dec  4 03:01:04 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sun, 4 Dec 2005 03:01:04 +0100
+Subject: [Xoops4-svn] r82 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: admin/modulesadmin admin/preferences include
+Message-ID: <200512040201.jB4214A3032482@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-04 03:00:52 +0100 (Sun, 04 Dec 2005)
+New Revision: 82
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/main.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/modulesadmin.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/include/update.php
+Log:
+Removed traces of the old templates sets system from the admin
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/main.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/main.php	2005-12-04 01:59:50 UTC (rev 81)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/main.php	2005-12-04 02:00:52 UTC (rev 82)
+@@ -269,61 +269,8 @@
+         $newmid = $module->getVar('mid');
+         $msgs = array();
+         $msgs[] = 'Module data updated.';
+-        $tplfile_handler =& xoops_gethandler('tplfile');
+-        $deltpl =& $tplfile_handler->find('default', 'module', $module->getVar('mid'));
+-        $delng = array();
+-        if (is_array($deltpl)) {
+-            $xoopsTpl = new XoopsTpl();
+-            // clear cache files
+-            $xoopsTpl->clear_cache(null, 'mod_'.$dirname);
+-            // delete template file entry in db
+-            $dcount = count($deltpl);
+-            for ($i = 0; $i < $dcount; $i++) {
+-                if (!$tplfile_handler->delete($deltpl[$i])) {
+-                    $delng[] = $deltpl[$i]->getVar('tpl_file');
+-                }
+-            }
+-        }
+-        $templates = $module->getInfo('templates');
+-        if ($templates != false) {
+-            $msgs[] = 'Updating templates...';
+-            foreach ($templates as $tpl) {
+-                $tpl['file'] = trim($tpl['file']);
+-                if (!in_array($tpl['file'], $delng)) {
+-                    $tpldata =& xoops_module_gettemplate($dirname, $tpl['file']);
+-                    $tplfile =& $tplfile_handler->create();
+-                    $tplfile->setVar('tpl_refid', $newmid);
+-                    $tplfile->setVar('tpl_lastimported', 0);
+-                    $tplfile->setVar('tpl_lastmodified', time());
+-                    if (preg_match("/\.css$/i", $tpl['file'])) {
+-                        $tplfile->setVar('tpl_type', 'css');
+-                    } else {
+-                        $tplfile->setVar('tpl_type', 'module');
+-                    }
+-                    $tplfile->setVar('tpl_source', $tpldata, true);
+-                    $tplfile->setVar('tpl_module', $dirname);
+-                    $tplfile->setVar('tpl_tplset', 'default');
+-                    $tplfile->setVar('tpl_file', $tpl['file'], true);
+-                    $tplfile->setVar('tpl_desc', $tpl['description'], true);
+-                    if (!$tplfile_handler->insert($tplfile)) {
+-                        $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$tpl['file'].'</b> to the database.</span>';
+-                    } else {
+-                        $newid = $tplfile->getVar('tpl_id');
+-                        $msgs[] = '&nbsp;&nbsp;Template <b>'.$tpl['file'].'</b> inserted to the database.';
+-                        if ($xoopsConfig['template_set'] == 'default') {
+-                            if (!xoops_template_touch($newid)) {
+-                                $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not recompile template <b>'.$tpl['file'].'</b>.</span>';
+-                            } else {
+-                                $msgs[] = '&nbsp;&nbsp;Template <b>'.$tpl['file'].'</b> recompiled.</span>';
+-                            }
+-                        }
+-                    }
+-                    unset($tpldata);
+-                } else {
+-                    $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not delete old template <b>'.$tpl['file'].'</b>. Aborting update of this file.</span>';
+-                }
+-            }
+-        }
++        $msgs[] = '@TODO-2.3: Delete cached output from the templates cache on module ins/upd/uninst... :-)';
++
+         $contents = xoops_module_get_admin_menu();
+         if (!xoops_module_write_admin_menu($contents)) {
+             $msgs[] = '<p><span style="color:#ff0000;">'._MD_AM_FAILWRITE.'</span></p>';
+@@ -339,15 +286,11 @@
+                     $editfunc = isset($blocks[$i]['edit_func']) ? $blocks[$i]['edit_func'] : '';
+                     $showfuncs[] = $blocks[$i]['show_func'];
+                     $funcfiles[] = $blocks[$i]['file'];
++                    $content = '';
+                     $template = '';
+-                    if ((isset($blocks[$i]['template']) && trim($blocks[$i]['template']) != '')) {
+-                        $content =& xoops_module_gettemplate($dirname, $blocks[$i]['template'], true);
++                    if ( isset( $blocks[$i]['template'] ) && @is_readable( XOOPS_ROOT_PATH . "/modules/$dirname/templates/blocks/" . $blocks[$i]['template'] ) ) {
++						$template = $blocks[$i]['template'];
+                     }
+-                    if (!$content) {
+-                        $content = '';
+-                    } else {
+-                        $template = $blocks[$i]['template'];
+-                    }
+                     $options = '';
+                     if (!empty($blocks[$i]['options'])) {
+                         $options = $blocks[$i]['options'];
+@@ -363,37 +306,6 @@
+                             $msgs[] = '&nbsp;&nbsp;ERROR: Could not update '.$fblock['name'];
+                         } else {
+                             $msgs[] = '&nbsp;&nbsp;Block <b>'.$fblock['name'].'</b> updated. Block ID: <b>'.$fblock['bid'].'</b>';
+-                            if ($template != '') {
+-                                $tplfile =& $tplfile_handler->find('default', 'block', $fblock['bid']);
+-                                if (count($tplfile) == 0) {
+-                                    $tplfile_new =& $tplfile_handler->create();
+-                                    $tplfile_new->setVar('tpl_module', $dirname);
+-                                    $tplfile_new->setVar('tpl_refid', $fblock['bid']);
+-                                    $tplfile_new->setVar('tpl_tplset', 'default');
+-                                    $tplfile_new->setVar('tpl_file', $blocks[$i]['template'], true);
+-                                    $tplfile_new->setVar('tpl_type', 'block');
+-                                }
+-                                else {
+-                                    $tplfile_new = $tplfile[0];
+-                                }
+-                                $tplfile_new->setVar('tpl_source', $content, true);
+-                                $tplfile_new->setVar('tpl_desc', $blocks[$i]['description'], true);
+-                                $tplfile_new->setVar('tpl_lastmodified', time());
+-                                $tplfile_new->setVar('tpl_lastimported', 0);
+-                                if (!$tplfile_handler->insert($tplfile_new)) {
+-                                    $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not update template <b>'.$blocks[$i]['template'].'</b>.</span>';
+-                                } else {
+-                                    $msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> updated.';
+-                                    if ($xoopsConfig['template_set'] == 'default') {
+-                                        if (!xoops_template_touch($tplfile_new->getVar('tpl_id'))) {
+-                                            $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not recompile template <b>'.$blocks[$i]['template'].'</b>.</span>';
+-                                        } else {
+-                                            $msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> recompiled.';
+-                                        }
+-                                    }
+-
+-                                }
+-                            }
+                         }
+                     }
+                     if ($fcount == 0) {
+@@ -421,32 +333,6 @@
+                                     $msgs[] = '&nbsp;&nbsp;Added block access right. Block ID: <b>'.$newbid.'</b> Group ID: <b>'.$mygroup.'</b>';
+                                 }
+                             }
+-
+-                            if ($template != '') {
+-                                $tplfile =& $tplfile_handler->create();
+-                                $tplfile->setVar('tpl_module', $dirname);
+-                                $tplfile->setVar('tpl_refid', $newbid);
+-                                $tplfile->setVar('tpl_source', $content, true);
+-                                $tplfile->setVar('tpl_tplset', 'default');
+-                                $tplfile->setVar('tpl_file', $blocks[$i]['template'], true);
+-                                $tplfile->setVar('tpl_type', 'block');
+-                                $tplfile->setVar('tpl_lastimported', 0);
+-                                $tplfile->setVar('tpl_lastmodified', time());
+-                                $tplfile->setVar('tpl_desc', $blocks[$i]['description'], true);
+-                                if (!$tplfile_handler->insert($tplfile)) {
+-                                    $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$blocks[$i]['template'].'</b> to the database.</span>';
+-                                } else {
+-                                    $newid = $tplfile->getVar('tpl_id');
+-                                    $msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> added to the database.';
+-                                    if ($xoopsConfig['template_set'] == 'default') {
+-                                        if (!xoops_template_touch($newid)) {
+-                                            $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Template <b>'.$blocks[$i]['template'].'</b> recompile failed.</span>';
+-                                        } else {
+-                                            $msgs[] = '&nbsp;&nbsp;Template <b>'.$blocks[$i]['template'].'</b> recompiled.';
+-                                        }
+-                                    }
+-                                }
+-                            }
+                             $msgs[] = '&nbsp;&nbsp;Block <b>'.$blocks[$i]['name'].'</b> created. Block ID: <b>'.$newbid.'</b>';
+                             $sql = 'INSERT INTO '.$xoopsDB->prefix('block_module_link').' (block_id, module_id) VALUES ('.$newbid.', -1)';
+                             $xoopsDB->query($sql);
+@@ -462,19 +348,6 @@
+                         $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not delete block <b>'.$block->getVar('name').'</b>. Block ID: <b>'.$block->getVar('bid').'</b></span>';
+                     } else {
+                         $msgs[] = '&nbsp;&nbsp;Block <b>'.$block->getVar('name').' deleted. Block ID: <b>'.$block->getVar('bid').'</b>';
+-                        if ($block->getVar('template') != '') {
+-                            $tplfiles =& $tplfile_handler->find(null, 'block', $block->getVar('bid'));
+-                            if (is_array($tplfiles)) {
+-                                $btcount = count($tplfiles);
+-                                for ($k = 0; $k < $btcount; $k++) {
+-                                    if (!$tplfile_handler->delete($tplfiles[$k])) {
+-                                        $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not remove deprecated block template. (ID: <b>'.$tplfiles[$k]->getVar('tpl_id').'</b>)</span>';
+-                                    } else {
+-                                        $msgs[] = '&nbsp;&nbsp;Block template <b>'.$tplfiles[$k]->getVar('tpl_file').'</b> deprecated.';
+-                                    }
+-                                }
+-                            }
+-                        }
+                     }
+                 }
+             }
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/modulesadmin.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/modulesadmin.php	2005-12-04 01:59:50 UTC (rev 81)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/modulesadmin/modulesadmin.php	2005-12-04 02:00:52 UTC (rev 82)
+@@ -129,12 +129,19 @@
+     xoops_cp_footer();
+ }
+ 
+-function xoops_module_install($dirname)
+-{
++function xoops_module_install($dirname) {
+     global $xoopsUser, $xoopsConfig;
+     $dirname = trim($dirname);
+     $db =& Database::getInstance();
+-    $reservedTables = array('avatar', 'avatar_users_link', 'block_module_link', 'xoopscomments', 'config', 'configcategory', 'configoption', 'image', 'imagebody', 'imagecategory', 'imgset', 'imgset_tplset_link', 'imgsetimg', 'groups','groups_users_link','group_permission', 'online', 'bannerclient', 'banner', 'bannerfinish', 'priv_msgs', 'ranks', 'session', 'smiles', 'users', 'newblocks', 'modules', 'tplfile', 'tplset', 'tplsource', 'xoopsnotifications', 'banner', 'bannerclient', 'bannerfinish');
++    $reservedTables = array(
++    	'avatar', 'avatar_users_link', 'block_module_link', 'xoopscomments',
++    	'config', 'configcategory', 'configoption',
++    	'image', 'imagebody', 'imagecategory', 'imgset', 'imgset_tplset_link', 'imgsetimg',
++    	'groups','groups_users_link','group_permission', 'online',
++    	'bannerclient', 'banner', 'bannerfinish',
++    	'priv_msgs', 'ranks', 'session', 'smiles', 'users', 'newblocks', 'modules',
++    	'xoopsnotifications', 'banner', 'bannerclient', 'bannerfinish'
++    );
+     $module_handler =& xoops_gethandler('module');
+     if ($module_handler->getCount(new Criteria('dirname', $dirname)) == 0) {
+         $module =& $module_handler->create();
+@@ -229,41 +236,8 @@
+                 $newmid = $module->getVar('mid');
+                 unset($created_tables);
+                 $msgs[] = 'Module data inserted successfully. Module ID: <b>'.$newmid.'</b>';
+-                $tplfile_handler =& xoops_gethandler('tplfile');
+-                $templates = $module->getInfo('templates');
+-                if ($templates != false) {
+-                    $msgs[] = 'Adding templates...';
+-                    foreach ($templates as $tpl) {
+-                        $tplfile =& $tplfile_handler->create();
+-                        $tpldata =& xoops_module_gettemplate($dirname, $tpl['file']);
+-                        $tplfile->setVar('tpl_source', $tpldata, true);
+-                        $tplfile->setVar('tpl_refid', $newmid);
++                $msgs[] = '@TODO-2.3: Clear module templates cache here';
+ 
+-                        $tplfile->setVar('tpl_tplset', 'default');
+-                        $tplfile->setVar('tpl_file', $tpl['file']);
+-                        $tplfile->setVar('tpl_desc', $tpl['description'], true);
+-                        $tplfile->setVar('tpl_module', $dirname);
+-                        $tplfile->setVar('tpl_lastmodified', time());
+-                        $tplfile->setVar('tpl_lastimported', 0);
+-                        $tplfile->setVar('tpl_type', 'module');
+-                        if (!$tplfile_handler->insert($tplfile)) {
+-                            $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$tpl['file'].'</b> to the database.</span>';
+-                        } else {
+-                            $newtplid = $tplfile->getVar('tpl_id');
+-                            $msgs[] = '&nbsp;&nbsp;Template <b>'.$tpl['file'].'</b> added to the database. (ID: <b>'.$newtplid.'</b>)';
+-                            // generate compiled file
+-                            include_once XOOPS_ROOT_PATH.'/class/template.php';
+-                            if (!xoops_template_touch($newtplid)) {
+-                                $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Failed compiling template <b>'.$tpl['file'].'</b>.</span>';
+-                            } else {
+-                                $msgs[] = '&nbsp;&nbsp;Template <b>'.$tpl['file'].'</b> compiled.</span>';
+-                            }
+-                        }
+-                        unset($tpldata);
+-                    }
+-                }
+-                include_once XOOPS_ROOT_PATH.'/class/template.php';
+-                xoops_template_clear_module_cache($newmid);
+                 $blocks = $module->getInfo('blocks');
+                 if ($blocks != false) {
+                     $msgs[] = 'Adding blocks...';
+@@ -298,31 +272,6 @@
+                             $msgs[] = '&nbsp;&nbsp;Block <b>'.$block['name'].'</b> added. Block ID: <b>'.$newbid.'</b>';
+                             $sql = 'INSERT INTO '.$db->prefix('block_module_link').' (block_id, module_id) VALUES ('.$newbid.', -1)';
+                             $db->query($sql);
+-                            if ($template != '') {
+-                                $tplfile =& $tplfile_handler->create();
+-                                $tplfile->setVar('tpl_refid', $newbid);
+-                                $tplfile->setVar('tpl_source', $content, true);
+-                                $tplfile->setVar('tpl_tplset', 'default');
+-                                $tplfile->setVar('tpl_file', $block['template']);
+-                                $tplfile->setVar('tpl_module', $dirname);
+-                                $tplfile->setVar('tpl_type', 'block');
+-                                $tplfile->setVar('tpl_desc', $block['description'], true);
+-                                $tplfile->setVar('tpl_lastimported', 0);
+-                                $tplfile->setVar('tpl_lastmodified', time());
+-                                if (!$tplfile_handler->insert($tplfile)) {
+-                                    $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$block['template'].'</b> to the database.</span>';
+-                                } else {
+-                                    $newtplid = $tplfile->getVar('tpl_id');
+-                                    $msgs[] = '&nbsp;&nbsp;Template <b>'.$block['template'].'</b> added to the database. (ID: <b>'.$newtplid.'</b>)';
+-                                    // generate compiled file
+-                                    include_once XOOPS_ROOT_PATH.'/class/template.php';
+-                                    if (!xoops_template_touch($newtplid)) {
+-                                        $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Failed compiling template <b>'.$block['template'].'</b>.</span>';
+-                                    } else {
+-                                        $msgs[] = '&nbsp;&nbsp;Template <b>'.$block['template'].'</b> compiled.</span>';
+-                                    }
+-                                }
+-                            }
+                         }
+                         unset($content);
+                     }
+@@ -529,13 +478,22 @@
+ function xoops_module_uninstall($dirname)
+ {
+     global $xoopsConfig;
+-    $reservedTables = array('avatar', 'avatar_users_link', 'block_module_link', 'xoopscomments', 'config', 'configcategory', 'configoption', 'image', 'imagebody', 'imagecategory', 'imgset', 'imgset_tplset_link', 'imgsetimg', 'groups','groups_users_link','group_permission', 'online', 'bannerclient', 'banner', 'bannerfinish', 'priv_msgs', 'ranks', 'session', 'smiles', 'users', 'newblocks', 'modules', 'tplfile', 'tplset', 'tplsource', 'xoopsnotifications', 'banner', 'bannerclient', 'bannerfinish');
++    $reservedTables = array(
++    	'avatar', 'avatar_users_link', 'block_module_link', 'xoopscomments',
++    	'config', 'configcategory', 'configoption',
++    	'image', 'imagebody', 'imagecategory', 'imgset', 'imgset_tplset_link', 'imgsetimg',
++    	'groups','groups_users_link','group_permission', 'online',
++    	'bannerclient', 'banner', 'bannerfinish',
++    	'priv_msgs', 'ranks', 'session', 'smiles', 'users', 'newblocks', 'modules',
++    	'xoopsnotifications', 'banner', 'bannerclient', 'bannerfinish'
++    );
+     $db =& Database::getInstance();
+     $module_handler =& xoops_gethandler('module');
+     $module =& $module_handler->getByDirname($dirname);
+-    include_once XOOPS_ROOT_PATH.'/class/template.php';
+-    xoops_template_clear_module_cache($module->getVar('mid'));
+-    if ($module->getVar('dirname') == 'system') {
++
++	$msgs[] = '@TODO-2.3: Clear module templates cache here';
++
++	if ($module->getVar('dirname') == 'system') {
+         return "<p>".sprintf(_MD_AM_FAILUNINS, "<b>".$module->getVar('name')."</b>")."&nbsp;"._MD_AM_ERRORSC."<br /> - "._MD_AM_SYSNO."</p>";
+     } elseif ($module->getVar('dirname') == $xoopsConfig['startpage']) {
+         return "<p>".sprintf(_MD_AM_FAILUNINS, "<b>".$module->getVar('name')."</b>")."&nbsp;"._MD_AM_ERRORSC."<br /> - "._MD_AM_STRTNO."</p>";
+@@ -544,23 +502,6 @@
+         if (!$module_handler->delete($module)) {
+             $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not delete '.$module->getVar('name').'</span>';
+         } else {
+-
+-            // delete template files
+-            $tplfile_handler = xoops_gethandler('tplfile');
+-            $templates =& $tplfile_handler->find(null, 'module', $module->getVar('mid'));
+-            $tcount = count($templates);
+-            if ($tcount > 0) {
+-                $msgs[] = 'Deleting templates...';
+-                for ($i = 0; $i < $tcount; $i++) {
+-                    if (!$tplfile_handler->delete($templates[$i])) {
+-                        $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not delete template '.$templates[$i]->getVar('tpl_file').' from the database. Template ID: <b>'.$templates[$i]->getVar('tpl_id').'</b></span>';
+-                    } else {
+-                        $msgs[] = '&nbsp;&nbsp;Template <b>'.$templates[$i]->getVar('tpl_file').'</b> deleted from the database. Template ID: <b>'.$templates[$i]->getVar('tpl_id').'</b>';
+-                    }
+-                }
+-            }
+-            unset($templates);
+-
+             // delete blocks and block tempalte files
+             $block_arr =& XoopsBlock::getByModule($module->getVar('mid'));
+             if (is_array($block_arr)) {
+@@ -572,20 +513,6 @@
+                     } else {
+                         $msgs[] = '&nbsp;&nbsp;Block <b>'.$block_arr[$i]->getVar('name').'</b> deleted. Block ID: <b>'.$block_arr[$i]->getVar('bid').'</b>';
+                     }
+-                    if ($block_arr[$i]->getVar('template') != ''){
+-                        $templates =& $tplfile_handler->find(null, 'block', $block_arr[$i]->getVar('bid'));
+-                        $btcount = count($templates);
+-                        if ($btcount > 0) {
+-                            for ($j = 0; $j < $btcount; $j++) {
+-                                if (!$tplfile_handler->delete($templates[$j])) {
+-                                $msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">ERROR: Could not delete block template '.$templates[$j]->getVar('tpl_file').' from the database. Template ID: <b>'.$templates[$j]->getVar('tpl_id').'</b></span>';
+-                                } else {
+-                                $msgs[] = '&nbsp;&nbsp;Block template <b>'.$templates[$j]->getVar('tpl_file').'</b> deleted from the database. Template ID: <b>'.$templates[$j]->getVar('tpl_id').'</b>';
+-                                }
+-                            }
+-                        }
+-                        unset($templates);
+-                    }
+                 }
+             }
+ 
+@@ -683,8 +610,8 @@
+ {
+     $module_handler =& xoops_gethandler('module');
+     $module =& $module_handler->get($mid);
+-    include_once XOOPS_ROOT_PATH.'/class/template.php';
+-    xoops_template_clear_module_cache($module->getVar('mid'));
++
++	// @TODO-2.3: Clear module templates cache here
+     $module->setVar('isactive', 1);
+     if (!$module_handler->insert($module)) {
+         $ret = "<p>".sprintf(_MD_AM_FAILACT, "<b>".$module->getVar('name')."</b>")."&nbsp;"._MD_AM_ERRORSC."<br />".$module->getHtmlErrors();
+@@ -704,8 +631,7 @@
+     global $xoopsConfig;
+     $module_handler =& xoops_gethandler('module');
+     $module =& $module_handler->get($mid);
+-    include_once XOOPS_ROOT_PATH.'/class/template.php';
+-    xoops_template_clear_module_cache($mid);
++	// @TODO-2.3: Clear module templates cache here
+     $module->setVar('isactive', 0);
+     if ($module->getVar('dirname') == "system") {
+         return "<p>".sprintf(_MD_AM_FAILDEACT, "<b>".$module->getVar('name')."</b>")."&nbsp;"._MD_AM_ERRORSC."<br /> - "._MD_AM_SYSNO."</p>";
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php	2005-12-04 01:59:50 UTC (rev 81)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php	2005-12-04 02:00:52 UTC (rev 82)
+@@ -366,49 +366,6 @@
+                         $theme_updated = true;
+                     }
+ 
+-                    // if default template set has been changed
+-                    if (!$tpl_updated && $config->getVar('conf_catid') == XOOPS_CONF && $config->getVar('conf_name') == 'template_set') {
+-                        // clear cached/compiled files and regenerate them if default theme has been changed
+-                        if ($xoopsConfig['template_set'] != ${$config->getVar('conf_name')}) {
+-                            $newtplset = ${$config->getVar('conf_name')};
+-
+-                            // clear all compiled and cachedfiles
+-                            $xoopsTpl->clear_compiled_tpl();
+-
+-                            // generate compiled files for the new theme
+-                            // block files only for now..
+-                            $tplfile_handler =& xoops_gethandler('tplfile');
+-                            $dtemplates =& $tplfile_handler->find('default', 'block');
+-                            $dcount = count($dtemplates);
+-
+-                            // need to do this to pass to xoops_template_touch function
+-                            $GLOBALS['xoopsConfig']['template_set'] = $newtplset;
+-
+-                            for ($i = 0; $i < $dcount; $i++) {
+-                                $found =& $tplfile_handler->find($newtplset, 'block', $dtemplates[$i]->getVar('tpl_refid'), null);
+-                                if (count($found) > 0) {
+-                                    // template for the new theme found, compile it
+-                                    xoops_template_touch($found[0]->getVar('tpl_id'));
+-                                } else {
+-                                    // not found, so compile 'default' template file
+-                                    xoops_template_touch($dtemplates[$i]->getVar('tpl_id'));
+-                                }
+-                            }
+-
+-                            // generate image cache files from image binary data, save them under cache/
+-                            $image_handler =& xoops_gethandler('imagesetimg');
+-                            $imagefiles =& $image_handler->getObjects(new Criteria('tplset_name', $newtplset), true);
+-                            foreach (array_keys($imagefiles) as $i) {
+-                                if (!$fp = fopen(XOOPS_CACHE_PATH.'/'.$newtplset.'_'.$imagefiles[$i]->getVar('imgsetimg_file'), 'wb')) {
+-                                } else {
+-                                    fwrite($fp, $imagefiles[$i]->getVar('imgsetimg_body'));
+-                                    fclose($fp);
+-                                }
+-                            }
+-                        }
+-                        $tpl_updated = true;
+-                    }
+-
+                     // add read permission for the start module to all groups
+                     if (!$startmod_updated  && $new_value != '--' && $config->getVar('conf_catid') == XOOPS_CONF && $config->getVar('conf_name') == 'startpage') {
+                         $member_handler =& xoops_gethandler('member');
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/include/update.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/include/update.php	2005-12-04 01:59:50 UTC (rev 81)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/include/update.php	2005-12-04 02:00:52 UTC (rev 82)
+@@ -30,6 +30,8 @@
+ // ------------------------------------------------------------------------- //
+ 
+ function xoops_module_system_update(&$module) {
++	//@TODO-2.3: This should be for an old version, and should be copied in the upgrader
++	/*
+     if ($module->getVar('version') == 100) {
+         $result = $xoopsDB->query("SELECT t1.tpl_id FROM ".$xoopsDB->prefix('tplfile')." t1, ".$xoopsDB->prefix('tplfile')." t2 WHERE t1.tpl_module = t2.tpl_module AND t1.tpl_tplset=t2.tpl_tplset AND t1.tpl_file = t2.tpl_file AND t1.tpl_id > t2.tpl_id");
+ 
+@@ -48,6 +50,7 @@
+             }
+         }
+     }
++    */
+     return true;
+ }
+ 
+
+
+
+From skalpa at berlios.de  Sun Dec  4 03:19:22 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Sun, 4 Dec 2005 03:19:22 +0100
+Subject: [Xoops4-svn] r83 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+Message-ID: <200512040219.jB42JM4I006783@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-04 03:19:17 +0100 (Sun, 04 Dec 2005)
+New Revision: 83
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css
+Log:
+Fixed the CSS for the banner to display correctly
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css	2005-12-04 02:00:52 UTC (rev 82)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css	2005-12-04 02:19:17 UTC (rev 83)
+@@ -23,13 +23,29 @@
+ }
+ 
+ #xo-banner {
++	position:		relative;
+ 	height:			60px;
+ 	border:			1px solid #000000;
+ 	padding:		2px;
+ 	background:		#2A75C5 url(img/canvas-banner_bg.png) repeat-x left top;
+ }
+ 
++#xo-banner-ad {
++	position:		absolute;
++	top:			2px;
++	left:			0px;
++	width:			100%;
++	text-align:		center;
++}
++
++#xo-banner-ad object, #xo-banner-ad img {
++	display:		block;
++	text-align:		left;
++	margin:			0px auto;
++}
++
+ #xo-canvas-main {
++	clear:			both;
+ 	border-top:		1px solid #FFFFFF;
+ 	padding:		6px;
+ }
+
+
+
+From skalpa at berlios.de  Mon Dec 12 18:12:52 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 18:12:52 +0100
+Subject: [Xoops4-svn] r84 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class
+Message-ID: <200512121712.jBCHCqCo006250@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 18:12:52 +0100 (Mon, 12 Dec 2005)
+New Revision: 84
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php
+Log:
+YARF
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php	2005-12-04 02:19:17 UTC (rev 83)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/class/xoopslists.php	2005-12-12 17:12:52 UTC (rev 84)
+@@ -153,9 +153,9 @@
+ 		{
+ 			$avatars = array();
+ 			if ( $avatar_dir != "" ) {
+-				$avatars =& XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/avatar/".$avatar_dir."/", $avatar_dir."/");
++				$avatars = XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/avatar/".$avatar_dir."/", $avatar_dir."/");
+ 			} else {
+-				$avatars =& XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/avatar/");
++				$avatars = XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/avatar/");
+ 			}
+ 			return $avatars;
+ 		}
+@@ -167,7 +167,7 @@
+ 		{
+ 			$avatars = array();
+ 			$dirlist = array();
+-			$dirlist =& XoopsLists::getDirListAsArray(XOOPS_ROOT_PATH."/images/avatar/");
++			$dirlist = XoopsLists::getDirListAsArray(XOOPS_ROOT_PATH."/images/avatar/");
+ 			if ( count($dirlist) > 0 ) {
+ 				foreach ( $dirlist as $dir ) {
+ 					$avatars[$dir] =& XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/avatar/".$dir."/", $dir."/");
+@@ -186,9 +186,9 @@
+ 		{
+ 			$subjects = array();
+ 			if($sub_dir != ""){
+-				$subjects =& XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/subject/".$sub_dir, $sub_dir."/");
++				$subjects = XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/subject/".$sub_dir, $sub_dir."/");
+ 			} else {
+-				$subjects =& XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/subject/");
++				$subjects = XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH."/images/subject/");
+ 			}
+ 			return $subjects;
+ 		}
+@@ -199,7 +199,7 @@
+ 		function getLangList()
+ 		{
+ 			$lang_list = array();
+-			$lang_list =& XoopsLists::getDirListAsArray(XOOPS_ROOT_PATH."/language/");
++			$lang_list = XoopsLists::getDirListAsArray(XOOPS_ROOT_PATH."/language/");
+ 			return $lang_list;
+ 		}
+ 
+
+
+
+From skalpa at berlios.de  Mon Dec 12 18:14:22 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 18:14:22 +0100
+Subject: [Xoops4-svn] r85 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+Message-ID: <200512121714.jBCHEMDH006432@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 18:14:22 +0100 (Mon, 12 Dec 2005)
+New Revision: 85
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php
+Log:
+Changed the on-demand theme selection code to allow setting the theme using get request vars.
+
+stuff.php?xoops_theme_select=thing
+
+should work now
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php	2005-12-12 17:12:52 UTC (rev 84)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/common.php	2005-12-12 17:14:22 UTC (rev 85)
+@@ -199,9 +199,9 @@
+             $xoopsUserIsAdmin = $xoopsUser->isAdmin();
+         }
+     }
+-    if (!empty($_POST['xoops_theme_select']) && in_array($_POST['xoops_theme_select'], $xoopsConfig['theme_set_allowed'])) {
+-        $xoopsConfig['theme_set'] = $_POST['xoops_theme_select'];
+-        $_SESSION['xoopsUserTheme'] = $_POST['xoops_theme_select'];
++    if (!empty($_REQUEST['xoops_theme_select']) && in_array($_REQUEST['xoops_theme_select'], $xoopsConfig['theme_set_allowed'])) {
++        $xoopsConfig['theme_set'] = $_REQUEST['xoops_theme_select'];
++        $_SESSION['xoopsUserTheme'] = $_REQUEST['xoops_theme_select'];
+     } elseif (!empty($_SESSION['xoopsUserTheme']) && in_array($_SESSION['xoopsUserTheme'], $xoopsConfig['theme_set_allowed'])) {
+         $xoopsConfig['theme_set'] = $_SESSION['xoopsUserTheme'];
+     }
+
+
+
+From skalpa at berlios.de  Mon Dec 12 18:15:24 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 18:15:24 +0100
+Subject: [Xoops4-svn] r86 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+Message-ID: <200512121715.jBCHFOme006566@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 18:15:24 +0100 (Mon, 12 Dec 2005)
+New Revision: 86
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_update.php
+Log:
+Removed an useless check that was preventing the new form markup to work correctly
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_update.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_update.php	2005-12-12 17:14:22 UTC (rev 85)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/notification_update.php	2005-12-12 17:15:24 UTC (rev 86)
+@@ -50,9 +50,11 @@
+ include_once XOOPS_ROOT_PATH.'/include/notification_functions.php';
+ include_once XOOPS_ROOT_PATH.'/language/'.$xoopsConfig['language'].'/notification.php';
+ 
++/*
+ if (!isset($_POST['not_submit'])) {
+     exit();
+ }
++*/
+ 
+ if (!$GLOBALS['xoopsSecurity']->check()) {
+     redirect_header($_POST['not_redirect'], 3, implode('<br />', $GLOBALS['xoopsSecurity']->getErrors()));
+
+
+
+From skalpa at berlios.de  Mon Dec 12 18:15:44 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 18:15:44 +0100
+Subject: [Xoops4-svn] r87 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+Message-ID: <200512121715.jBCHFiKt006692@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 18:15:44 +0100 (Mon, 12 Dec 2005)
+New Revision: 87
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/cp_functions.php
+Log:
+YARF
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/cp_functions.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/cp_functions.php	2005-12-12 17:15:24 UTC (rev 86)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include/cp_functions.php	2005-12-12 17:15:44 UTC (rev 87)
+@@ -54,7 +54,7 @@
+         echo '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/system/style.css" />';
+         include_once XOOPS_CACHE_PATH.'/adminmenu.php';
+         $moduleperm_handler =& xoops_gethandler('groupperm');
+-        $admin_mids =& $moduleperm_handler->getItemIds('module_admin', $xoopsUser->getGroups());
++        $admin_mids = $moduleperm_handler->getItemIds('module_admin', $xoopsUser->getGroups());
+ ?>
+ 
+ <script type='text/javascript'>
+
+
+
+From skalpa at berlios.de  Mon Dec 12 19:22:27 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 19:22:27 +0100
+Subject: [Xoops4-svn] r88 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel
+Message-ID: <200512121822.jBCIMRdR015115@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 19:22:14 +0100 (Mon, 12 Dec 2005)
+New Revision: 88
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php
+Log:
+YARF YARF YARF (the return of the comeback of the neverending fix)
+
+Grrr.... People writing articles like that: http://www.devarticles.com/c/a/PHP/PHP-References-Explained/
+
+should be burnt in public and have their balls pressed in a juice maker
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php	2005-12-12 17:15:44 UTC (rev 87)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/member.php	2005-12-12 18:22:14 UTC (rev 88)
+@@ -210,7 +210,7 @@
+      */
+     function getGroupList($criteria = null)
+     {
+-        $groups =& $this->_gHandler->getObjects($criteria, true);
++        $groups = $this->_gHandler->getObjects($criteria, true);
+         $ret = array();
+         foreach (array_keys($groups) as $i) {
+             $ret[$i] = $groups[$i]->getVar('name');
+@@ -226,7 +226,7 @@
+      */
+     function getUserList($criteria = null)
+     {
+-        $users =& $this->_uHandler->getObjects($criteria, true);
++        $users = $this->_uHandler->getObjects($criteria, true);
+         $ret = array();
+         foreach (array_keys($users) as $i) {
+             $ret[$i] = $users[$i]->getVar('uname');
+@@ -280,7 +280,7 @@
+      */
+     function getUsersByGroup($group_id, $asobject = false, $limit = 0, $start = 0)
+     {
+-        $user_ids =& $this->_mHandler->getUsersByGroup($group_id, $limit, $start);
++        $user_ids = $this->_mHandler->getUsersByGroup($group_id, $limit, $start);
+         if (!$asobject) {
+            return $user_ids;
+         } else {
+@@ -305,7 +305,7 @@
+      */
+     function getGroupsByUser($user_id, $asobject = false)
+     {
+-        $group_ids =& $this->_mHandler->getGroupsByUser($user_id);
++        $group_ids = $this->_mHandler->getGroupsByUser($user_id);
+         if (!$asobject) {
+            return $group_ids;
+         } else {
+@@ -327,7 +327,7 @@
+     {
+         $criteria = new CriteriaCompo(new Criteria('uname', $uname));
+         $criteria->add(new Criteria('pass', md5($pwd)));
+-        $user =& $this->_uHandler->getObjects($criteria, false);
++        $user = $this->_uHandler->getObjects($criteria, false);
+         if (!$user || count($user) != 1) {
+         	$user = false;
+             return $user;
+@@ -346,7 +346,7 @@
+     {
+         $criteria = new CriteriaCompo(new Criteria('uname', $uname));
+         $criteria->add(new Criteria('pass', $md5pwd));
+-        $user =& $this->_uHandler->getObjects($criteria, false);
++        $user = $this->_uHandler->getObjects($criteria, false);
+         if (!$user || count($user) != 1) {
+         	$user = false;
+             return $user;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php	2005-12-12 17:15:44 UTC (rev 87)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/module.php	2005-12-12 18:22:14 UTC (rev 88)
+@@ -496,7 +496,7 @@
+             return $ret;
+         }
+         while ($myrow = $this->db->fetchArray($result)) {
+-            $module = new XoopsModule();
++            $module =& new XoopsModule();
+             $module->assignVars($myrow);
+             if (!$id_as_key) {
+                 $ret[] =& $module;
+@@ -520,7 +520,7 @@
+         if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+             $sql .= ' '.$criteria->renderWhere();
+         }
+-        if (!$result =& $this->db->query($sql)) {
++        if (!$result = $this->db->query($sql)) {
+             return 0;
+         }
+         list($count) = $this->db->fetchRow($result);
+@@ -539,12 +539,12 @@
+     function getList($criteria = null, $dirname_as_key = false)
+     {
+         $ret = array();
+-        $modules =& $this->getObjects($criteria, true);
++        $modules = $this->getObjects($criteria, true);
+         foreach (array_keys($modules) as $i) {
+             if (!$dirname_as_key) {
+-                $ret[$i] =& $modules[$i]->getVar('name');
++                $ret[$i] = $modules[$i]->getVar('name');
+             } else {
+-                $ret[$modules[$i]->getVar('dirname')] =& $modules[$i]->getVar('name');
++                $ret[$modules[$i]->getVar('dirname')] = $modules[$i]->getVar('name');
+             }
+         }
+         return $ret;
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php	2005-12-12 17:15:44 UTC (rev 87)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/kernel/tplset.php	2005-12-12 18:22:14 UTC (rev 88)
+@@ -190,7 +190,7 @@
+     function getList($criteria = null)
+ 	{
+         $ret = array();
+-		$tplsets =& $this->getObjects($criteria, true);
++		$tplsets = $this->getObjects($criteria, true);
+ 		foreach (array_keys($tplsets) as $i) {
+             $ret[$tplsets[$i]->getVar('tplset_name')] = $tplsets[$i]->getVar('tplset_name');
+         }
+
+
+
+From skalpa at berlios.de  Mon Dec 12 19:32:00 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 19:32:00 +0100
+Subject: [Xoops4-svn] r89 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+Message-ID: <200512121832.jBCIW0Pq022771@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 19:31:30 +0100 (Mon, 12 Dec 2005)
+New Revision: 89
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css
+Log:
+Fixed the page styling (removed useless padding)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css	2005-12-12 18:22:14 UTC (rev 88)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/page-default.css	2005-12-12 18:31:30 UTC (rev 89)
+@@ -67,8 +67,9 @@
+ 
+ #xo-page {
+ 	background:		#ffffff;
+-	padding:		1em 0px;
++	padding:		0px;
+ 	border:			1px solid #CCCCCC;
++	min-height:		300px;
+ }
+ 
+ #xo-canvas-leftcolumn + #xo-page, #xo-canvas-leftcolumn + * + #xo-page {
+
+
+
+From skalpa at berlios.de  Mon Dec 12 19:33:28 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 19:33:28 +0100
+Subject: [Xoops4-svn] r90 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/img
+Message-ID: <200512121833.jBCIXS5N023571@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 19:33:04 +0100 (Mon, 12 Dec 2005)
+New Revision: 90
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/img/xoops-logo.png
+Log:
+Logo correction
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default/img/xoops-logo.png
+===================================================================
+(Binary files differ)
+
+
+
+From skalpa at berlios.de  Mon Dec 12 19:35:25 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 19:35:25 +0100
+Subject: [Xoops4-svn] r91 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam
+Message-ID: <200512121835.jBCIZPJx025147@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 19:34:52 +0100 (Mon, 12 Dec 2005)
+New Revision: 91
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+Log:
+Fixed a prob with the margin rules
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css	2005-12-12 18:33:04 UTC (rev 90)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/xoops-devteam/page-default.css	2005-12-12 18:34:52 UTC (rev 91)
+@@ -11,4 +11,17 @@
+ 	background-image:		url(img/canvas-rightcolumn_bg.png);
+ }
+ 
++#xo-canvas-leftcolumn + #xo-page {
++	margin-left:	0px;
++	margin-right:	176px;
++}
++#xo-canvas-rightcolumn + #xo-page {
++	margin-right:	0px;
++	margin-left:	176px;
++}
++#xo-canvas-leftcolumn + #xo-canvas-rightcolumn + #xo-page {
++	margin-left:	176px;
++	margin-right:	176px;
++}
+ 
++
+
+
+
+From skalpa at berlios.de  Mon Dec 12 19:47:24 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 19:47:24 +0100
+Subject: [Xoops4-svn] r92 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates
+Message-ID: <200512121847.jBCIlOHt001318@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 19:47:21 +0100 (Mon, 12 Dec 2005)
+New Revision: 92
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl
+Log:
+Fixed the notifs form that wasnt working anymore
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl	2005-12-12 18:34:52 UTC (rev 91)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl	2005-12-12 18:47:21 UTC (rev 92)
+@@ -18,6 +18,7 @@
+ 	</tr>
+ 	</thead>			
+ 	<tbody>
++	([assign var=index value=0])
+ 	([foreach name=outer item=category from=$xoops_notification.categories])
+ 	([foreach name=inner item=event from=$category.events])
+ 	<tr>
+@@ -30,6 +31,7 @@
+ 			<input type="checkbox" name="not_list[([$index])][status]" value="1" ([if $event.subscribed])checked="checked"([/if]) />			
+ 		</td>
+ 	</tr>
++	([assign var=index value=$index+1])
+ 	([/foreach])
+ 	([/foreach])
+ 	</tbody>
+
+
+
+From skalpa at berlios.de  Mon Dec 12 19:53:56 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 19:53:56 +0100
+Subject: [Xoops4-svn] r93 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences
+Message-ID: <200512121853.jBCIrupY003714@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 19:53:48 +0100 (Mon, 12 Dec 2005)
+New Revision: 93
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php
+Log:
+YARF
+
+@TODO: The main prefs page still has traces of the old tplsets system.
+Should be removed later.
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php	2005-12-12 18:47:21 UTC (rev 92)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/admin/preferences/main.php	2005-12-12 18:53:48 UTC (rev 93)
+@@ -46,8 +46,8 @@
+         $confcat_id = intval($_GET['confcat_id']);
+     }
+     if ($op == 'list') {
+-        $confcat_handler =& xoops_gethandler('configcategory');
+-        $confcats =& $confcat_handler->getObjects();
++        $confcat_handler = xoops_gethandler('configcategory');
++        $confcats = $confcat_handler->getObjects();
+         $catcount = count($confcats);
+         xoops_cp_header();
+         echo '<h4 style="text-align:left">'._MD_AM_SITEPREF.'</h4><ul>';
+@@ -75,7 +75,7 @@
+         $criteria = new CriteriaCompo();
+         $criteria->add(new Criteria('conf_modid', 0));
+         $criteria->add(new Criteria('conf_catid', $confcat_id));
+-        $config =& $config_handler->getConfigs($criteria);
++        $config = $config_handler->getConfigs($criteria);
+         $confcount = count($config);
+         for ($i = 0; $i < $confcount; $i++) {
+             $title = (!defined($config[$i]->getVar('conf_desc')) || constant($config[$i]->getVar('conf_desc')) == '') ? constant($config[$i]->getVar('conf_title')) : constant($config[$i]->getVar('conf_title')).'<br /><br /><span style="font-weight:normal;">'.constant($config[$i]->getVar('conf_desc')).'</span>';
+@@ -91,7 +91,7 @@
+                 break;
+             case 'select':
+                 $ele = new XoopsFormSelect($title, $config[$i]->getVar('conf_name'), $config[$i]->getConfValueForOutput());
+-                $options =& $config_handler->getConfigOptions(new Criteria('conf_id', $config[$i]->getVar('conf_id')));
++                $options = $config_handler->getConfigOptions(new Criteria('conf_id', $config[$i]->getVar('conf_id')));
+                 $opcount = count($options);
+                 for ($j = 0; $j < $opcount; $j++) {
+                     $optval = defined($options[$j]->getVar('confop_value')) ? constant($options[$j]->getVar('confop_value')) : $options[$j]->getVar('confop_value');
+@@ -101,7 +101,7 @@
+                 break;
+             case 'select_multi':
+                 $ele = new XoopsFormSelect($title, $config[$i]->getVar('conf_name'), $config[$i]->getConfValueForOutput(), 5, true);
+-                $options =& $config_handler->getConfigOptions(new Criteria('conf_id', $config[$i]->getVar('conf_id')));
++                $options = $config_handler->getConfigOptions(new Criteria('conf_id', $config[$i]->getVar('conf_id')));
+                 $opcount = count($options);
+                 for ($j = 0; $j < $opcount; $j++) {
+                     $optval = defined($options[$j]->getVar('confop_value')) ? constant($options[$j]->getVar('confop_value')) : $options[$j]->getVar('confop_value');
+@@ -139,7 +139,7 @@
+             case 'tplset':
+                 $ele = new XoopsFormSelect($title, $config[$i]->getVar('conf_name'), $config[$i]->getConfValueForOutput());
+                 $tplset_handler =& xoops_gethandler('tplset');
+-                $tplsetlist =& $tplset_handler->getList();
++                $tplsetlist = $tplset_handler->getList();
+                 asort($tplsetlist);
+                 foreach ($tplsetlist as $key => $name) {
+                     $ele->addOption($key, $name);
+@@ -158,7 +158,7 @@
+                 $module_handler =& xoops_gethandler('module');
+                 $criteria = new CriteriaCompo(new Criteria('hasmain', 1));
+                 $criteria->add(new Criteria('isactive', 1));
+-                $moduleslist =& $module_handler->getList($criteria, true);
++                $moduleslist = $module_handler->getList($criteria, true);
+                 $moduleslist['--'] = _MD_AM_NONE;
+                 $ele->addOptionArray($moduleslist);
+                 break;
+@@ -177,7 +177,7 @@
+                 break;
+             case 'module_cache':
+                 $module_handler =& xoops_gethandler('module');
+-                $modules =& $module_handler->getObjects(new Criteria('hasmain', 1), true);
++                $modules = $module_handler->getObjects(new Criteria('hasmain', 1), true);
+                 $currrent_val = $config[$i]->getConfValueForOutput();
+                 $cache_options = array('0' => _NOCACHE, '30' => sprintf(_SECONDS, 30), '60' => _MINUTE, '300' => sprintf(_MINUTES, 5), '1800' => sprintf(_MINUTES, 30), '3600' => _HOUR, '18000' => sprintf(_HOURS, 5), '86400' => _DAY, '259200' => sprintf(_DAYS, 3), '604800' => _WEEK);
+                 if (count($modules) > 0) {
+@@ -229,7 +229,7 @@
+             header('Location: admin.php?fct=preferences');
+             exit();
+         }
+-        $config =& $config_handler->getConfigs(new Criteria('conf_modid', $mod));
++        $config = $config_handler->getConfigs(new Criteria('conf_modid', $mod));
+         $count = count($config);
+         if ($count < 1) {
+             redirect_header('admin.php?fct=preferences', 1);
+
+
+
+From skalpa at berlios.de  Mon Dec 12 21:28:05 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 21:28:05 +0100
+Subject: [Xoops4-svn] r94 - XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot
+Message-ID: <200512122028.jBCKS5Oo008874@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 21:28:04 +0100 (Mon, 12 Dec 2005)
+New Revision: 94
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php
+Log:
+Codename change
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php	2005-12-12 18:53:48 UTC (rev 93)
++++ XoopsCore/branches/tasks/121476-tplset-remove/XOOPS/Boot/kernel.php	2005-12-12 20:28:04 UTC (rev 94)
+@@ -27,7 +27,7 @@
+ class xoops_kernel_Xoops2 {
+ 	var $xoBundleIdentifier		= 'xoops_kernel_Xoops2';
+ 	var $xoRunMode				= XO_MODE_PROD;
+-	var $xoShortVersionString	= 'XOOPS 2.3.0-dev (Mistrust)';
++	var $xoShortVersionString	= 'XOOPS 2.3.0-dev "Cheerleaders"';
+ 
+ 	var $xoBundleRoot = 'XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm';
+ 	
+
+
+
+From skalpa at berlios.de  Mon Dec 12 21:33:07 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 21:33:07 +0100
+Subject: [Xoops4-svn] r95 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install
+Message-ID: <200512122033.jBCKX7Rl009537@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 21:33:04 +0100 (Mon, 12 Dec 2005)
+New Revision: 95
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php
+Log:
+Trying to fix initial blocks display (will try just after)
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php	2005-12-12 20:28:04 UTC (rev 94)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/install/makedata.php	2005-12-12 20:33:04 UTC (rev 95)
+@@ -108,7 +108,7 @@
+ 
+     foreach ($modversion['blocks'] as $func_num => $newblock) {
+         if ($fp = fopen('../modules/system/templates/blocks/'.$newblock['template'], 'r')) {
+-            if (in_array($newblock['template'], array('system_block_user.html', 'system_block_login.html', 'system_block_mainmenu.html'))) {
++            if (in_array($newblock['template'], array('system_block_user.xotpl', 'system_block_login.html', 'system_block_mainmenu.xotpl'))) {
+                 $visible = 1;
+             } else {
+                 $visible = 0;
+
+
+
+From skalpa at berlios.de  Mon Dec 12 21:44:30 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 12 Dec 2005 21:44:30 +0100
+Subject: [Xoops4-svn] r96 - XoopsCore/tags
+Message-ID: <200512122044.jBCKiUlG011019@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-12 21:44:30 +0100 (Mon, 12 Dec 2005)
+New Revision: 96
+
+Added:
+   XoopsCore/tags/121476-tplset-remove-1/
+Log:
+made a copy
+
+Copied: XoopsCore/tags/121476-tplset-remove-1 (from rev 95, XoopsCore/branches/tasks/121476-tplset-remove)
+
+
+
+From skalpa at berlios.de  Tue Dec 13 00:10:53 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Tue, 13 Dec 2005 00:10:53 +0100
+Subject: [Xoops4-svn] r97 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes
+Message-ID: <200512122310.jBCNArnF000124@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-13 00:10:53 +0100 (Tue, 13 Dec 2005)
+New Revision: 97
+
+Removed:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/themes/default/
+Log:
+removing existing default theme (the merge cannot be done otherwise)
+
+
+
+From skalpa at berlios.de  Tue Dec 13 05:06:33 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Tue, 13 Dec 2005 05:06:33 +0100
+Subject: [Xoops4-svn] r99 - XoopsCore/branches/2.3.x/2.3-main/docs
+Message-ID: <200512130406.jBD46XAJ013560@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-13 05:06:31 +0100 (Tue, 13 Dec 2005)
+New Revision: 99
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt
+Log:
+Added a quick readme file and updated the changelog
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt	2005-12-12 23:50:03 UTC (rev 98)
++++ XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt	2005-12-13 04:06:31 UTC (rev 99)
+@@ -5,14 +5,16 @@
+ ============================
+ - Updated Smarty to 2.6.10 (skalpa)
+ - Updated Snoopy to 1.2.3 (skalpa)
++- Fixed module instanciation code URI rewriting compatibility (skalpa)
++- Fixed several references related notices [not all, it's gonna take centuries] (skalpa)
++- Added the 1st draft of the Exxos components system (skalpa)
++- Started to refactor the boot sequence, adding the new kernel (skalpa)
++- Completely refactored the theme / templates layers (skalpa)
++- Started the new XHTML compliant default theme (skalpa)
++- Added the devteam.xoops.org theme to showcase inheritance (skalpa)
++- Renamed the old crappy default theme to 'xoops20' (skalpa)
++- Moved the 2.0.x system templates to the xoops20 theme for old themes BC (skalpa)
+ 
+-
+-
+-
+-
+-
+-
+-
+ ============================
+ 2005/10/28: Version 2.0.13.2
+ ============================
+
+Added: XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt	2005-12-12 23:50:03 UTC (rev 98)
++++ XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt	2005-12-13 04:06:31 UTC (rev 99)
+@@ -0,0 +1,36 @@
++
++XOOPS 2.3.0-dev
++Dummy readme file to compensate the lack of documentation.
++
++Note: this thing is still in alpha stage. It can be used without problems assuming you know how to handle the few drawbacks it has. Now, if you're afraid to edit files by yourself, you may want to wait a little more.
++
++Installation:
++- Copy the content of the htdocs/ folder where it can be accessed by your server
++- Copy the XOOPS and XOOPS-data folders where you want to (it's recommended to let them out of the webroot)
++- Make all the folders inside 'XOOPS-data' server writable
++- Burn the 2 other folders
++- The actual installer hasn't been changed to handle the new vars. So you'll have to help it a little: start the installation procedure normally, until the mainfile.php generation (the page with the "writing constants"... dont worry about the one that fails). Once it's done, manually edit mainfile.php and enter the values of XOOPS_PATH and XOOPS_VAR_PATH with the physical paths of your XOOPS and XOOPS-data folders. Then click "next" in the installer to go on with the installation procedure.
++
++!NB! By default the kernel is configured to use "development mode". You should only use this locally, as it's very slow and only here for modules devs/themes designers to work.
++This mode shows the PHP error message within the page and should NEVER be used on a public server. To switch to production mode, you have to edit the XOOPS/Boot/hosts.php file and replace the last line to set the xoRunMode variable to 0 (zero).
++
++Quick notes: 
++All the new stuff will be documented, but here are a few notes for people who would like to start playing before the articles are written.
++1) The old tplsets system has disappeared to be replaced by the new theme engine. Online edition of templates is not possible anymore, but will come back with a new WYSIWYG editor module (this objective is actually why the smarty delimiters have been changed).
++2) The default templates delimiters are ([ ]) . The new engine tries to differentiate templates by looking at their filename: .html tpls are considered "old-school" tpls and processed before compilation so the <{ }> they contain are replaced.
++NB: please tell us if you've done a module using templates with another extension than .html, so we can change the test.
++3) The theme engine uses 3 templates to build a page (canvas,page,content) see the theme class comments for an explanation.
++4) xoAppUrl and xoImgUrl are smarty COMPILER plugins, and can't use variables. The 1st ones generates URIs to modules pages, the 2nd one uses the theme inheritance system.
++If you need to use vars, you can replace xoAppUrl by ([$xoops->url($stuff)]).
++You can also replace xoImgUrl by ([$xoops->url( $xoTheme->resourcePath($stuff) )]) but its not recommended (this is resource hungry, it's actually why xoImgUrl is implemented as a compiler plugin ).
++5) The new xotpl: resource handler uses full paths to templates.
++v1:
++([include file='xotpl:my_component#rel/path/to/file.xotpl']) get the 'path/to/file.xotpl' template of the 'my_component' object (it's a components-based system, so objects can own templates now)
++v2: (not recommended, but the only way to include modules tpls right now)
++([include file='xotpl:modules/stuff/tplname.xotpl'])
++
++
++
++
++
++
+
+
+
+From skalpa at berlios.de  Tue Dec 13 05:35:43 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Tue, 13 Dec 2005 05:35:43 +0100
+Subject: [Xoops4-svn] r100 - XoopsCore/branches/2.3.x/2.3-main/docs
+Message-ID: <200512130435.jBD4Zhja027126@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-13 05:35:42 +0100 (Tue, 13 Dec 2005)
+New Revision: 100
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt
+Log:
+Small upds to the readme file
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt	2005-12-13 04:06:31 UTC (rev 99)
++++ XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt	2005-12-13 04:35:42 UTC (rev 100)
+@@ -28,9 +28,5 @@
+ ([include file='xotpl:my_component#rel/path/to/file.xotpl']) get the 'path/to/file.xotpl' template of the 'my_component' object (it's a components-based system, so objects can own templates now)
+ v2: (not recommended, but the only way to include modules tpls right now)
+ ([include file='xotpl:modules/stuff/tplname.xotpl'])
+-
+-
+-
+-
+-
+-
++6) Only the code part has been taken care of. All the CSS rules for old markup have not been put back in the default theme (which will make most of the actual modules look strange). Now if you want to clean up the old messy CSS file to do that and contribute your work, you're welcome.
++7) The default theme is not MSIE 5.5/6 compat yet.
+
+
+
+From skalpa at berlios.de  Mon Dec 19 02:29:59 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Mon, 19 Dec 2005 02:29:59 +0100
+Subject: [Xoops4-svn] r101 - XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin
+Message-ID: <200512190129.jBJ1TxTA002253@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-19 02:29:53 +0100 (Mon, 19 Dec 2005)
+New Revision: 101
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php
+Log:
+Ensured the db: resource handler cache is cleared on module install/update/uninstall
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php	2005-12-13 04:35:42 UTC (rev 100)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/modules/system/admin/modulesadmin/main.php	2005-12-19 01:29:53 UTC (rev 101)
+@@ -186,6 +186,11 @@
+ if ($op == 'install_ok') {
+     $ret = array();
+     $ret[] = xoops_module_install($module);
++
++	// Clear the db: resource handler cache
++    global $xoops;
++    @unlink( $xoops->path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ) );
++    
+     $contents = xoops_module_get_admin_menu();
+     if (!xoops_module_write_admin_menu($contents)) {
+         $ret[] = "<p>"._MD_AM_FAILWRITE."</p>";
+@@ -219,6 +224,11 @@
+ if ($op == 'uninstall_ok') {
+     $ret = array();
+     $ret[] = xoops_module_uninstall($module);
++
++    // Clear the db: resource handler cache
++    global $xoops;
++    @unlink( $xoops->path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ) );
++    
+     $contents = xoops_module_get_admin_menu();
+     if (!xoops_module_write_admin_menu($contents)) {
+         $ret[] = "<p>"._MD_AM_FAILWRITE."</p>";
+@@ -271,6 +281,10 @@
+         $msgs[] = 'Module data updated.';
+         $msgs[] = '@TODO-2.3: Delete cached output from the templates cache on module ins/upd/uninst... :-)';
+ 
++		// Clear the db: resource handler cache
++	    global $xoops;
++	    @unlink( $xoops->path( 'var/Caches/xoops_template_Smarty/dbhandler-list.php' ) );
++      
+         $contents = xoops_module_get_admin_menu();
+         if (!xoops_module_write_admin_menu($contents)) {
+             $msgs[] = '<p><span style="color:#ff0000;">'._MD_AM_FAILWRITE.'</span></p>';
+
+
+
+From skalpa at berlios.de  Wed Dec 21 00:57:25 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Wed, 21 Dec 2005 00:57:25 +0100
+Subject: [Xoops4-svn] r102 - XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel
+Message-ID: <200512202357.jBKNvPI2010984@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-21 00:57:24 +0100 (Wed, 21 Dec 2005)
+New Revision: 102
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php
+Log:
+Adding the XoopsPersistableObjectHandler class from 2.2.3
+
+Added: XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php	2005-12-19 01:29:53 UTC (rev 101)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php	2005-12-20 23:57:24 UTC (rev 102)
+@@ -0,0 +1,421 @@
++<?php
++// $Id$
++
++/**
++* Persistable Object Handler class.  
++* This class is responsible for providing data access mechanisms to the data source 
++* of derived class objects.
++*
++* @author  Jan Keller Pedersen <mithrandir at xoops.org> - IDG Danmark A/S <www.idg.dk>
++* @copyright copyright (c) 2000-2004 XOOPS.org
++* @package Kernel
++*/
++
++class XoopsPersistableObjectHandler extends XoopsObjectHandler {
++
++    /**#@+
++    * Information about the class, the handler is managing
++    *
++    * @var string
++    */
++    var $table;
++    var $keyName;
++    var $className;
++    var $identifierName;
++    /**#@-*/
++
++    /**
++    * Constructor - called from child classes
++    * @param object     $db         {@link XoopsDatabase} object
++    * @param string     $tablename  Name of database table
++    * @param string     $classname  Name of Class, this handler is managing
++    * @param string     $keyname    Name of the property, holding the key
++    *
++    * @return void
++    */
++    function XoopsPersistableObjectHandler(&$db, $tablename, $classname, $keyname, $idenfierName = false) {
++        $this->XoopsObjectHandler($db);
++        $this->table = $db->prefix($tablename);
++        $this->keyName = $keyname;
++        $this->className = $classname;
++        if ($idenfierName != false) {
++            $this->identifierName = $idenfierName;
++        }
++    }
++
++    /**
++     * create a new user
++     * 
++     * @param bool $isNew Flag the new objects as "new"?
++     *
++     * @return object
++     */
++    function &create($isNew = true) {
++        $obj =& new $this->className();
++        if ($isNew === true) {
++            $obj->setNew();
++        }
++        return $obj;
++    }
++
++    /**
++     * retrieve an object
++     * 
++     * @param mixed $id ID of the object - or array of ids for joint keys. Joint keys MUST be given in the same order as in the constructor
++     * @param bool $as_object whether to return an object or an array
++     * @return mixed reference to the object, FALSE if failed
++     */
++    function &get($id, $as_object = true) {
++        if (is_array($this->keyName)) {
++            $criteria = new CriteriaCompo();
++            for ($i = 0; $i < count($this->keyName); $i++) {
++                $criteria->add(new Criteria($this->keyName[$i], intval($id[$i])));
++            }
++        }
++        else {
++            $criteria = new Criteria($this->keyName, intval($id));
++        }
++        $criteria->setLimit(1);
++        $obj_array = $this->getObjects($criteria, false, $as_object);
++        if (count($obj_array) != 1) {
++            return $this->create();
++        }
++        return $obj_array[0];
++    }
++
++    /**
++     * retrieve objects from the database
++     * 
++     * @param object $criteria {@link CriteriaElement} conditions to be met
++     * @param bool $id_as_key use the ID as key for the array?
++     * @param bool $as_object return an array of objects?
++     *
++     * @return array
++     */
++    function getObjects($criteria = null, $id_as_key = false, $as_object = true)
++    {
++        $ret = array();
++        $limit = $start = 0;
++        $sql = 'SELECT * FROM '.$this->table;
++        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria->renderWhere();
++            if ($criteria->getSort() != '') {
++                $sql .= ' ORDER BY '.$criteria->getSort().' '.$criteria->getOrder();
++            }
++            $limit = $criteria->getLimit();
++            $start = $criteria->getStart();
++        }
++        $result = $this->db->query($sql, $limit, $start);
++        if (!$result) {
++            return $ret;
++        }
++
++        return $this->convertResultSet($result, $id_as_key, $as_object);
++    }
++
++    /**
++     * Convert a database resultset to a returnable array
++     *
++     * @param object $result database resultset
++     * @param bool $id_as_key - should NOT be used with joint keys
++     * @param bool $as_object
++     *
++     * @return array
++     */
++    function convertResultSet($result, $id_as_key = false, $as_object = true) {
++        $ret = array();
++        while ($myrow = $this->db->fetchArray($result)) {
++            $obj =& $this->create(false);
++            $obj->assignVars($myrow);
++            if (!$id_as_key) {
++                if ($as_object) {
++                    $ret[] =& $obj;
++                }
++                else {
++                    $row = array();
++                    $vars = $obj->getVars();
++                    foreach (array_keys($vars) as $i) {
++                        $row[$i] = $obj->getVar($i);
++                    }
++                    $ret[] = $row;
++                }
++            } else {
++                if ($as_object) {
++                    $ret[$myrow[$this->keyName]] =& $obj;
++                }
++                else {
++                    $row = array();
++                    $vars = $obj->getVars();
++                    foreach (array_keys($vars) as $i) {
++                        $row[$i] = $obj->getVar($i);
++                    }
++                    $ret[$myrow[$this->keyName]] = $row;
++                }
++            }
++            unset($obj);
++        }
++
++        return $ret;
++    }
++
++    /**
++    * Retrieve a list of objects as arrays - DON'T USE WITH JOINT KEYS
++    *
++    * @param object $criteria {@link CriteriaElement} conditions to be met
++    * @param int   $limit      Max number of objects to fetch
++    * @param int   $start      Which record to start at
++    *
++    * @return array
++    */
++    function getList($criteria = null, $limit = 0, $start = 0) {
++        $ret = array();
++        if ($criteria == null) {
++            $criteria = new CriteriaCompo();
++        }
++        
++        if ($criteria->getSort() == '') {
++            $criteria->setSort($this->identifierName);
++        }
++            
++        $sql = 'SELECT '.$this->keyName;
++        if(!empty($this->identifierName)){
++	        $sql .= ', '.$this->identifierName;
++        }
++        $sql .= ' FROM '.$this->table;
++        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria->renderWhere();
++            if ($criteria->getSort() != '') {
++                $sql .= ' ORDER BY '.$criteria->getSort().' '.$criteria->getOrder();
++            }
++            $limit = $criteria->getLimit();
++            $start = $criteria->getStart();
++        }
++        $result = $this->db->query($sql, $limit, $start);
++        if (!$result) {
++            return $ret;
++        }
++
++        $myts =& MyTextSanitizer::getInstance();
++        while ($myrow = $this->db->fetchArray($result)) {
++            //identifiers should be textboxes, so sanitize them like that
++            $ret[$myrow[$this->keyName]] = empty($this->identifierName)?1:$myts->htmlSpecialChars($myrow[$this->identifierName]);
++        }
++        return $ret;
++    }
++
++    /**
++
++     * count objects matching a condition
++     * 
++     * @param object $criteria {@link CriteriaElement} to match
++     * @return int count of objects
++     */
++    function getCount($criteria = null)
++    {
++        $field = "";
++        $groupby = false;
++        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
++            if ($criteria->groupby != "") {
++                $groupby = true;
++                $field = $criteria->groupby.", "; //Not entirely secure unless you KNOW that no criteria's groupby clause is going to be mis-used
++            }
++        }
++        $sql = 'SELECT '.$field.'COUNT(*) FROM '.$this->table;
++        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria->renderWhere();
++            if ($criteria->groupby != "") {
++                $sql .= $criteria->getGroupby();
++            }
++        }
++        $result = $this->db->query($sql);
++        if (!$result) {
++            return 0;
++        }
++        if ($groupby == false) {
++            list($count) = $this->db->fetchRow($result);
++            return $count;
++        }
++        else {
++            $ret = array();
++            while (list($id, $count) = $this->db->fetchRow($result)) {
++                $ret[$id] = $count;
++            }
++            return $ret;
++        }
++    }
++
++    /**
++     * delete an object from the database
++     * 
++     * @param object $obj reference to the object to delete
++     * @param bool $force
++     * @return bool FALSE if failed.
++     */
++    function delete(&$obj, $force = false)
++    {
++        if (is_array($this->keyName)) {
++            $clause = array();
++            for ($i = 0; $i < count($this->keyName); $i++) {
++	            $clause[] = $this->keyName[$i]." = ".$obj->getVar($this->keyName[$i]);
++            }
++            $whereclause = implode(" AND ", $clause);
++        }
++        else {
++            $whereclause = $this->keyName." = ".$obj->getVar($this->keyName);
++        }
++        $sql = "DELETE FROM ".$this->table." WHERE ".$whereclause;
++        if (false != $force) {
++            $result = $this->db->queryF($sql);
++        } else {
++            $result = $this->db->query($sql);
++        }
++        if (!$result) {
++            return false;
++        }
++        return true;
++    }
++
++    /**
++     * insert a new object in the database
++     * 
++     * @param object $obj reference to the object
++     * @param bool $force whether to force the query execution despite security settings
++     * @param bool $checkObject check if the object is dirty and clean the attributes
++     * @return bool FALSE if failed, TRUE if already present and unchanged or successful
++     */
++
++    function insert(&$obj, $force = false, $checkObject = true)
++    {
++        if ($checkObject != false) {
++            if (!is_object($obj)) {
++                var_dump($obj);
++                return false;
++            }
++            /**
++        * @TODO: Change to if (!(class_exists($this->className) && $obj instanceof $this->className)) when going fully PHP5
++        */
++            if (!is_a($obj, $this->className)) {
++                $obj->setErrors(get_class($obj)." Differs from ".$this->className);
++                return false;
++            }
++            if (!$obj->isDirty()) {
++                $obj->setErrors("Not dirty"); //will usually not be outputted as errors are not displayed when the method returns true, but it can be helpful when troubleshooting code - Mith
++                return true;
++            }
++        }
++        if (!$obj->cleanVars()) {
++            return false;
++        }
++
++        foreach ($obj->cleanVars as $k => $v) {
++            if ($obj->vars[$k]['data_type'] == XOBJ_DTYPE_INT) {
++                $cleanvars[$k] = intval($v);
++            } elseif ( is_array( $v ) ) {
++            	$cleanvars[ $k ] = $this->db->quoteString( implode( ',', $v ) );
++            } else {
++                $cleanvars[$k] = $this->db->quoteString($v);
++            }
++        }
++        if ($obj->isNew()) {
++            if (!is_array($this->keyName)) {
++                if ($cleanvars[$this->keyName] < 1) {
++                    $cleanvars[$this->keyName] = $this->db->genId($this->table.'_'.$this->keyName.'_seq');
++                }
++            }
++            $sql = "INSERT INTO ".$this->table." (".implode(',', array_keys($cleanvars)).") VALUES (".implode(',', array_values($cleanvars)) .")";
++        } else {
++            $sql = "UPDATE ".$this->table." SET";
++            foreach ($cleanvars as $key => $value) {
++                if ((!is_array($this->keyName) && $key == $this->keyName) || (is_array($this->keyName) && in_array($key, $this->keyName))) {
++                    continue;
++                }
++                if (isset($notfirst) ) {
++                    $sql .= ",";
++                }
++                $sql .= " ".$key." = ".$value;
++                $notfirst = true;
++            }
++            if (is_array($this->keyName)) {
++                $whereclause = "";
++                for ($i = 0; $i < count($this->keyName); $i++) {
++                    if ($i > 0) {
++                        $whereclause .= " AND ";
++                    }
++                    $whereclause .= $this->keyName[$i]." = ".$obj->getVar($this->keyName[$i]);
++                }
++            }
++            else {
++                $whereclause = $this->keyName." = ".$obj->getVar($this->keyName);
++            }
++            $sql .= " WHERE ".$whereclause;
++        }
++        if (false != $force) {
++            $result = $this->db->queryF($sql);
++        } else {
++            $result = $this->db->query($sql);
++        }
++        if (!$result) {
++            return false;
++        }
++        if ($obj->isNew() && !is_array($this->keyName)) {
++            $obj->assignVar($this->keyName, $this->db->getInsertId());
++        }
++        return true;
++    }
++
++    /**
++     * Change a value for objects with a certain criteria
++     * 
++     * @param   string  $fieldname  Name of the field
++     * @param   string  $fieldvalue Value to write
++     * @param   object  $criteria   {@link CriteriaElement} 
++     * 
++     * @return  bool
++     **/
++    function updateAll($fieldname, $fieldvalue, $criteria = null, $force = false)
++    {
++    	$set_clause = $fieldname . ' = ';
++    	if ( is_numeric( $fieldvalue ) ) {
++    		$set_clause .=  $fieldvalue;
++    	} elseif ( is_array( $fieldvalue ) ) {
++    		$set_clause .= $this->db->quoteString( implode( ',', $fieldvalue ) );
++    	} else {
++    		$set_clause .= $this->db->quoteString( $fieldvalue );
++    	}
++        $sql = 'UPDATE '.$this->table.' SET '.$set_clause;
++        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
++            $sql .= ' '.$criteria->renderWhere();
++        }
++        if (false != $force) {
++            $result = $this->db->queryF($sql);
++        } else {
++            $result = $this->db->query($sql);
++        }
++        if (!$result) {
++            return false;
++        }
++        return true;
++    }
++
++    /**
++     * delete all objects meeting the conditions
++     * 
++     * @param object $criteria {@link CriteriaElement} with conditions to meet
++     * @return bool
++     */
++
++    function deleteAll($criteria = null)
++    {
++        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
++            $sql = 'DELETE FROM '.$this->table;
++            $sql .= ' '.$criteria->renderWhere();
++            if (!$this->db->query($sql)) {
++                return false;
++            }
++            $rows = $this->db->getAffectedRows();
++            return $rows > 0 ? $rows : true;
++        }
++        return false;
++    }
++}
++?>
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/htdocs/kernel/persistable.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + "Author Date Id Rev URL"
+
+
+
+From skalpa at berlios.de  Wed Dec 21 00:58:55 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Wed, 21 Dec 2005 00:58:55 +0100
+Subject: [Xoops4-svn] r103 - XoopsCore/branches/2.3.x/2.3-main/docs
+Message-ID: <200512202358.jBKNwtFr011246@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-21 00:58:51 +0100 (Wed, 21 Dec 2005)
+New Revision: 103
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt
+Log:
+Adding the XoopsPersistableObjectHandler class from 2.2.3
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt	2005-12-20 23:57:24 UTC (rev 102)
++++ XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt	2005-12-20 23:58:51 UTC (rev 103)
+@@ -14,7 +14,11 @@
+ - Added the devteam.xoops.org theme to showcase inheritance (skalpa)
+ - Renamed the old crappy default theme to 'xoops20' (skalpa)
+ - Moved the 2.0.x system templates to the xoops20 theme for old themes BC (skalpa)
++- Re-added the XoopsPersistableObjectHandler from 2.2.x (skalpa)
+ 
++
++
++
+ ============================
+ 2005/10/28: Version 2.0.13.2
+ ============================
+
+
+
+From skalpa at berlios.de  Thu Dec 29 10:51:15 2005
+From: skalpa at berlios.de (skalpa at BerliOS)
+Date: Thu, 29 Dec 2005 10:51:15 +0100
+Subject: [Xoops4-svn] r104 - XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+Message-ID: <200512290951.jBT9pFxn003837@sheep.berlios.de>
+
+Author: skalpa
+Date: 2005-12-29 10:51:14 +0100 (Thu, 29 Dec 2005)
+New Revision: 104
+
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php
+Log:
+Updated the xotpl: resource handler so it favors '.xotpl' templates.
+
+Modules writers should now be able to deliver their apps with both an old style and a new style version of each of their templates, and 2.3+ will automatically grab the .xotpl template (even if their code states to retrieve my_tpl_something.html)
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php	2005-12-20 23:58:51 UTC (rev 103)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/resource.xotpl.php	2005-12-29 09:51:14 UTC (rev 104)
+@@ -1,20 +1,13 @@
+ <?php
+ /**
+- * Smarty plugin
++ * Smarty xotpl resource handler
+  * 
+- * Kept for XOOPS 2.0 backward compatibility only !!!
++ * The xotpl resource handler is integrated with the core theming layer.
++ * It may be very resource inten
+  * 
+- * Use the new xotpl: handler to access XOOPS templates
++ * 
+  * ------------------------------------------------------------- 
+- * File:     resource.db.php
+- * Type:     resource
+- * Name:     db
+- * Purpose:  Fetches templates from a database
+- * -------------------------------------------------------------
+- * @package xoops20
+- * @deprecated
+  */
+-
+ function smarty_resource_xotpl_source($tpl_name, &$tpl_source, &$smarty) {
+ 
+ 	if ( $tplPath = smarty_resource_xotpl_getpath( $tpl_name, $smarty ) ) {
+@@ -47,29 +40,36 @@
+ function smarty_resource_xotpl_getpath( $tplName, &$smarty ) {
+ 	global $xoops;
+ 	
++	$realpath = '';
++	$name = str_replace( 'templates/', '', $tplName );
++	$pos = strrpos( $name, '.' );
++	$basename = substr( $name, 0, $pos );
++	$ext = substr( $name, $pos + 1 );
++
+ 	if ( $smarty->currentTheme ) {
+-		$name = str_replace( '/templates/', '/', $tplName );
+-		$themed = $smarty->currentTheme->resourcePath( $name );
++		// Look for an .xotpl version of the template first, then try with .html
++		// this allows modules devs to provide both 2.0.x and 2.3.x templates
++		// and ensure the correct one is used by 2.3+
++		$themed = $smarty->currentTheme->resourcePath( "$basename.xotpl" );
+ 		if ( substr( $themed, 0, 7 ) == 'themes/' ) {
+-			$tplName = $themed;
++			$realpath = $themed;
+ 		} else {
+-			if ( false !== ( $pos = strrpos( $tplName, '.' ) ) ) {
+-				$name = substr( $tplName, 0, $pos );
+-				$ext = substr( $tplName, $pos );
+-				$name = ( $ext == '.xotpl' ) ? "$name.html" : "$name.xotpl";
+-				$name = str_replace( '/templates/', '/', $name );
+-				// If the template is not in the theme folder,
+-				// check if it's not here, but with a different extension
+-				$themed = $smarty->currentTheme->resourcePath( $name );
+-				if ( substr( $themed, 0, 7 ) == 'themes/' ) {
+-					$tplName = $themed;
+-				}
++			$themed = $smarty->currentTheme->resourcePath( "$basename.html" );
++			if ( substr( $themed, 0, 7 ) == 'themes/' ) {
++				$realpath = $themed;
+ 			}
+ 		}
+ 	}
+-	//echo $xoops->path( $tplName ) . "<br />\n";
+-	return $xoops->path( $tplName );
+ 
++	if ( empty( $realpath ) ) {
++		$realpath = substr( $tplName, 0, $pos + 10 );
++		if ( file_exists( $xoops->path( "$realpath.xotpl" ) ) ) {
++			$realpath .=  '.xotpl';
++		} else {
++			$realpath .= '.html';
++		}
++	}
++	return $xoops->path( $realpath );
+ }
+ 
+ 
+
+
+

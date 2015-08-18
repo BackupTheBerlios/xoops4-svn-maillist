@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r203 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r203%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot&In-Reply-To=%3C200601290039.k0T0doCh000268%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000194.html">
+   <LINK REL="Next"  HREF="000196.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r203 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r203%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot&In-Reply-To=%3C200601290039.k0T0doCh000268%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r203 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Jan 29 01:39:50 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000194.html">[Xoops4-svn] r202 - in XoopsCore/branches/tasks/123353-authentication/XOOPS: Boot Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000196.html">[Xoops4-svn] r204 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#195">[ date ]</a>
+              <a href="thread.html#195">[ thread ]</a>
+              <a href="subject.html#195">[ subject ]</a>
+              <a href="author.html#195">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-29 01:39:39 +0100 (Sun, 29 Jan 2006)
+New Revision: 203
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php
+Log:
+Fixed the XOS import() method that was failing when importing a component with no class path (i.e: modules)
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php	2006-01-28 20:38:54 UTC (rev 202)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Boot/exxos.php	2006-01-29 00:39:39 UTC (rev 203)
+@@ -64,6 +64,7 @@
+ 			}
+ 			return $me-&gt;imported[$bundleId] = false;
+ 		}
++		return true;
+ 	}
+ 
+ 	/**
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000194.html">[Xoops4-svn] r202 - in XoopsCore/branches/tasks/123353-authentication/XOOPS: Boot Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000196.html">[Xoops4-svn] r204 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#195">[ date ]</a>
+              <a href="thread.html#195">[ thread ]</a>
+              <a href="subject.html#195">[ subject ]</a>
+              <a href="author.html#195">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

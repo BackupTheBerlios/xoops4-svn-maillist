@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r191 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r191%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200601262213.k0QMDx6m004064%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000182.html">
+   <LINK REL="Next"  HREF="000184.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r191 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r191%20-%20XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins&In-Reply-To=%3C200601262213.k0QMDx6m004064%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r191 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Jan 26 23:13:59 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000182.html">[Xoops4-svn] r190 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000184.html">[Xoops4-svn] r192 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#183">[ date ]</a>
+              <a href="thread.html#183">[ thread ]</a>
+              <a href="subject.html#183">[ subject ]</a>
+              <a href="author.html#183">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-26 23:13:58 +0100 (Thu, 26 Jan 2006)
+New Revision: 191
+
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+Log:
+Enhanced the xoAppUrl smarty plug-in taking new kernel features into account.
+xoAppUrl now accepts two syntaxes:
+
+xoAppUrl /path/to/script.php
+
+xoAppUrl mod_your_ModuleIdentifier#location
+
+Modified: XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-01-26 21:05:17 UTC (rev 190)
++++ XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Smarty.xoobj/plugins/compiler.xoAppUrl.php	2006-01-26 22:13:58 UTC (rev 191)
+@@ -18,8 +18,20 @@
+ 	global $xoops;
+ 	
+ 	$argStr = trim( $argStr );
++
++	@list( $modId, $location ) = explode( '#', $argStr, 2 );
++	if ( isset( $location ) ) {
++		if ( $module = $xoops-&gt;loadModule( $modId ) ) {
++			$uri = $module-&gt;xoBundleRoot;
++			if ( isset( $location ) &amp;&amp; isset( $module-&gt;moduleLocations[$location] ) ) {
++				$uri .= $module-&gt;moduleLocations[$location]['scriptFile'];
++			}
++		}
++	} else {
++		$uri = $argStr;
++	}
+ 	
+-	return &quot;\necho '&quot; . addslashes( $xoops-&gt;path( $argStr, true ) ) . &quot;';&quot;;
++	return &quot;\necho '&quot; . addslashes( $xoops-&gt;path( $uri, true ) ) . &quot;';&quot;;
+ 
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000182.html">[Xoops4-svn] r190 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000184.html">[Xoops4-svn] r192 - XoopsCore/branches/tasks/123353-authentication/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#183">[ date ]</a>
+              <a href="thread.html#183">[ thread ]</a>
+              <a href="subject.html#183">[ subject ]</a>
+              <a href="author.html#183">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

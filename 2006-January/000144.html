@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r152%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm%3A%20.%20http.xoobj&In-Reply-To=%3C200601200510.k0K5A4BR005446%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000143.html">
+   <LINK REL="Next"  HREF="000145.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r152%20-%20in%20XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm%3A%20.%20http.xoobj&In-Reply-To=%3C200601200510.k0K5A4BR005446%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r152 - in XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 06:10:04 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000143.html">[Xoops4-svn] r151 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+        <LI>Next message: <A HREF="000145.html">[Xoops4-svn] r153 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#144">[ date ]</a>
+              <a href="thread.html#144">[ thread ]</a>
+              <a href="subject.html#144">[ subject ]</a>
+              <a href="author.html#144">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 06:10:01 +0100 (Fri, 20 Jan 2006)
+New Revision: 152
+
+Added:
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php
+   XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php
+Log:
+Added the response handling component
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-19 12:39:57 UTC (rev 151)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-01-20 05:10:01 UTC (rev 152)
+@@ -0,0 +1,218 @@
++&lt;?php
++/**
++* xoops_http_HttpHandler component main class definition
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_http
++* @subpackage	xoops_http_HttpHandler
++* @version		$Id$
++*/
++
++
++/**
++ * xoops_http_HttpHandler component
++ *
++ * The HttpHandler component encapsulates the HTTP response manipulation functions
++ * (redirection for now, and more later on)
++ */
++class xoops_http_HttpHandler {
++	/**
++	* Whether HTTP redirections are enabled or not
++	* @var bool
++	*/
++	var $enableRedirections	= true;
++	/**
++	* How many seconds the fake redirection page should be shown
++	* @var integer
++	*/
++	var $fakeRedirectPageDelay = 3;
++
++	/**
++	 * Fake redirection page content template
++	 * 
++	 * &lt;p&gt;When HTTP redirections are disabled, this string is returned to the client.&lt;/p&gt;
++	 * &lt;p&gt;This page can contain any of the following, and they will be replaced before the page is sent:&lt;br /&gt;
++	 * &lt;ul&gt;
++	 * &lt;li&gt;{message}: The redirection message&lt;/li&gt;
++	 * &lt;li&gt;{refresh}: A &lt;meta http-equiv=&quot;refresh&quot;&gt; tag that ensures client-side redirection is performed&lt;/li&gt;
++	 * &lt;/ul&gt;
++	 *
++	 * @var string
++	 */
++	var $fakeRedirectTemplate = '&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;&gt;	
++&lt;head&gt;{refresh}&lt;/head&gt;
++&lt;body&gt;
++	&lt;div style=&quot;text-align:center; background-color: #EBEBEB; border-top: 1px solid #FFFFFF; border-left: 1px solid #FFFFFF; border-right: 1px solid #AAAAAA; border-bottom: 1px solid #AAAAAA; font-weight : bold;&quot;&gt;
++		&lt;h4&gt;{message}&lt;/h4&gt;&lt;p&gt;{ifnotreload}&lt;/p&gt;
++	&lt;/div&gt;
++	&lt;!--{xo-debug-output}--&gt;
++&lt;/body&gt;&lt;/html&gt;';
++	/**
++	* Default strings to add to the response status header (indexed by status code)
++	* @var array
++	*/
++	var $responseMessages = array(
++		200			=&gt; 'OK',
++		400			=&gt; 'Bad request',
++		404			=&gt; 'Not found',
++	);
++	/**
++	* Location of the default error pages (unimplemented)
++	* @var string
++	*/
++	var $defaultErrorPages = false;
++	/**
++	* Redirection message sent by the last page
++	* @var string
++	*/
++	var $redirectMessage = '';
++
++
++	function xoInit( $options = array() ) {
++		if ( !empty( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] ) ) {
++			foreach ( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] as $k =&gt; $v ) {
++				$_SERVER[ 'REDIRECT_' . $k ] = $v;
++			}
++			//var_export( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] );
++			unset( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] );
++			$this-&gt;redirectMessage = $_SERVER['REDIRECT_ERROR_NOTES'];
++		}
++		if ( @$_SESSION[$this-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] ) {
++			$this-&gt;enableRedirections = false;
++		}
++		header( 'X-Powered-By: ' . $GLOBALS['xoops']-&gt;xoShortVersionString, false );
++		header( 'X-Powered-By: The noosphere', false );
++		return true;
++	}
++
++	/**
++	 * Convert a relative URI to an absolute one
++	 */
++	function absoluteUrl( $url ) {
++		global $xoops;
++		static $host;	
++
++		if ( strpos( $url, '://' ) === false ) {
++			if ( !isset($host) ) {
++				list( $defaultPort, $proto ) =
++					( substr( $_SERVER['SERVER_PROTOCOL'], 4, 1 ) == '/' ) ? array( 80, '<A HREF="http://">http://</A>' ) : array( 443, '<A HREF="https://">https://</A>' );
++				if ( !$host = @$_SERVER['HTTP_HOST'] ) {
++					$host = !empty($this-&gt;defaultServerName) ? $this-&gt;defaultServerName : $_SERVER['SERVER_NAME'];
++				}
++				if ( !empty($_SERVER['SERVER_PORT']) &amp;&amp; $_SERVER['SERVER_PORT'] != $defaultPort ) {
++					$host .= ':' . $_SERVER['SERVER_PORT'];
++				}
++				$host = $proto . $host;
++			}
++	        if ( !strlen($url) ) {
++	            $url = $_SERVER['REQUEST_URI'];
++        	} elseif ( substr( $url, 0, 1 ) == '/' ) {
++	            return $host . $xoops-&gt;url( &quot;/www$url&quot; );
++        	}
++        	// Check for PATH_INFO
++        	if (isset($_SERVER['PATH_INFO']) &amp;&amp; $_SERVER['PHP_SELF'] != $_SERVER['PATH_INFO']) {
++            	$path = dirname(substr($_SERVER['PHP_SELF'], 0, -strlen($_SERVER['PATH_INFO'])));
++        	} else {
++            	$path = dirname($_SERVER['PHP_SELF']);
++        	}
++        	if (substr($path = strtr($path, '\\', '/'), -1) != '/') {
++            	$path .= '/';
++        	}
++			$url = $host . $path . $url;
++		}
++		return $url;
++	}
++	/**
++	 * Set/send the response status and redirection location
++	 * 
++	 * This set the status response headers, and optionally redirect the client to the 
++	 * specified location.
++	 * The way the redirection is performed depends on the value of the $enableRedirections property:
++	 * if true, a Location: header is sent
++	 * if false, a custom html page containing a refresh &lt;meta&gt; tag will be displayed to perform client-side
++	 * redirection
++	 * 
++	 * @param int $status The HTTP status code to send to the client
++	 * @param string $message The HTTP status message to send to the client
++	 * @param string $location Location to redirect the client to
++	 */
++	function sendResponse( $status = null, $message = '', $location = '' ) {
++		global $xoops;
++
++ 	 	if ( is_array($status) ) {
++	 		list( $status, $message, $location ) = $status;
++		}
++		if ( empty($status) ) {
++			$status = 200;			// HTTP_STATUS_OK
++		}
++		if ( empty($message) &amp;&amp; isset($this-&gt;errorMessages[$status]) ) {
++		 	$message =  $this-&gt;errorMessages[$status];
++		}
++		/*
++		if ( empty($location) &amp;&amp; isset($this-&gt;errorPages[$status]) ) {
++			$location = $this-&gt;errorPages[$status];
++		}
++		*/
++		if ( $location == -1 ) {
++		 	if ( !( $location = @$_SERVER['HTTP_REFERER'] ) ) {
++		 		$location = '/www/';
++			}
++		}
++		if ( !empty($location) &amp;&amp; !$xoops-&gt;isVirtual ) {
++		    if ( preg_match( &quot;/[\\0-\\31]|about:|script:/i&quot;, $location ) ) {
++        		$location = '/www/';
++    		}
++    		if ( !strpos( $location, '://' ) ) {
++				$location = $this-&gt;absoluteUrl( $xoops-&gt;url( $location ) );
++    		}
++			if ( $this-&gt;enableRedirections ) {
++				$_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] = array(
++					'STATUS' =&gt; $status,
++					'URL' =&gt; $_SERVER['REQUEST_URI'],
++					'REQUEST_METHOD' =&gt; $_SERVER['REQUEST_METHOD'],
++					'ERROR_NOTES' =&gt; $message,
++				);
++				header( &quot;Location: $location&quot; );
++				$this-&gt;sendResponseCode( $status, $message );
++				echo &quot;&lt;body&gt;&lt;a href='$location'&gt;Page redirected. Status: $status, $message.&lt;/a&gt;&lt;/body&gt;&quot;;
++			} else {
++				$this-&gt;sendResponseCode( 200, $message );
++				$vars = array(
++					'{refresh}' =&gt; '&lt;meta http_equiv=&quot;refresh&quot; content=&quot;' . $this-&gt;fakeRedirectPageDelay . ';url=' . htmlspecialchars( $location, ENT_QUOTES ) . '&quot; /&gt;',
++					'{message}' =&gt; $message,
++					'{ifnotreload}' =&gt; sprintf( _IFNOTRELOAD, $location )
++				);
++				echo str_replace( array_keys( $vars ), array_values( $vars ), $this-&gt;fakeRedirectTemplate );
++			}
++		}
++	}
++	/**
++	 * Send the specified response code header to the response
++	 * @param int $status The HTTP status code to send to the client
++	 * @param string $message The HTTP status message to send to the client
++	 * @access protected
++	 */
++	function sendResponseCode( $status = 200, $message = 'OK' ) {
++		if ( !headers_sent() ) {
++			$message = str_replace( array( &quot;\r&quot;, &quot;\n&quot; ), '', $message );
++			if ( $pos = strpos( $message, '&lt;' ) ) {
++				$message = substr( $message, 0, $pos );
++			}
++			header( &quot;Status: $status $message&quot; );
++			header( &quot;HTTP/1.1 $status $message&quot; );
++		}
++	}
++	
++	
++}
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php	2006-01-19 12:39:57 UTC (rev 151)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php	2006-01-20 05:10:01 UTC (rev 152)
+@@ -0,0 +1,64 @@
++&lt;?php
++/**
++* xoops_http response codes definition file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_http
++* @version		$Id$
++*/
++
++define( 'HTTP_STATUS_OK',			200 );		// The client's request was successful, and the server's response contains the requested data.
++define( 'HTTP_STATUS_CREATED',		201 );		// This status code is used whenever a new URL is created. With this result code, the Location header is given by the server to specify where the new data was placed.
++define( 'HTTP_STATUS_ACCEPTED',		202 );		// The request was accepted but not immediately acted upon. More information about the transaction may be given in the entity-body of the server's response. There is no guarantee that the server will actually honor the request, even though it may seem like a legitimate request at the time of acceptance.
++define( 'HTTP_STATUS_NONAUTH',		203 );		// The information in the entity header is from a local or third-party copy, not from the original server.
++define( 'HTTP_STATUS_NOCONTENT',	204 );		// A status code and header are given in the response, but there is no entity-body in the reply. Browsers should not update their document view upon receiving this response. This is a useful code for CGI programs to use when they accept data from a form but want the browser view to stay at the form.
++define( 'HTTP_STATUS_RESETCONTENT',	205 );		// The browser should clear the form used for this transaction for additional input. For data-entry CGI applications.
++define( 'HTTP_STATUS_PARTCONTENT',	206 );		// The server is returning partial data of the size requested. Used in response to a request specifying a Range header. The server must specify the range included in the response with the Content-Range header.
++
++define( 'HTTP_STATUS_MOVED',		301 );		// The requested URL is no longer used by the server, and the operation specified in the request was not performed. The new location for the requested document is specified in the Location header. All future requests for the document should use the new URL.
++define( 'HTTP_STATUS_SEEOTHER',		303 );		// The requested URL can be found at a different URL (specified in the Location header) and should be retrieved by a GET on that resource.
++define( 'HTTP_STATUS_NOTMODIFIED',	304 );		// This is the response code to an If-Modified-Since or If-None-Match header, where the URL has not been modified since the specified date. The entity-body is not sent, and the client should use its own local copy.
++define( 'HTTP_STATUS_USEPROXY',		305 );		// The requested URL must be accessed through the proxy in the Location header.
++define( 'HTTP_STATUS_MOVEDTEMP',	307 );		// The requested URL has moved, but only temporarily. The Location header specifies the new location, but no information is given about the validity of the redirect in the future. The client should revisit the original URL in the future.
++
++define( 'HTTP_STATUS_BADREQUEST',	400 );		//This response code indicates that the server detected a syntax error in the client's request.
++define( 'HTTP_STATUS_UNAUTHORIZED',	401 );		// Given along with the WWW-Authenticate header to indicate that the request lacked proper authorization, and the client should supply proper authorization when requesting this URL again. See the description of the Authorization header for more information on how authorization works in HTTP.
++define( 'HTTP_STATUS_NEEDPAYMENT',	402 );		// This code is not yet implemented in HTTP.
++define( 'HTTP_STATUS_FORBIDDEN',	403 );		// The request was denied for a reason the server does not want to (or has no means to) indicate to the client.
++define( 'HTTP_STATUS_NOTFOUND',		404 );		// The document at the specified URL does not exist.
++define( 'HTTP_STATUS_BADMETHOD',	405 );		// This code is given with the Allow header and indicates that the method used by the client is not supported for this URL.
++define( 'HTTP_STATUS_NOTACCEPTABLE',406 );		// The URL specified by the client exists, but not in a format preferred by the client. Along with this code, the server provides the Content-Language, Content-Encoding, and Content-type headers.
++define( 'HTTP_STATUS_TIMEOUT',		408 );		// This response code means the client did not produce a full request within some predetermined time (usually specified in the server's configuration), and the server is disconnecting the network connection.
++define( 'HTTP_STATUS_CONFLICT',		409 );		// This code indicates that the request conflicts with another request or with the server's configuration. Information about the conflict should be returned in the data portion of the reply. For example, this response code could be given when a client's request would cause integrity problems in a database.
++define( 'HTTP_STATUS_GONE',			410 );		// This code indicates that the requested URL no longer exists and has been permanently removed from the server.
++
++define( 'HTTP_STATUS_SERVERERROR',		500 );		// A part of the server (for example, a CGI program) has crashed or encountered a configuration error.
++define( 'HTTP_STATUS_NOTIMPLEMENTED',	501 );		// The client requested an action that cannot be performed by the server.
++define( 'HTTP_STATUS_SERVICEUNAVAIL',	503 );		// The service is temporarily unavailable, but should be restored in the future. If the server knows when it will be available again, a Retry-After header may also be supplied.
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php	2006-01-19 12:39:57 UTC (rev 151)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php	2006-01-20 05:10:01 UTC (rev 152)
+@@ -0,0 +1,25 @@
++&lt;?php
++/**
++* xoops_http framework bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since		2.3.0
++* @package		xoops_http
++* @version		$Id$
++*/
++
++// xoBundleVersion: x.y.zRn  with R=release type (a:cvs snapshot, b:alpha, c:beta, d: RC, e: final)
++// We must be able to compare versions by comparing this string
++
++return array(
++	'xoBundleDisplayName' =&gt; 'XOOPS HTTP handler',
++	'xoBundleIdentifier' =&gt; 'xoops_http_HttpHandler',
++	'xoClassPath' =&gt; '/http.php',
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000143.html">[Xoops4-svn] r151 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj
+</A></li>
+	<LI>Next message: <A HREF="000145.html">[Xoops4-svn] r153 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Pyro/Theme.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#144">[ date ]</a>
+              <a href="thread.html#144">[ thread ]</a>
+              <a href="subject.html#144">[ subject ]</a>
+              <a href="author.html#144">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

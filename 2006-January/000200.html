@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r208 - in XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default: . img
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r208%20-%20in%20XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default%3A%20.%20img&In-Reply-To=%3C200601290333.k0T3XM1R012470%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000199.html">
+   <LINK REL="Next"  HREF="000201.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r208 - in XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default: . img</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r208%20-%20in%20XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default%3A%20.%20img&In-Reply-To=%3C200601290333.k0T3XM1R012470%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r208 - in XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default: . img">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Jan 29 04:33:22 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000199.html">[Xoops4-svn] r207 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000201.html">[Xoops4-svn] r209 - XoopsCore/branches/tasks/123353-authentication/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-29 04:33:15 +0100 (Sun, 29 Jan 2006)
+New Revision: 208
+
+Added:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/img/logged_in-22.png
+Modified:
+   XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/canvas-default.xotpl
+   XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/img/xoops-logo.png
+   XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/msie.css
+   XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/page-default.xotpl
+   XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/style-default.css
+Log:
+Several changes in the default theme... should mostly fix IE compat too
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/canvas-default.xotpl	2006-01-29 01:04:49 UTC (rev 207)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/canvas-default.xotpl	2006-01-29 03:33:15 UTC (rev 208)
+@@ -1,5 +1,8 @@
+ &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;([$xoops_langcode])&quot; lang=&quot;([$xoops_langcode])&quot;&gt;
++&lt;html
++	xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;
++	xml:lang=&quot;([$xoops_langcode])&quot; lang=&quot;([$xoops_langcode])&quot;
++&gt;
+ &lt;head&gt;
+ 	&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=([$xoops_charset])&quot; /&gt;
+ 	&lt;meta http-equiv=&quot;content-language&quot; content=&quot;([$xoops_langcode])&quot; /&gt;
+@@ -37,7 +40,7 @@
+ &lt;/script&gt;
+ 	
+ &lt;/head&gt;
+-&lt;body&gt;
++&lt;body class=&quot;([$xoops-&gt;currentModule-&gt;xoBundleIdentifier])&quot;&gt;
+ 
+ ([if $xoBlocks.canvas_left and $xoBlocks.canvas_right])
+ 	([assign var=canvas_class value=&quot;xo-with_both&quot;])
+@@ -57,6 +60,17 @@
+ 			&lt;div id=&quot;xo-banner-ad&quot;&gt;([$xoops_banner])&lt;/div&gt;
+ 			([/if])
+ 		&lt;/div&gt;
++		&lt;div id=&quot;xo-header-userinfo&quot;&gt;
++		([if not $xoops-&gt;currentUser-&gt;userId])
++			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#login])&quot;&gt;Log in&lt;/a&gt;
++			&lt;a href=&quot;([xoAppUrl /www/register.php])&quot;&gt;Register&lt;/a&gt;
++		([else])
++			&lt;div class=&quot;user-name&quot;&gt;
++				([if $xoops-&gt;currentUser-&gt;fullName])([$xoops-&gt;currentUser-&gt;fullName])([else])([$xoops-&gt;currentUser-&gt;login])([/if])
++			&lt;/div&gt;
++			&lt;a href=&quot;([xoAppUrl mod_xoops_Identification#logout])&quot;&gt;Log out&lt;/a&gt;
++		([/if])
++		&lt;/div&gt;
+ 	&lt;/div&gt;
+ ([if $xoops-&gt;services.http-&gt;redirectMessage])
+ 	&lt;div id=&quot;xo-redirect-message&quot;&gt;
+@@ -88,8 +102,9 @@
+ 			Powered by ([$xoops-&gt;xoShortVersionString])
+ 		&lt;/a&gt;
+ 	&lt;/div&gt;
+-
+ &lt;/div&gt;
+   
++&lt;!--{xo-logger-output}--&gt;
++
+ &lt;/body&gt;
+ &lt;/html&gt;
+
+Added: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/img/logged_in-22.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/img/logged_in-22.png
+___________________________________________________________________
+Name: svn:mime-type
+   + image/png
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/img/xoops-logo.png
+===================================================================
+(Binary files differ)
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/msie.css
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/msie.css	2006-01-29 01:04:49 UTC (rev 207)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/msie.css	2006-01-29 03:33:15 UTC (rev 208)
+@@ -1,6 +1,29 @@
+ 
+ 
++#xo-header-userinfo {
++	right:			25px;
++}
++#xo-header-userinfo .user-name {
++	background:		transparent none;
++	padding:		0px;
++}
++
++
+ #xo-page {
+ 	/* Fix to allow 100% large elements inside the content zone (this browser is so lame... it's unbelievable) */
+ 	height:			1%;
+ }
++
++#xo-canvas-left {
++	display:	inline;
++}
++
++
++.mod_xoops_Identification #xo-page.login {
++	text-align:		center;
++}
++.mod_xoops_Identification #xo-page.login #login_window  {
++	text-align:		left;
++	margin:			1em;
++	width:			480px;
++}
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/page-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/page-default.xotpl	2006-01-29 01:04:49 UTC (rev 207)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/page-default.xotpl	2006-01-29 03:33:15 UTC (rev 208)
+@@ -1,5 +1,5 @@
+ 
+-	&lt;div id=&quot;xo-page&quot;&gt;
++	&lt;div id=&quot;xo-page&quot;([if $xoops-&gt;currentModule-&gt;currentLocation]) class=&quot;([$xoops-&gt;currentModule-&gt;currentLocation])&quot;([/if])&gt;
+ 		([if !empty($xoops_ccblocks)])
+ 		&lt;div class=&quot;xo-blockszone&quot; id=&quot;xo-page-topblocks&quot;&gt;
+ 		([foreach item=block from=$xoops_ccblocks])
+
+Modified: XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/style-default.css
+===================================================================
+--- XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/style-default.css	2006-01-29 01:04:49 UTC (rev 207)
++++ XoopsCore/branches/tasks/123353-authentication/htdocs/themes/default/style-default.css	2006-01-29 03:33:15 UTC (rev 208)
+@@ -11,13 +11,15 @@
+ 	font:					10pt sans-serif;
+ }
+ 
++
+ #xo-canvas {
+-	position:		relative;
+ 	margin:			15px;
+ 	background:		#EEEEEE;
+ }
+ 
++/* ------------------- Canvas banner ------------------- */
+ #xo-canvas-header {
++	position:		relative;
+ 	border-bottom:	1px solid #CCCCCC;
+ 	background:		#FFFFFF;
+ 	padding:		3px 3px 3px;
+@@ -45,6 +47,25 @@
+ 	margin:			0px auto;
+ }
+ 
++#xo-header-userinfo {
++	position:		absolute;
++	top:			6px;
++	right:			10px;
++	color:			#ffffff;
++	font-size:		90%;
++	font-weight:	bold;
++	text-align:		center;
++}
++#xo-header-userinfo a {
++	display:		block;
++	color:			#eeeeee;
++}
++#xo-header-userinfo .user-name {
++	background:		url(img/logged_in-22.png) no-repeat right center;
++	padding-top:	2px;
++	padding-right:	24px;
++}
++
+ #xo-redirect-message {
+ 	position:		absolute;
+ 	z-index:		20;
+@@ -58,8 +79,8 @@
+ 	font-weight:	bold;
+ }
+ 
++/* ------------------- Main canvas zone (columns and page) ------------------- */
+ #xo-canvas-main {
+-	clear:			both;
+ 	border-top:		1px solid #FFFFFF;
+ 	padding:		6px;
+ }
+@@ -72,13 +93,12 @@
+ 	float:			left;
+ 	border:			1px solid #666666;
+ }
+-
++#xo-canvas-column .xo-block {
++	display:		block;
++}
+ #xo-canvas-rightcolumn {
+ 	float:			right;
+-	padding-bottom:	96px;
+-	background:		url(img/canvas-rightcolumn_bg.png) no-repeat center bottom;
+ }
+-
+ #xo-page {
+ 	background:		#ffffff;
+ 	padding:		0px;
+@@ -87,13 +107,17 @@
+ }
+ 
+ #xo-canvas.xo-with_left #xo-page, #xo-canvas.xo-with_both #xo-page {
+-	margin-left:	176px;
++	margin-left:	170px;
+ }
+-
+ #xo-canvas.xo-with_right #xo-page, #xo-canvas.xo-with_both #xo-page {
+-	margin-right:	176px;
++	margin-right:	170px;
+ }
+ 
++#xo-content {
++	position:		relative;
++}
++
++
+ #xo-canvas-footer {
+ 	padding:		1px;
+ 	background:		#DDDDDD;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000199.html">[Xoops4-svn] r207 - in XoopsCore/branches/tasks/123353-authentication: XOOPS/Boot htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000201.html">[Xoops4-svn] r209 - XoopsCore/branches/tasks/123353-authentication/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

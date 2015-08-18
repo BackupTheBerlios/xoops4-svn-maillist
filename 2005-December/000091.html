@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r99 - XoopsCore/branches/2.3.x/2.3-main/docs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r99%20-%20XoopsCore/branches/2.3.x/2.3-main/docs&In-Reply-To=%3C200512130406.jBD46XAJ013560%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000090.html">
+   <LINK REL="Next"  HREF="000092.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r99 - XoopsCore/branches/2.3.x/2.3-main/docs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r99%20-%20XoopsCore/branches/2.3.x/2.3-main/docs&In-Reply-To=%3C200512130406.jBD46XAJ013560%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r99 - XoopsCore/branches/2.3.x/2.3-main/docs">skalpa at berlios.de
+       </A><BR>
+    <I>Tue Dec 13 05:06:33 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000090.html">[Xoops4-svn] r97 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes
+</A></li>
+        <LI>Next message: <A HREF="000092.html">[Xoops4-svn] r100 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#91">[ date ]</a>
+              <a href="thread.html#91">[ thread ]</a>
+              <a href="subject.html#91">[ subject ]</a>
+              <a href="author.html#91">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-13 05:06:31 +0100 (Tue, 13 Dec 2005)
+New Revision: 99
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt
+Log:
+Added a quick readme file and updated the changelog
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt	2005-12-12 23:50:03 UTC (rev 98)
++++ XoopsCore/branches/2.3.x/2.3-main/docs/changelog.txt	2005-12-13 04:06:31 UTC (rev 99)
+@@ -5,14 +5,16 @@
+ ============================
+ - Updated Smarty to 2.6.10 (skalpa)
+ - Updated Snoopy to 1.2.3 (skalpa)
++- Fixed module instanciation code URI rewriting compatibility (skalpa)
++- Fixed several references related notices [not all, it's gonna take centuries] (skalpa)
++- Added the 1st draft of the Exxos components system (skalpa)
++- Started to refactor the boot sequence, adding the new kernel (skalpa)
++- Completely refactored the theme / templates layers (skalpa)
++- Started the new XHTML compliant default theme (skalpa)
++- Added the devteam.xoops.org theme to showcase inheritance (skalpa)
++- Renamed the old crappy default theme to 'xoops20' (skalpa)
++- Moved the 2.0.x system templates to the xoops20 theme for old themes BC (skalpa)
+ 
+-
+-
+-
+-
+-
+-
+-
+ ============================
+ 2005/10/28: Version 2.0.13.2
+ ============================
+
+Added: XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt	2005-12-12 23:50:03 UTC (rev 98)
++++ XoopsCore/branches/2.3.x/2.3-main/docs/readme.txt	2005-12-13 04:06:31 UTC (rev 99)
+@@ -0,0 +1,36 @@
++
++XOOPS 2.3.0-dev
++Dummy readme file to compensate the lack of documentation.
++
++Note: this thing is still in alpha stage. It can be used without problems assuming you know how to handle the few drawbacks it has. Now, if you're afraid to edit files by yourself, you may want to wait a little more.
++
++Installation:
++- Copy the content of the htdocs/ folder where it can be accessed by your server
++- Copy the XOOPS and XOOPS-data folders where you want to (it's recommended to let them out of the webroot)
++- Make all the folders inside 'XOOPS-data' server writable
++- Burn the 2 other folders
++- The actual installer hasn't been changed to handle the new vars. So you'll have to help it a little: start the installation procedure normally, until the mainfile.php generation (the page with the &quot;writing constants&quot;... dont worry about the one that fails). Once it's done, manually edit mainfile.php and enter the values of XOOPS_PATH and XOOPS_VAR_PATH with the physical paths of your XOOPS and XOOPS-data folders. Then click &quot;next&quot; in the installer to go on with the installation procedure.
++
++!NB! By default the kernel is configured to use &quot;development mode&quot;. You should only use this locally, as it's very slow and only here for modules devs/themes designers to work.
++This mode shows the PHP error message within the page and should NEVER be used on a public server. To switch to production mode, you have to edit the XOOPS/Boot/hosts.php file and replace the last line to set the xoRunMode variable to 0 (zero).
++
++Quick notes: 
++All the new stuff will be documented, but here are a few notes for people who would like to start playing before the articles are written.
++1) The old tplsets system has disappeared to be replaced by the new theme engine. Online edition of templates is not possible anymore, but will come back with a new WYSIWYG editor module (this objective is actually why the smarty delimiters have been changed).
++2) The default templates delimiters are ([ ]) . The new engine tries to differentiate templates by looking at their filename: .html tpls are considered &quot;old-school&quot; tpls and processed before compilation so the &lt;{ }&gt; they contain are replaced.
++NB: please tell us if you've done a module using templates with another extension than .html, so we can change the test.
++3) The theme engine uses 3 templates to build a page (canvas,page,content) see the theme class comments for an explanation.
++4) xoAppUrl and xoImgUrl are smarty COMPILER plugins, and can't use variables. The 1st ones generates URIs to modules pages, the 2nd one uses the theme inheritance system.
++If you need to use vars, you can replace xoAppUrl by ([$xoops-&gt;url($stuff)]).
++You can also replace xoImgUrl by ([$xoops-&gt;url( $xoTheme-&gt;resourcePath($stuff) )]) but its not recommended (this is resource hungry, it's actually why xoImgUrl is implemented as a compiler plugin ).
++5) The new xotpl: resource handler uses full paths to templates.
++v1:
++([include file='xotpl:my_component#rel/path/to/file.xotpl']) get the 'path/to/file.xotpl' template of the 'my_component' object (it's a components-based system, so objects can own templates now)
++v2: (not recommended, but the only way to include modules tpls right now)
++([include file='xotpl:modules/stuff/tplname.xotpl'])
++
++
++
++
++
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000090.html">[Xoops4-svn] r97 - XoopsCore/branches/2.3.x/2.3-main/htdocs/themes
+</A></li>
+	<LI>Next message: <A HREF="000092.html">[Xoops4-svn] r100 - XoopsCore/branches/2.3.x/2.3-main/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#91">[ date ]</a>
+              <a href="thread.html#91">[ thread ]</a>
+              <a href="subject.html#91">[ subject ]</a>
+              <a href="author.html#91">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r59 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . blocks templates templates/blocks
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r59%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system%3A%20.%20blocks%20templates%20templates/blocks&In-Reply-To=%3C200512021415.jB2EFTom021213%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000051.html">
+   <LINK REL="Next"  HREF="000053.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r59 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . blocks templates templates/blocks</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r59%20-%20in%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system%3A%20.%20blocks%20templates%20templates/blocks&In-Reply-To=%3C200512021415.jB2EFTom021213%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r59 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system: . blocks templates templates/blocks">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Dec  2 15:15:29 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000051.html">[Xoops4-svn] r58 - in XoopsCore/branches/tasks/121627-refs/htdocs: class/database kernel modules/system/blocks
+</A></li>
+        <LI>Next message: <A HREF="000053.html">[Xoops4-svn] r60 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class/database kernel
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-02 15:15:26 +0100 (Fri, 02 Dec 2005)
+New Revision: 59
+
+Added:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.xotpl
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl
+Removed:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php
+Log:
+Updated the main menu / user menu / theme block output to be more compliant.
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-02 14:15:26 UTC (rev 59)
+@@ -113,15 +113,15 @@
+     $criteria = new CriteriaCompo(new Criteria('hasmain', 1));
+     $criteria-&gt;add(new Criteria('isactive', 1));
+     $criteria-&gt;add(new Criteria('weight', 0, '&gt;'));
+-    $modules =&amp; $module_handler-&gt;getObjects($criteria, true);
++    $modules = $module_handler-&gt;getObjects($criteria, true);
+     $moduleperm_handler =&amp; xoops_gethandler('groupperm');
+     $groups = is_object($xoopsUser) ? $xoopsUser-&gt;getGroups() : XOOPS_GROUP_ANONYMOUS;
+-    $read_allowed =&amp; $moduleperm_handler-&gt;getItemIds('module_read', $groups);
++    $read_allowed = $moduleperm_handler-&gt;getItemIds('module_read', $groups);
+     foreach (array_keys($modules) as $i) {
+         if (in_array($i, $read_allowed)) {
+             $block['modules'][$i]['name'] = $modules[$i]-&gt;getVar('name');
+             $block['modules'][$i]['directory'] = $modules[$i]-&gt;getVar('dirname');
+-            $sublinks =&amp; $modules[$i]-&gt;subLink();
++            $sublinks = $modules[$i]-&gt;subLink();
+             if ((count($sublinks) &gt; 0) &amp;&amp; (!empty($xoopsModule)) &amp;&amp; ($i == $xoopsModule-&gt;getVar('mid'))) {
+                 foreach($sublinks as $sublink){
+                     $block['modules'][$i]['sublinks'][] = array('name' =&gt; $sublink['name'], 'url' =&gt; XOOPS_URL.'/modules/'.$modules[$i]-&gt;getVar('dirname').'/'.$sublink['url']);
+@@ -479,9 +479,15 @@
+     return $form;
+ }
+ 
+-function b_system_themes_show($options)
+-{
++function b_system_themes_show($options) {
+     global $xoopsConfig;
++
++    $vars = array();
++    $vars['availableThemes'] = $xoopsConfig['theme_set_allowed'];
++    $vars['currentTheme'] = $xoopsConfig['theme_set'];
++    $vars['options'] = $options;
++    return $vars;
++    
+     $theme_options = '';
+     foreach ($xoopsConfig['theme_set_allowed'] as $theme) {
+         $theme_options .= '&lt;option value=&quot;'.$theme.'&quot;';
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,15 +0,0 @@
+-&lt;table cellspacing=&quot;0&quot;&gt;
+-  &lt;tr&gt;
+-    &lt;td id=&quot;mainmenu&quot;&gt;
+-      &lt;a class=&quot;menuTop&quot; href=&quot;&lt;{$xoops_url}&gt;/&quot;&gt;&lt;{$block.lang_home}&gt;&lt;/a&gt;
+-      &lt;!-- start module menu loop --&gt;
+-      &lt;{foreach item=module from=$block.modules}&gt;
+-      &lt;a class=&quot;menuMain&quot; href=&quot;&lt;{$xoops_url}&gt;/modules/&lt;{$module.directory}&gt;/&quot;&gt;&lt;{$module.name}&gt;&lt;/a&gt;
+-        &lt;{foreach item=sublink from=$module.sublinks}&gt;
+-          &lt;a class=&quot;menuSub&quot; href=&quot;&lt;{$sublink.url}&gt;&quot;&gt;&lt;{$sublink.name}&gt;&lt;/a&gt;
+-        &lt;{/foreach}&gt;
+-      &lt;{/foreach}&gt;
+-      &lt;!-- end module menu loop --&gt;
+-    &lt;/td&gt;
+-  &lt;/tr&gt;
+-&lt;/table&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_mainmenu.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,9 @@
++&lt;ul&gt;
++	&lt;li&gt;&lt;a rel=&quot;home&quot; href=&quot;([xoAppUrl /www/])&quot;&gt;([$block.lang_home])&lt;/a&gt;&lt;/li&gt;
++	([foreach item=module from=$block.modules])
++	&lt;li&gt;&lt;a href=&quot;([$xoops-&gt;url(&quot;modules/`$module.directory`/&quot;) ])&quot;&gt;([$module.name])&lt;/a&gt;&lt;/li&gt;
++	([foreach item=sublink from=$module.sublinks])
++	&lt;li class=&quot;menuSub&quot;&gt;&lt;a href=&quot;([$sublink.url])&quot;&gt;([$sublink.name])&lt;/a&gt;&lt;/li&gt;
++	([/foreach])
++	([/foreach])
++&lt;/ul&gt;
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,5 +0,0 @@
+-&lt;div style=&quot;text-align: center;&quot;&gt;
+-&lt;form action=&quot;index.php&quot; method=&quot;post&quot;&gt;
+-&lt;{$block.theme_select}&gt;
+-&lt;/form&gt;
+-&lt;/div&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_themes.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,19 @@
++
++&lt;form action=&quot;([xoAppUrl /www/index.php])&quot; method=&quot;post&quot;&gt;
++([if $block.options.0 == 1])
++	&lt;img id=&quot;xo-theme-thumbImg&quot; alt=&quot;Screenshot&quot; style=&quot;width:([$block.options.1])px&quot;
++		 src=&quot;([$xoops-&gt;url(&quot;themes/`$block.currentTheme`/shot.gif&quot;) ])&quot; /&gt;&lt;br /&gt;
++	&lt;select name=&quot;xoops_theme_select&quot;
++		onchange=&quot;document.getElementById('xo-theme-thumbImg').src='([xoAppUrl themes/])'+this.value+'/shot.gif')&quot;&gt;
++([else])	
++	&lt;select name=&quot;xoops_theme_select&quot; size=&quot;3&quot; onchange=&quot;this.form.submit()&quot;&gt;
++([/if])
++([foreach from=$block.availableThemes item=theme])
++		&lt;option value=&quot;([$theme])&quot;([if $theme==$block.currentTheme]) selected=&quot;selected&quot;([/if])&gt;([$theme])&lt;/option&gt;
++([/foreach])	
++	&lt;/select&gt;&lt;br /&gt;
++	([$block.availableThemes|@count|string_format:$smarty.const._MB_SYSTEM_NUMTHEME])&lt;br /&gt;
++([if $block.options.0 == 1])
++	&lt;input type=&quot;submit&quot; value=&quot;([$smarty.const._GO])&quot; /&gt;	
++([/if])
++&lt;/form&gt;
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,19 +0,0 @@
+-&lt;table cellspacing=&quot;0&quot;&gt;
+-  &lt;tr&gt;
+-    &lt;td id=&quot;usermenu&quot;&gt;
+-      &lt;a class=&quot;menuTop&quot; href=&quot;&lt;{$xoops_url}&gt;/user.php&quot;&gt;&lt;{$block.lang_youraccount}&gt;&lt;/a&gt;
+-      &lt;a href=&quot;&lt;{$xoops_url}&gt;/edituser.php&quot;&gt;&lt;{$block.lang_editaccount}&gt;&lt;/a&gt;
+-      &lt;a href=&quot;&lt;{$xoops_url}&gt;/notifications.php&quot;&gt;&lt;{$block.lang_notifications}&gt;&lt;/a&gt;
+-      &lt;a href=&quot;&lt;{$xoops_url}&gt;/user.php?op=logout&quot;&gt;&lt;{$block.lang_logout}&gt;&lt;/a&gt;
+-      &lt;{if $block.new_messages &gt; 0}&gt;
+-        &lt;a class=&quot;highlight&quot; href=&quot;&lt;{$xoops_url}&gt;/viewpmsg.php&quot;&gt;&lt;{$block.lang_inbox}&gt; (&lt;span style=&quot;color:#ff0000; font-weight: bold;&quot;&gt;&lt;{$block.new_messages}&gt;&lt;/span&gt;)&lt;/a&gt;
+-      &lt;{else}&gt;
+-        &lt;a href=&quot;&lt;{$xoops_url}&gt;/viewpmsg.php&quot;&gt;&lt;{$block.lang_inbox}&gt;&lt;/a&gt;
+-      &lt;{/if}&gt;
+-
+-      &lt;{if $xoops_isadmin}&gt;
+-        &lt;a href=&quot;&lt;{$xoops_url}&gt;/admin.php&quot;&gt;&lt;{$block.lang_adminmenu}&gt;&lt;/a&gt;
+-      &lt;{/if}&gt;
+-    &lt;/td&gt;
+-  &lt;/tr&gt;
+-&lt;/table&gt;
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/blocks/system_block_user.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,14 @@
++&lt;ul&gt;
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl /www/user.php])&quot;&gt;([$block.lang_youraccount])&lt;/a&gt;&lt;/li&gt;
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl /www/edituser.php])&quot;&gt;([$block.lang_editaccount])&lt;/a&gt;&lt;/li&gt;
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl /www/notifications.php])&quot;&gt;([$block.lang_notifications])&lt;/a&gt;&lt;/li&gt;
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl /www/user.php?op=logout])&quot;&gt;([$block.lang_logout])&lt;/a&gt;&lt;/li&gt;
++	([if $block.new_messages eq 0])
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl /www/viewpmsg.php])&quot;&gt;&lt;em&gt;([$block.lang_inbox]) (([$block.new_messages]))&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
++	([else])
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl /www/viewpmsg.php])&quot;&gt;([$block.lang_inbox])&lt;/a&gt;&lt;/li&gt;
++	([/if])
++	([if $xoops_isadmin])
++	&lt;li&gt;&lt;a href=&quot;([xoAppUrl  /www/admin.php])&quot;&gt;([$block.lang_adminmenu])&lt;/a&gt;&lt;/li&gt;
++	([/if])
++&lt;/ul&gt;
+\ No newline at end of file
+
+Deleted: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html	2005-12-02 14:15:26 UTC (rev 59)
+@@ -1,36 +0,0 @@
+-&lt;{if $xoops_notification.show}&gt;
+-&lt;form name=&quot;notification_select&quot; action=&quot;&lt;{$xoops_notification.target_page}&gt;&quot; method=&quot;post&quot;&gt;
+-&lt;h4 style=&quot;text-align:center;&quot;&gt;&lt;{$lang_activenotifications}&gt;&lt;/h4&gt;
+-&lt;input type=&quot;hidden&quot; name=&quot;not_redirect&quot; value=&quot;&lt;{$xoops_notification.redirect_script}&gt;&quot; /&gt;
+-&lt;input type=&quot;hidden&quot; name=&quot;XOOPS_TOKEN_REQUEST&quot; value=&quot;&lt;{php}&gt;echo $GLOBALS['xoopsSecurity']-&gt;createToken();&lt;{/php}&gt;&quot; /&gt;
+-&lt;table class=&quot;outer&quot;&gt;
+-  &lt;tr&gt;&lt;th colspan=&quot;3&quot;&gt;&lt;{$lang_notificationoptions}&gt;&lt;/th&gt;&lt;/tr&gt;
+-  &lt;tr&gt;
+-    &lt;td class=&quot;head&quot;&gt;&lt;{$lang_category}&gt;&lt;/td&gt;
+-    &lt;td class=&quot;head&quot;&gt;&lt;input name=&quot;allbox&quot; id=&quot;allbox&quot; onclick=&quot;xoopsCheckAll('notification_select','allbox');&quot; type=&quot;checkbox&quot; value=&quot;&lt;{$lang_checkall}&gt;&quot; /&gt;&lt;/td&gt;
+-    &lt;td class=&quot;head&quot;&gt;&lt;{$lang_events}&gt;&lt;/td&gt;
+-  &lt;/tr&gt;
+-  &lt;{foreach name=outer item=category from=$xoops_notification.categories}&gt;
+-  &lt;{foreach name=inner item=event from=$category.events}&gt;
+-  &lt;tr&gt;
+-    &lt;{if $smarty.foreach.inner.first}&gt;
+-    &lt;td class=&quot;even&quot; rowspan=&quot;&lt;{$smarty.foreach.inner.total}&gt;&quot;&gt;&lt;{$category.title}&gt;&lt;/td&gt;
+-    &lt;{/if}&gt;
+-    &lt;td class=&quot;odd&quot;&gt;
+-    &lt;{counter assign=index}&gt;
+-    &lt;input type=&quot;hidden&quot; name=&quot;not_list[&lt;{$index}&gt;][params]&quot; value=&quot;&lt;{$category.name}&gt;,&lt;{$category.itemid}&gt;,&lt;{$event.name}&gt;&quot; /&gt;
+-    &lt;input type=&quot;checkbox&quot; id=&quot;not_list[]&quot; name=&quot;not_list[&lt;{$index}&gt;][status]&quot; value=&quot;1&quot; &lt;{if $event.subscribed}&gt;checked=&quot;checked&quot;&lt;{/if}&gt; /&gt;
+-    &lt;/td&gt;
+-    &lt;td class=&quot;odd&quot;&gt;&lt;{$event.caption}&gt;&lt;/td&gt;
+-  &lt;/tr&gt;
+-  &lt;{/foreach}&gt;
+-  &lt;{/foreach}&gt;
+-  &lt;tr&gt;
+-    &lt;td class=&quot;foot&quot; colspan=&quot;3&quot; align=&quot;center&quot;&gt;&lt;input type=&quot;submit&quot; name=&quot;not_submit&quot; value=&quot;&lt;{$lang_updatenow}&gt;&quot; /&gt;&lt;/td&gt;
+-  &lt;/tr&gt;
+-&lt;/table&gt;
+-&lt;div align=&quot;center&quot;&gt;
+-&lt;{$lang_notificationmethodis}&gt;:&nbsp;&lt;{$user_method}&gt;&nbsp;&nbsp;[&lt;a href=&quot;&lt;{$editprofile_url}&gt;&quot;&gt;&lt;{$lang_change}&gt;&lt;/a&gt;]
+-&lt;/div&gt;
+-&lt;/form&gt;
+-&lt;{/if}&gt;
+\ No newline at end of file
+
+Copied: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl (from rev 33, XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html)
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.html	2005-11-25 10:28:52 UTC (rev 33)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/templates/system_notification_select.xotpl	2005-12-02 14:15:26 UTC (rev 59)
+@@ -0,0 +1,49 @@
++([if $xoops_notification.show])
++
++&lt;div class=&quot;xo-block system-notification_select&quot;&gt;
++	&lt;div class=&quot;xo-blocktitle&quot;&gt;
++		&lt;div class=&quot;xo-expand-switch&quot; onclick=&quot;switchBlockDisplay(this.parentNode.parentNode,this)&quot;&gt;-&lt;/div&gt;
++		([$lang_notificationoptions])
++	&lt;/div&gt;
++	&lt;div class=&quot;xo-blockcontent&quot;&gt;
++	&lt;form name=&quot;notification_select&quot; action=&quot;([$xoops_notification.target_page])&quot; method=&quot;post&quot;&gt;
++	&lt;input type=&quot;hidden&quot; name=&quot;not_redirect&quot; value=&quot;([$xoops_notification.redirect_script])&quot; /&gt;
++	&lt;input type=&quot;hidden&quot; name=&quot;XOOPS_TOKEN_REQUEST&quot; value=&quot;([php])echo $GLOBALS['xoopsSecurity']-&gt;createToken();([/php])&quot; /&gt;
++	&lt;table class=&quot;xo-form&quot;&gt;
++	&lt;thead&gt;
++	&lt;tr&gt;
++		&lt;th scope=&quot;col&quot;&gt;([$lang_category])&lt;/th&gt;
++		&lt;th scope=&quot;col&quot;&gt;([$lang_events])&lt;/th&gt;
++		&lt;th scope=&quot;col&quot;&gt;&lt;input type=&quot;checkbox&quot; onclick=&quot;xoopsCheckAll(this.form,this);&quot; /&gt;&lt;/th&gt;
++	&lt;/tr&gt;
++	&lt;/thead&gt;			
++	&lt;tbody&gt;
++	([foreach name=outer item=category from=$xoops_notification.categories])
++	([foreach name=inner item=event from=$category.events])
++	&lt;tr&gt;
++	([if $smarty.foreach.inner.first])
++		&lt;th scope=&quot;row&quot; rowspan=&quot;([$smarty.foreach.inner.total])&quot;&gt;([$category.title])&lt;/th&gt;
++	([/if])
++		&lt;td&gt;([$event.caption])&lt;/td&gt;
++		&lt;td&gt;
++			&lt;input type=&quot;hidden&quot; name=&quot;not_list[([$index])][params]&quot; value=&quot;([$category.name]),([$category.itemid]),([$event.name])&quot; /&gt;
++			&lt;input type=&quot;checkbox&quot; name=&quot;not_list[([$index])][status]&quot; value=&quot;1&quot; ([if $event.subscribed])checked=&quot;checked&quot;([/if]) /&gt;			
++		&lt;/td&gt;
++	&lt;/tr&gt;
++	([/foreach])
++	([/foreach])
++	&lt;/tbody&gt;
++	&lt;tfoot&gt;
++	&lt;tr&gt;
++		&lt;td colspan=&quot;3&quot;&gt;&lt;button type=&quot;submit&quot;&gt;([$lang_updatenow])&lt;/button&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++	&lt;/tfoot&gt;
++	&lt;/table&gt;
++	&lt;/form&gt;
++	([$lang_notificationmethodis]):
++	([$user_method])
++	(&lt;a href=&quot;([$editprofile_url])&quot;&gt;([$lang_change])&lt;/a&gt;)
++	&lt;/div&gt;
++&lt;/div&gt;
++
++([/if])
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php	2005-12-02 13:53:48 UTC (rev 58)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/xoops_version.php	2005-12-02 14:15:26 UTC (rev 59)
+@@ -74,7 +74,7 @@
+ $modversion['templates'][12]['description'] = 'Dummy template file for holding non-template contents. This should not be edited.';
+ $modversion['templates'][13]['file'] = 'system_notification_list.html';
+ $modversion['templates'][13]['description'] = '';
+-$modversion['templates'][14]['file'] = 'system_notification_select.html';
++$modversion['templates'][14]['file'] = 'system_notification_select.xotpl';
+ $modversion['templates'][14]['description'] = '';
+ $modversion['templates'][15]['file'] = 'system_block_dummy.html';
+ $modversion['templates'][15]['description'] = 'Dummy template for custom blocks or blocks without templates';
+@@ -84,7 +84,7 @@
+ $modversion['blocks'][1]['name'] = _MI_SYSTEM_BNAME2;
+ $modversion['blocks'][1]['description'] = &quot;Shows user block&quot;;
+ $modversion['blocks'][1]['show_func'] = &quot;b_system_user_show&quot;;
+-$modversion['blocks'][1]['template'] = 'system_block_user.html';
++$modversion['blocks'][1]['template'] = 'system_block_user.xotpl';
+ 
+ $modversion['blocks'][2]['file'] = &quot;system_blocks.php&quot;;
+ $modversion['blocks'][2]['name'] = _MI_SYSTEM_BNAME3;
+@@ -108,7 +108,7 @@
+ $modversion['blocks'][5]['name'] = _MI_SYSTEM_BNAME6;
+ $modversion['blocks'][5]['description'] = &quot;Shows the main navigation menu of the site&quot;;
+ $modversion['blocks'][5]['show_func'] = &quot;b_system_main_show&quot;;
+-$modversion['blocks'][5]['template'] = 'system_block_mainmenu.html';
++$modversion['blocks'][5]['template'] = 'system_block_mainmenu.xotpl';
+ 
+ $modversion['blocks'][6]['file'] = &quot;system_blocks.php&quot;;
+ $modversion['blocks'][6]['name'] = _MI_SYSTEM_BNAME7;
+@@ -162,7 +162,7 @@
+ $modversion['blocks'][12]['show_func'] = &quot;b_system_themes_show&quot;;
+ $modversion['blocks'][12]['options'] = &quot;0|80&quot;;
+ $modversion['blocks'][12]['edit_func'] = &quot;b_system_themes_edit&quot;;
+-$modversion['blocks'][12]['template'] = 'system_block_themes.html';
++$modversion['blocks'][12]['template'] = 'system_block_themes.xotpl';
+ 
+ // Menu
+ $modversion['hasMain'] = 0;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000051.html">[Xoops4-svn] r58 - in XoopsCore/branches/tasks/121627-refs/htdocs: class/database kernel modules/system/blocks
+</A></li>
+	<LI>Next message: <A HREF="000053.html">[Xoops4-svn] r60 - in XoopsCore/branches/tasks/121476-tplset-remove/htdocs: class/database kernel
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

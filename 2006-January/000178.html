@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r186 - XoopsCore/branches/2.2.x/2.2-main/html
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r186%20-%20XoopsCore/branches/2.2.x/2.2-main/html&In-Reply-To=%3C200601222351.k0MNpGSO008930%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000177.html">
+   <LINK REL="Next"  HREF="000179.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r186 - XoopsCore/branches/2.2.x/2.2-main/html</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r186%20-%20XoopsCore/branches/2.2.x/2.2-main/html&In-Reply-To=%3C200601222351.k0MNpGSO008930%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r186 - XoopsCore/branches/2.2.x/2.2-main/html">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Jan 23 00:51:16 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000177.html">[Xoops4-svn] r185 - in XoopsCore/branches/2.2.x/2.2-main: docs html html/class html/class/xml html/class/xoopseditor/dhtmltextarea html/class/xoopseditor/koivi html/class/xoopseditor/koivi/include html/class/xoopseditor/textarea html/include html/install html/kernel html/language/english html/modules/pm html/modules/pm/templates html/modules/profile html/modules/profile/admin html/modules/profile/include html/modules/system html/modules/system/admin/banners html/modules/system/admin/groups html/modules/system/admin/mailusers html/modules/system/admin/preferences html/modules/system/admin/smilies html/modules/system/admin/tplsets html/modules/system/blocks html/modules/system/include html/modules/system/templates html/themes/default/css html/themes/xmt/css
+</A></li>
+        <LI>Next message: <A HREF="000179.html">[Xoops4-svn] r187 - XoopsCore/branches/2.2.x/2.2-main/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#178">[ date ]</a>
+              <a href="thread.html#178">[ thread ]</a>
+              <a href="subject.html#178">[ subject ]</a>
+              <a href="author.html#178">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-23 00:51:15 +0100 (Mon, 23 Jan 2006)
+New Revision: 186
+
+Modified:
+   XoopsCore/branches/2.2.x/2.2-main/html/mainfile.php
+Log:
+Reverting mainfile.php (sent an installed one by mistake)
+
+Modified: XoopsCore/branches/2.2.x/2.2-main/html/mainfile.php
+===================================================================
+--- XoopsCore/branches/2.2.x/2.2-main/html/mainfile.php	2006-01-22 23:49:01 UTC (rev 185)
++++ XoopsCore/branches/2.2.x/2.2-main/html/mainfile.php	2006-01-22 23:51:15 UTC (rev 186)
+@@ -24,75 +24,12 @@
+ //  along with this program; if not, write to the Free Software              //
+ //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
+ //  ------------------------------------------------------------------------ //
++/**
++ * Xoops is not installed, redirect to the installer 
++ **/
+ 
+-if ( !defined(&quot;XOOPS_MAINFILE_INCLUDED&quot;) ) {
+-	define(&quot;XOOPS_MAINFILE_INCLUDED&quot;,1);
+-
+-	// XOOPS Physical Path
+-	// Physical path to your main XOOPS directory WITHOUT trailing slash
+-	// Example: define('XOOPS_ROOT_PATH', 'w:/home/xoops.local/htdocs_dev/svn-2.2.4/html');
+-	define('XOOPS_ROOT_PATH', 'w:/home/xoops.local/htdocs_dev/svn-2.2.4/html');
+-
+-	// XOOPS Virtual Path (URL)
+-	// Virtual path to your main XOOPS directory WITHOUT trailing slash
+-	// Example: define('XOOPS_URL', '<A HREF="http://dev.xoops.local/svn-2.2.4/html">http://dev.xoops.local/svn-2.2.4/html</A>');
+-	define('XOOPS_URL', '<A HREF="http://dev.xoops.local/svn-2.2.4/html">http://dev.xoops.local/svn-2.2.4/html</A>');
+-
+-	define('XOOPS_CHECK_PATH', '1');
+-	// Protect against external scripts execution if safe mode is not enabled
+-	if ( XOOPS_CHECK_PATH &amp;&amp; !@ini_get('safe_mode') ) {
+-		if ( function_exists('debug_backtrace') ) {
+-			$xoopsScriptPath = debug_backtrace();
+-			if ( !count($xoopsScriptPath) ) {
+-			 	die(&quot;XOOPS path check: this file cannot be requested directly&quot;);
+-			}
+-			$xoopsScriptPath = $xoopsScriptPath[0]['file'];
+-		} else {
+-			$xoopsScriptPath = isset($_SERVER['PATH_TRANSLATED']) ? $_SERVER['PATH_TRANSLATED'] :  $_SERVER['SCRIPT_FILENAME'];
+-		}
+-		if ( DIRECTORY_SEPARATOR != '/' ) {
+-			// IIS6 may double the \ chars
+-			$xoopsScriptPath = str_replace( strpos( $xoopsScriptPath, '\\\\', 2 ) ? '\\\\' : DIRECTORY_SEPARATOR, '/', $xoopsScriptPath);
+-		}
+-		if ( strcasecmp( substr($xoopsScriptPath, 0, strlen(XOOPS_ROOT_PATH)), str_replace( DIRECTORY_SEPARATOR, '/', XOOPS_ROOT_PATH)) ) {
+-		 	exit(&quot;XOOPS path check: Script is not inside XOOPS_ROOT_PATH and cannot run.&quot;);
+-		}
+-	}
+-
+-	// Database
+-	// Choose the database to be used
+-	define('XOOPS_DB_TYPE', 'mysql');
+-
+-	// Table Prefix
+-	// This prefix will be added to all new tables created to avoid name conflict in the database. Please change this to something different than 'xoops'.
+-	define('XOOPS_DB_PREFIX', 'x224');
+-
+-	// Database Hostname
+-	// Hostname of the database server. If you are unsure, 'localhost' works in most cases.
+-	define('XOOPS_DB_HOST', 'localhost');
+-
+-	// Database Username
+-	// Your database user account on the host
+-	define('XOOPS_DB_USER', 'root');
+-
+-	// Database Password
+-	// Password for your database user account
+-	define('XOOPS_DB_PASS', 'skalpa');
+-
+-	// Database Name
+-	// The name of database on the host. The installer will attempt to create the database if not exist
+-	define('XOOPS_DB_NAME', 'xoops_dev');
+-
+-	// Use persistent connection? (Yes=1 No=0)
+-	// Default is 'No'. Choose 'No' if you are unsure.
+-	define('XOOPS_DB_PCONNECT', '0');
+-
+-	define('XOOPS_GROUP_ADMIN', '1');
+-	define('XOOPS_GROUP_USERS', '2');
+-	define('XOOPS_GROUP_ANONYMOUS', '3');
+-
+-	if (!isset($xoopsOption['nocommon']) &amp;&amp; XOOPS_ROOT_PATH != '') {
+-		require XOOPS_ROOT_PATH.&quot;/include/common.php&quot;;
+-	}
++// XOOPS is not installed yet.
++if(! defined('XOOPS_INSTALL')){
++    header('Location: install/index.php');
+ }
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000177.html">[Xoops4-svn] r185 - in XoopsCore/branches/2.2.x/2.2-main: docs html html/class html/class/xml html/class/xoopseditor/dhtmltextarea html/class/xoopseditor/koivi html/class/xoopseditor/koivi/include html/class/xoopseditor/textarea html/include html/install html/kernel html/language/english html/modules/pm html/modules/pm/templates html/modules/profile html/modules/profile/admin html/modules/profile/include html/modules/system html/modules/system/admin/banners html/modules/system/admin/groups html/modules/system/admin/mailusers html/modules/system/admin/preferences html/modules/system/admin/smilies html/modules/system/admin/tplsets html/modules/system/blocks html/modules/system/include html/modules/system/templates html/themes/default/css html/themes/xmt/css
+</A></li>
+	<LI>Next message: <A HREF="000179.html">[Xoops4-svn] r187 - XoopsCore/branches/2.2.x/2.2-main/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#178">[ date ]</a>
+              <a href="thread.html#178">[ thread ]</a>
+              <a href="subject.html#178">[ subject ]</a>
+              <a href="author.html#178">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

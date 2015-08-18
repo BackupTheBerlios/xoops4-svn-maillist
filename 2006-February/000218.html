@@ -1,0 +1,884 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r226 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj session.xoobj
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r226%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm%3A%20.%20http.xoobj%20session.xoobj&In-Reply-To=%3C200602130318.k1D3IwWV020270%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000217.html">
+   <LINK REL="Next"  HREF="000219.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r226 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj session.xoobj</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r226%20-%20in%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm%3A%20.%20http.xoobj%20session.xoobj&In-Reply-To=%3C200602130318.k1D3IwWV020270%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r226 - in XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm: . http.xoobj session.xoobj">skalpa at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 04:18:58 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000217.html">[Xoops4-svn] r225 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000219.html">[Xoops4-svn] r227 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#218">[ date ]</a>
+              <a href="thread.html#218">[ thread ]</a>
+              <a href="subject.html#218">[ subject ]</a>
+              <a href="author.html#218">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-13 04:18:45 +0100 (Mon, 13 Feb 2006)
+New Revision: 226
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.php
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/handler-db.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php
+Log:
+Several documentation fixes, as well as a little refactoring (output caching headers manipulation have been moved where they should be: in the HttpHandler component)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -0,0 +1,66 @@
++&lt;?php
++/**
++ * xoops_http main class definition
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @version		$Id$
++ */
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
++
++/**
++ * xoops_http framework static class
++ * @package		xoops_http
++ */
++class xoops_http {
++	/**
++	 * Returns an RFC compliant (RFC822 or RFC850) date string from a timestamp
++	 * @param integer $time Timestamp to format (will default to now)
++	 * @return string
++	 */	
++	function date( $time = null ) {
++        return gmdate(
++        	( ini_get('y2k_compliance') ? 'D, d M Y' : 'l, d-M-y' ) .' H:i:s',
++        	isset($time) ? $time : time()
++        ) . ' GMT';
++    }
++	/**
++	 * Converts a relative URI to an absolute one
++	 * @param string $url URI to convert
++	 * @return string An absolute URI
++	 */
++	function absoluteUrl( $url ) {
++		global $xoops;
++
++		if ( strpos( $url, '://' ) === false ) {
++			$host = 'http' . ( $xoops-&gt;isSecure ? 's' : '' ) . '://' . $xoops-&gt;hostName;
++			if ( !strlen($url) ) {
++	            $url = $_SERVER['REQUEST_URI'];
++        	} elseif ( substr( $url, 0, 1 ) == '/' ) {
++	            return $host . $url;
++        	}
++        	// Check for PATH_INFO
++        	if (isset($_SERVER['PATH_INFO']) &amp;&amp; $_SERVER['PHP_SELF'] != $_SERVER['PATH_INFO']) {
++            	$path = dirname(substr($_SERVER['PHP_SELF'], 0, -strlen($_SERVER['PATH_INFO'])));
++        	} else {
++            	$path = dirname($_SERVER['PHP_SELF']);
++        	}
++        	if (substr($path = strtr($path, '\\', '/'), -1) != '/') {
++            	$path .= '/';
++        	}
++			$url = $host . $path . $url;
++		}
++		return $url;
++	}
++}
++
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/http.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -1,37 +1,80 @@
+ &lt;?php
+ /**
+-* xoops_http_HttpHandler component main class definition
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @subpackage	xoops_http_HttpHandler
+-* @version		$Id$
+-*/
++ * xoops_http_HttpHandler component main class definition
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @subpackage	xoops_http_HttpHandler
++ * @version		$Id$
++ */
+ 
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XOOPS_PATH' ) ) exit();
+ 
++XOS::import( 'xoops_http' );
++
+ /**
+- * xoops_http_HttpHandler component
++ * HTTP response customization component
+  *
+  * The HttpHandler component encapsulates the HTTP response manipulation functions
+  * (redirection for now, and more later on)
++ * @package		xoops_http
++ * @subpackage	xoops_http_HttpHandler
+  */
+ class xoops_http_HttpHandler {
+ 	/**
+-	* Whether HTTP redirections are enabled or not
+-	* @var bool
+-	*/
++	 * Whether HTTP redirections are enabled or not
++	 * @var bool
++	 */
+ 	var $enableRedirections	= true;
+ 	/**
++	 * Whether to use output compression or not, if the client supports it
++	 */
++	var $enableCompression = true;
++	/**
++	 * Whether to use output compression or not, if the client supports it
++	 */
++	var $compressionLevel = 6;
++	/**
++	 * Cache limiter sent by default to the client
++	 * @var string
++	 */
++	var $cacheLimiter = 'public';
++	/**
++	 * Default client caching lifetime (in seconds)
++	 * @var integer
++	 */
++	var $cacheLifetime = 3600;
++	/**
++	 * Entity mimetype
++	 */
++	var $contentType = 'text/html';
++	/**
++	 * Entity encoding charset
++	 */
++	var $contentEncoding = 'iso-8859-1';
++	/**
++	 * Response entity ETag value
++	 */
++	var $entityTag = '';
++	/**
++	 * Entity last modification date (defaults to now)
++	 */
++	var $lastModified = 0;
++	
++	/**
+ 	* How many seconds the fake redirection page should be shown
+ 	* @var integer
+ 	*/
+-	var $fakeRedirectPageDelay = 3;
++	var $fakeRedirectDelay = 3;
+ 
+ 	/**
+ 	 * Fake redirection page content template
+@@ -45,11 +88,12 @@
+ 	 *
+ 	 * @var string
+ 	 */
+-	var $fakeRedirectTemplate = '&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++	var $fakeRedirectTemplate = '
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+ &lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;&gt;	
+ &lt;head&gt;{refresh}&lt;/head&gt;
+ &lt;body&gt;
+-	&lt;div style=&quot;text-align:center; background-color: #EBEBEB; border-top: 1px solid #FFFFFF; border-left: 1px solid #FFFFFF; border-right: 1px solid #AAAAAA; border-bottom: 1px solid #AAAAAA; font-weight : bold;&quot;&gt;
++	&lt;div style=&quot;text-align:center; background-color:#EBEBEB; border:1px solid #AAAAAA; font-weight:bold;&quot;&gt;
+ 		&lt;h4&gt;{message}&lt;/h4&gt;&lt;p&gt;{ifnotreload}&lt;/p&gt;
+ 	&lt;/div&gt;
+ 	&lt;!--{xo-logger-output}--&gt;
+@@ -67,49 +111,136 @@
+ 
+ 
+ 	function xoInit( $options = array() ) {
+-		if ( !empty( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] ) ) {
+-			foreach ( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] as $k =&gt; $v ) {
+-				$_SERVER[ 'REDIRECT_' . $k ] = $v;
++		header( 'X-Powered-By: ' . $GLOBALS['xoops']-&gt;xoShortVersionString, false );
++		header( 'X-Powered-By: The noosphere', false );
++		
++		if ( $this-&gt;enableCompression &amp;&amp; extension_loaded( 'zlib' ) ) {
++			if ( $this-&gt;compressionLevel ) {
++				ini_set( 'zlib.compression_level', $this-&gt;compressionLevel );
+ 			}
+-			//var_export( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] );
+-			unset( $_SESSION[$this-&gt;xoBundleIdentifier]['redirect_info'] );
+-			$this-&gt;redirectMessage = $_SERVER['REDIRECT_ERROR_NOTES'];
++			ob_start( 'ob_gzhandler' );
+ 		}
+-		if ( @$_SESSION[$this-&gt;xoBundleIdentifier]['tmpDisallowRedirections'] ) {
+-			$this-&gt;enableRedirections = false;
++		if ( !$this-&gt;lastModified ) {
++			$this-&gt;lastModified = time();
+ 		}
+-		header( 'X-Powered-By: ' . $GLOBALS['xoops']-&gt;xoShortVersionString, false );
+-		header( 'X-Powered-By: The noosphere', false );
++		$this-&gt;entityTag = $_SERVER['REQUEST_URI'];
++		
++		$this-&gt;setCachingPolicy();
++		$this-&gt;setEntityInfo();
+ 		return true;
+ 	}
+ 
+ 	/**
+-	 * Convert a relative URI to an absolute one
++	 * Reload the redirection information from the session
+ 	 */
+-	function absoluteUrl( $url ) {
+-		global $xoops;
+-
+-		if ( strpos( $url, '://' ) === false ) {
+-			$host = 'http' . ( $xoops-&gt;isSecure ? 's' : '' ) . '://' . $xoops-&gt;hostName;
+-			if ( !strlen($url) ) {
+-	            $url = $_SERVER['REQUEST_URI'];
+-        	} elseif ( substr( $url, 0, 1 ) == '/' ) {
+-	            return $host . $url;
+-        	}
+-        	// Check for PATH_INFO
+-        	if (isset($_SERVER['PATH_INFO']) &amp;&amp; $_SERVER['PHP_SELF'] != $_SERVER['PATH_INFO']) {
+-            	$path = dirname(substr($_SERVER['PHP_SELF'], 0, -strlen($_SERVER['PATH_INFO'])));
+-        	} else {
+-            	$path = dirname($_SERVER['PHP_SELF']);
+-        	}
+-        	if (substr($path = strtr($path, '\\', '/'), -1) != '/') {
+-            	$path .= '/';
+-        	}
+-			$url = $host . $path . $url;
++	function reloadSessionState() {
++		@$state =&amp; $_SESSION[$this-&gt;xoBundleIdentifier];
++		if ( $state ) {
++			if ( @$state['tmpDisallowRedirections'] ) {
++				$this-&gt;enableRedirections = false;
++			}
++			if ( !empty( $state['redirect_info'] ) ) {
++				foreach ( $state['redirect_info'] as $k =&gt; $v ) {
++					$_SERVER[ 'REDIRECT_' . $k ] = $v;
++				}
++				unset( $state['redirect_info'] );
++				$this-&gt;redirectMessage = $_SERVER['REDIRECT_ERROR_NOTES'];
++			}
+ 		}
+-		return $url;
+ 	}
+ 	/**
++	 * Set/sends the output caching headers
++	 */
++	function setCachingPolicy( $limiter = null, $lifetime = null ) {
++		if ( isset($limiter) ) {
++			$this-&gt;cacheLimiter = $limiter;
++		}
++		if ( isset($lifetime) ) {
++			$this-&gt;cacheLifetime = $lifetime;
++		}
++		switch ( $this-&gt;cacheLimiter ) {
++		case 'none':
++			break;
++		case 'no-cache':
++		case 'nocache':
++			header( 'Expires: ' . xoops_http::date( time() - 3600 ) );
++			header( 'Cache-control: no-store,no-cache,must-revalidate,post-check=0,pre-check=0' );
++			break;
++		case 'private':
++			header( 'Expires: ' . xoops_http::date( time() - 3600 ) );
++		case 'private_no_expire':
++			header( &quot;Cache-control: private,max-age=$this-&gt;cacheLifetime,pre-check=$this-&gt;cacheLifetime&quot; );
++			break;
++		case 'public':
++		default:
++			header( 'Expires: ' . xoops_http::date( time() + $this-&gt;cacheLifetime ) );
++			header( &quot;Cache-control: public,max-age=$this-&gt;cacheLifetime&quot; );
++			//header( &quot;Last-Modified: &quot; . xoops_http::date( $this-&gt;lastModified ) );
++			break;
++		}
++	}
++	/**
++	 * Set/sends the entity information headers (content-type,encoding and last-mod date)
++	 *
++	 * @param string $mime Mimetype of the entity
++	 * @param string $encoding Charset of the entity
++	 */
++	function setEntityInfo( $mime = null, $charset = null, $lastMod = null ) {
++		if ( isset($mime) ) {
++			$this-&gt;contentType = $mime;
++		}
++		if ( isset($charset) ) {
++			$this-&gt;contentEncoding = $charset;
++		}
++		if ( isset($lastMod) ) {
++			$this-&gt;lastModified = $lastMod;
++		}
++		header( &quot;Content-Type: $this-&gt;contentType; charset=$this-&gt;contentEncoding&quot; );
++		header( &quot;Last-Modified: &quot; . xoops_http::date( $this-&gt;lastModified ) );
++	}
++	
++	/**
++	 * Send the specified file content to the browser
++	 *
++	 * @param unknown_type $filename
++	 * @param unknown_type $disposition
++	 * @param unknown_type $data
++	 * @param unknown_type $size
++	 */
++	function sendFileEntity( $filename, $disposition = 'inline', $data = null, $size = 0 ) {
++		if ( !isset($data) ) {
++			$data = file_get_contents( $filename );
++		}
++		if ( !$size ) {
++			$size = strlen( $data );
++		}
++		if ( false !== ( $pos = strrpos( $filename, '/' ) ) ) {
++			$filename = substr( $filename, $pos + 1 );
++		}
++		header( &quot;Content-disposition: $disposition; filename=\&quot;$filename\&quot;&quot; );
++		header( &quot;Content-length: $size&quot; );
++		if ( $disposition != 'inline' ) {
++			// If the file is sent as an attachment, send caching headers so MSIE can correctly access the file
++			header( 'Cache-control: cache,must-revalidate' );
++		}
++		echo $data;
++	}
++	
++	
++	function addVariation( $key, $value ) {
++		header( 'Vary: ' . ( substr($key,0,3) == 'xo-' ? '*' : $key ), false );
++		$this-&gt;entityTag .= '-' . $key . '=' . $value;
++		header( 'ETag: &quot;' . md5($this-&gt;entityTag) . '&quot;' );
++	}
++	
++	
++	
++	
++	
++	
++	
++	
++	/**
+ 	 * Set/send the response status and redirection location
+ 	 * 
+ 	 * This set the status response headers, and optionally redirect the client to the 
+@@ -143,7 +274,7 @@
+         		$location = $xoops-&gt;url( '/www/' );
+     		}
+     		if ( !strpos( $location, '://' ) ) {
+-				$location = $this-&gt;absoluteUrl( $location );
++				$location = xoops_http::absoluteUrl( $location );
+     		}
+ 		}
+ 		if ( !$xoops-&gt;isVirtual ) {
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/responses.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -1,19 +1,21 @@
+ &lt;?php
+ /**
+-* xoops_http response codes definition file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @version		$Id$
+-*/
++ * xoops_http response codes definition file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @subpackage	xoops_http_HttpHandler
++ * @version		$Id$
++ */
+ 
+-define( 'HTTP_STATUS_OK',			200 );		// The client's request was successful, and the server's response contains the requested data.
++/**The client's request was successful, and the server's response contains the requested data.*/
++define( 'HTTP_STATUS_OK',			200 );
+ define( 'HTTP_STATUS_CREATED',		201 );		// This status code is used whenever a new URL is created. With this result code, the Location header is given by the server to specify where the new data was placed.
+ define( 'HTTP_STATUS_ACCEPTED',		202 );		// The request was accepted but not immediately acted upon. More information about the transaction may be given in the entity-body of the server's response. There is no guarantee that the server will actually honor the request, even though it may seem like a legitimate request at the time of acceptance.
+ define( 'HTTP_STATUS_NONAUTH',		203 );		// The information in the entity header is from a local or third-party copy, not from the original server.
+@@ -60,5 +62,4 @@
+ 
+ 
+ 
+-
+ ?&gt;
+\ No newline at end of file
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/http.xoobj/xo-info.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -1,17 +1,18 @@
+ &lt;?php
+ /**
+-* xoops_http framework bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @version		$Id$
+-*/
++ * xoops_http_HttpHandler component bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @subpackage	xoops_http_HttpHandler
++ * @version		$Id$
++ */
+ 
+ // xoBundleVersion: x.y.zRn  with R=release type (a:cvs snapshot, b:alpha, c:beta, d: RC, e: final)
+ // We must be able to compare versions by comparing this string
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/handler-db.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/handler-db.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/handler-db.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -11,12 +11,14 @@
+  * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+  * @since		2.3.0
+  * @package		xoops_http
+- * @package		xoops_http_Session
++ * @subpackage	xoops_http_Session
+  * @version		$Id$
+  */
+ 
+ /**
+- * Handler for a session
++ * Session handler saving data in the database
++ * @package		xoops_http
++ * @subpackage	xoops_http_Session
+  */
+ class xoops_http_DatabaseSessionHandler {
+ 
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session-custom.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -29,8 +29,7 @@
+ define( 'XO_SID_USE_ANY', 3 );
+ 
+ /**
+- * xoops_http_CustomSessionService main class
+- * @since		2.3
++ * Fully configurable session service
+  * @package		xoops_http
+  * @subpackage	xoops_http_Session
+  */
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/session.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -19,21 +19,30 @@
+  */
+ if ( !defined( 'XOOPS_PATH' ) ) exit();
+ 
++XOS::import( 'xoops_http' );
++
+ /**
+- * xoops_http_SessionService main class
++ * Basic session service
+  * 
+  * The default session service provides basic session management functionality.
+  * It uses the settings defined in the PHP configuration files, and thus is not really
+- * user-configurable (you must use xoops_http_CustomSessionService for that).
++ * user-configurable (you must use {@link xoops_http_CustomSessionService} for that).
+  * 
+  * Only cache limiting has been enhanced: this component allows to configure this setting
+  * on a user basis (if the 'cacheLimiter' variable is stored in the session, it will be used)
++ * @package		xoops_http
++ * @subpackage	xoops_http_Session
+  */
+ class xoops_http_SessionService {
+ 	/**
+-	* Save handler to use for reading/writing session data
+-	* @var mixed
+-	*/
++	 * If sessions are created for unauthenticated users
++	 * @var boolean
++	 */
++	var $createGuestSessions = false;
++	/**
++	 * Save handler to use for reading/writing session data
++	 * @var object [xoops_http/xoops_http_Session/xoops_http_SessionHandler]
++	 */
+ 	var $saveHandler = 'xoops_http_DatabaseSessionHandler';
+ 	/**
+ 	 * Identifier of the current session
+@@ -41,16 +50,29 @@
+ 	 */
+ 	var $sessionId = 0;
+ 	/**
++	 * Name of the cookie used to store the session identifier
++	 * @var string
++	 */
++	var $sessionName = '';
++
++	/**#@+
++	 * @vargroup 20 Client caching
++	 */
++	/**
+ 	 * Default cache limiting policy (if different from the one defined in php.ini
+ 	 * @var string
+ 	 */
+-	var $cacheLimiter = '';
++	var $cacheLimiter = 'private_no_expire';
+ 	/**
+-	* If sessions are created for unauthenticated visitors
+-	* @var boolean
+-	*/
+-	var $createGuestSessions = false;
++	 * Default cache lifetime for content (in minutes)
++	 * @var integer
++	 */
++	var $cacheLifetime = 60;
++	/**#@-*/
+ 	
++	/**#@+
++	 * @tasktype 10 Initialization
++	 */
+ 	/**
+ 	* Initialize the session service
+ 	*/
+@@ -58,7 +80,11 @@
+ 		if ( $this-&gt;saveHandler &amp;&amp; !$this-&gt;attachHandler( $this-&gt;saveHandler ) ) {
+ 			return false;
+ 		}
+-		if ( isset( $_COOKIE[ session_name() ] ) || $this-&gt;createGuestSessions ) {
++		if ( !$this-&gt;sessionName ) {
++			$this-&gt;sessionName = session_name();
++		}
++		// Create the session
++		if ( isset( $_COOKIE[$this-&gt;sessionName] ) || $this-&gt;createGuestSessions ) {
+ 			$this-&gt;start();
+ 		}
+ 	 	return true;
+@@ -67,7 +93,7 @@
+ 	 * Initialize the specified object as a save handler
+ 	 *
+ 	 * @param mixed $handler Object to attach (or bundleIdentifier of the handler to instanciate)
+-	 * @return boolean true on success, false otherwise
++	 * @return bool True on success, false otherwise
+ 	 */
+ 	function attachHandler( $handler ) {
+ 		if ( !is_object( $handler ) ) {
+@@ -84,11 +110,16 @@
+ 		$this-&gt;saveHandler =&amp; $handler;
+ 		return true;
+ 	}
++	/**#@-*/
+ 	
++	/**#@+
++	 * @tasktype 20 Creating and destroying the session
++	 */
+ 	/**
+-	* Create a new session
+-	*/
++	 * Creates a new session
++	 */
+ 	function start() {
++		global $xoops;
+ 		if ( isset($_SESSION) ) {
+ 		  	return true;
+ 		}
+@@ -105,20 +136,29 @@
+ 		//if ( @$var = $this-&gt;getObjectVar( $this, 'cacheLimiter' ) ) {
+ 		//	$this-&gt;cacheLimiter = $var;
+ 		//}
+-		$this-&gt;resetCacheLimiting( $this-&gt;cacheLimiter, 60 * session_cache_expire() );
++		$xoops-&gt;services['http']-&gt;setCachingPolicy( $this-&gt;cacheLimiter, $this-&gt;cacheLifetime );
+ 		return $this-&gt;sessionId;
+ 	}
+ 	/**
+-	* Destroy the current session
++	* Destroys the current session
+ 	*/
+ 	function destroy() {
+ 		$_SESSION = array();
+ 		unset( $_COOKIE[ session_name() ] );
+ 		session_destroy();
+ 	}
++	/**#@-*/
++	
++	/**#@+
++	 * @tasktype 30 Getting and setting session variables
++	 */
+ 	/**
+-	* Set a named session variable
+-	*/
++	 * Adds, modifies or removes an object session variable
++	 * @param mixed $owner Instance or bundle identifier of the object whose variable you wish to set
++	 * @param string $key The key whose value you wish to modify or remove
++	 * @param mixed $value The value to set for the specified key and object. Pass NULL to remove the specified key from the session
++	 * @return mixed The just set value
++	 */
+ 	function setObjectVar( $owner, $key, $value ) {
+ 		if ( !isset($_SESSION) ) {
+ 			return null;
+@@ -126,58 +166,34 @@
+ 		if ( is_object($owner) ) {
+ 			$owner = $owner-&gt;xoBundleIdentifier;
+ 		}
++		if ( !isset($value) ) {
++			unset($_SESSION[$owner][$key]);
++			return $value;
++		}			
+ 		return $_SESSION[$owner][$key] = $value;
+ 	}
+ 	/**
+-	* Get the value of a named session variable
+-	*/
++	 * Obtains the session variable value for the specified key and object
++	 * @param mixed $owner Instance or bundle identifier of the object whose variable you wish to get
++	 * @param string $key The key whose value you wish to obtain
++	 * @return mixed The session variable value
++	 */
+ 	function getObjectVar( $owner, $key ) {
+ 		if ( is_object($owner) ) {
+ 			$owner = $owner-&gt;xoBundleIdentifier;
+ 		}
+ 		return @$_SESSION[$owner][$key];
+ 	}
+-	/**
+-	 * Resend the cache limiting headers
+-	 */
+-	function resetCacheLimiting( $policy, $cacheLifetime = 0, $lastModified = null ) {
+-		if ( !isset( $lastModified ) ) {
+-			$lastModified = time();
+-		}
+-		switch ( $policy ) {
+-		case 'none':
+-			break;
+-		case 'no-cache':
+-		case 'nocache':
+-			header( 'Expires: ' . $this-&gt;date( time() - 3600 ) );
+-			header( 'Cache-Control: no-store,no-cache,must-revalidate,post-check=0,pre-check=0' );
+-			break;
+-		case 'private':
+-			header( 'Expires: ' . $this-&gt;date( time() - 3600 ) );
+-		case 'private_no_expire':
+-			header( &quot;Cache-Control: private,max-age=$cacheLifetime,pre-check=$cacheLifetime&quot; );
+-			break;
+-		case 'public':
+-		default:
+-			header( 'Expires: ' . $this-&gt;date( time() + $cacheLifetime ) );
+-			header( &quot;Cache-Control: public,max-age=$cacheLifetime&quot; );
+-			header( &quot;Last-Modified: &quot; . $this-&gt;date( $lastModified ) );
+-			break;
+-		}
+-	}
+-	/**
+-	 * Return an RFC compliant (RFC822 or RFC850) date string from a timestamp
+-	 *
+-	 * @param interger $time
+-	 * @return string
+-	 */	
+-	function date( $time = null ) {
+-        return gmdate(
+-        	( ini_get('y2k_compliance') ? 'D, d M Y' : 'l, d-M-y' ) .' H:i:s',
+-        	isset($time) ? $time : time()
+-        ) . ' GMT';
+-    }
++	/**#@-*/
++}
+ 
++/**
++ * Abstract base class for session persistance handlers
++ * @package		xoops_http
++ * @subpackage	xoops_http_Session
++ */
++class xoops_http_SessionHandler {
++	
+ }
+ 
+ 
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/session.xoobj/xo-info.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -1,18 +1,18 @@
+ &lt;?php
+ /**
+-* xoops_http session component bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @package		xoops_http_Session
+-* @version		$Id$
+-*/
++ * xoops_http session component bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @subpackage	xoops_http_Session
++ * @version		$Id$
++ */
+ 
+ return array(
+ 	'xoBundleDisplayName' =&gt; 'XOOPS Session management component',
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php	2006-02-13 03:14:30 UTC (rev 225)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Http.xofrm/xo-info.php	2006-02-13 03:18:45 UTC (rev 226)
+@@ -1,17 +1,17 @@
+ &lt;?php
+ /**
+-* xoops_http framework bundle information file
+-*
+-* See the enclosed file LICENSE for licensing information.
+-* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
+-*
+-* @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
+-* @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
+-* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
+-* @since		2.3.0
+-* @package		xoops_http
+-* @version		$Id$
+-*/
++ * xoops_http framework bundle information file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_http
++ * @version		$Id$
++ */
+ 
+ // xoBundleVersion: x.y.zRn  with R=release type (a:cvs snapshot, b:alpha, c:beta, d: RC, e: final)
+ // We must be able to compare versions by comparing this string
+@@ -19,6 +19,7 @@
+ return array(
+ 	'xoBundleDisplayName'			=&gt; 'Xoops HTTP framework',
+ 	'xoBundleIdentifier'			=&gt; 'xoops_http',
++	'xoClassPath' =&gt; '/http.php',
+ 
+ 	'xoServices' =&gt; array(
+ 		'xoops_http_HttpHandler'	=&gt; array ( 'xoBundleRoot' =&gt; '/http.xoobj' ),
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000217.html">[Xoops4-svn] r225 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000219.html">[Xoops4-svn] r227 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/Foundation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#218">[ date ]</a>
+              <a href="thread.html#218">[ thread ]</a>
+              <a href="subject.html#218">[ subject ]</a>
+              <a href="author.html#218">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

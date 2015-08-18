@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r157 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r157%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default&In-Reply-To=%3C200601200519.k0K5JDZw006216%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000148.html">
+   <LINK REL="Next"  HREF="000150.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r157 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r157%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default&In-Reply-To=%3C200601200519.k0K5JDZw006216%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r157 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default">skalpa at berlios.de
+       </A><BR>
+    <I>Fri Jan 20 06:19:13 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000148.html">[Xoops4-svn] r156 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default
+</A></li>
+        <LI>Next message: <A HREF="000150.html">[Xoops4-svn] r158 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#149">[ date ]</a>
+              <a href="thread.html#149">[ thread ]</a>
+              <a href="subject.html#149">[ subject ]</a>
+              <a href="author.html#149">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-20 06:19:12 +0100 (Fri, 20 Jan 2006)
+New Revision: 157
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/canvas-default.xotpl
+   XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/style-default.css
+Log:
+Modified the default theme so it displays the redirection message (with a nice cheesy fading fx)
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/canvas-default.xotpl
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/canvas-default.xotpl	2006-01-20 05:17:41 UTC (rev 156)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/canvas-default.xotpl	2006-01-20 05:19:12 UTC (rev 157)
+@@ -18,6 +18,24 @@
+ 
+ 	([$xoops_module_header])
+ 
++	
++&lt;script type=&quot;text/javascript&quot;&gt;//&lt;![CDATA[
++	function xoHideRedirectMessage() {
++		var msg = document.getElementById( &quot;xo-redirect-message&quot; );
++		var dec = .05;
++		if (!msg) return;
++		if ( msg.style.opacity === '' ) {
++			if (document.defaultView) {
++				msg.style.opacity = document.defaultView.getComputedStyle(msg, &quot;&quot;).getPropertyValue(&quot;opacity&quot;) - dec;
++			} else msg.style.opacity = 1-dec;
++		} else msg.style.opacity -= dec;
++		if ( msg.style.opacity ) {
++			window.setTimeout( &quot;xoHideRedirectMessage()&quot;, 75 );
++		}
++	}
++//]]&gt;
++&lt;/script&gt;
++	
+ &lt;/head&gt;
+ &lt;body&gt;
+ 
+@@ -40,6 +58,12 @@
+ 			([/if])
+ 		&lt;/div&gt;
+ 	&lt;/div&gt;
++([if $xoops-&gt;services.http-&gt;redirectMessage])
++	&lt;div id=&quot;xo-redirect-message&quot;&gt;
++		([$xoops-&gt;services.http-&gt;redirectMessage])
++	&lt;/div&gt;
++	&lt;script type=&quot;text/javascript&quot;&gt;if (xoHideRedirectMessage) window.setTimeout( 'xoHideRedirectMessage()', 4200 );&lt;/script&gt;
++([/if])
+ 	&lt;div id=&quot;xo-canvas-main&quot;&gt;
+ 		([if !empty($xoBlocks.canvas_left)])
+ 		&lt;div class=&quot;xo-canvas-column xo-blockszone&quot; id=&quot;xo-canvas-leftcolumn&quot;&gt;
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/style-default.css
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/style-default.css	2006-01-20 05:17:41 UTC (rev 156)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default/style-default.css	2006-01-20 05:19:12 UTC (rev 157)
+@@ -12,6 +12,7 @@
+ }
+ 
+ #xo-canvas {
++	position:		relative;
+ 	margin:			15px;
+ 	background:		#EEEEEE;
+ }
+@@ -44,6 +45,19 @@
+ 	margin:			0px auto;
+ }
+ 
++#xo-redirect-message {
++	position:		absolute;
++	z-index:		20;
++	left:			25%;
++	width:			50%;
++	top:			62px;
++	padding:		.2em 1em;
++	background:		#000000;
++	color:			#EEEEEE;
++	text-align:		center;
++	font-weight:	bold;
++}
++
+ #xo-canvas-main {
+ 	clear:			both;
+ 	border-top:		1px solid #FFFFFF;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000148.html">[Xoops4-svn] r156 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/themes/default
+</A></li>
+	<LI>Next message: <A HREF="000150.html">[Xoops4-svn] r158 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#149">[ date ]</a>
+              <a href="thread.html#149">[ thread ]</a>
+              <a href="subject.html#149">[ subject ]</a>
+              <a href="author.html#149">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

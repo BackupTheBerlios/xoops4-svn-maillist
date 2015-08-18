@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r248 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r248%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm&In-Reply-To=%3C200602191850.k1JIodb2000098%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000239.html">
+   <LINK REL="Next"  HREF="000241.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r248 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r248%20-%20XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm&In-Reply-To=%3C200602191850.k1JIodb2000098%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r248 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm">skalpa at berlios.de
+       </A><BR>
+    <I>Sun Feb 19 19:50:39 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000239.html">[Xoops4-svn] r247 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm
+</A></li>
+        <LI>Next message: <A HREF="000241.html">[Xoops4-svn] r249 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#240">[ date ]</a>
+              <a href="thread.html#240">[ thread ]</a>
+              <a href="subject.html#240">[ subject ]</a>
+              <a href="author.html#240">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-02-19 19:50:34 +0100 (Sun, 19 Feb 2006)
+New Revision: 248
+
+Added:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/accessor.php
+Modified:
+   XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/xo-info.php
+Log:
+Added xoops_db_Accessor (a new helper base class for db access components)
+
+Added: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/accessor.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/accessor.php	2006-02-19 18:48:56 UTC (rev 247)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/accessor.php	2006-02-19 18:50:34 UTC (rev 248)
+@@ -0,0 +1,209 @@
++&lt;?php
++/**
++ * xoops_db_Accessor main class file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * @copyright	The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license		<A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++ * @since		2.3.0
++ * @package		xoops_db
++ * @subpackage	xoops_db_Accessor
++ * @version		$Id$
++ * @devstatus	unstable
++ */
++
++XOS::import( 'xoops_db_Database' );
++
++/**
++ * Database accessor component
++ * 
++ * This class provides a standard interface for database accessors (objects meant to perform a
++ * defined set of statements).
++ * 
++ * It may be extended as-is (by low-level components like the tree or preferences management
++ * classes), but XOOPS will provide modules developers with higher-level data access mechanisms
++ * for retrieving/storing model entities in the future.
++ */
++class xoops_db_Accessor {
++	/**
++	 * The database connection that will be used to perform statements
++	 * @var xoops_db_Database
++	 */
++	var $db = false;
++	/**
++	 * List of tables this object will access
++	 * 
++	 * This property contains the accessed tables names in a &lt;var&gt;realname&lt;/var&gt; =&gt; &lt;var&gt;prefixedname&lt;/var&gt;
++	 * hash. If it originally contains a regular array upon instanciation, the initialization routine will
++	 * take care of generating the hash automatically.
++	 * &lt;code&gt;
++	 * $db =&amp; XOS::create( 'xoops_db_Database', array( 'prefix' =&gt; 'tmp' ) );
++	 * $accessor = XOS::create( 'xoops_db_Accessor', array(
++	 *     'tables' =&gt; array( 'stuff', 'thing' ),
++	 * ) );
++	 * var_export( $accessor-&gt;tables );
++	 * // Outputs:
++	 * // array(
++	 * //     'stuff' =&gt; 'tmp_stuff',
++	 * //     'thing' =&gt; 'tmp_thing',
++	 * // )
++	 * &lt;/code&gt;
++	 * @var xoops_db_Statement[]
++	 */
++	var $tables = array();
++	/**
++	 * List of statements this object can perform (indexed by name)
++	 * 
++	 * &lt;var&gt;$queries&lt;/var&gt; contains this accessor statements. Each entry can be either a string
++	 * containing a valid SQL statement, or a {@link xoops_db_Statement} instance. When
++	 * this accessor will be asked to execute a string statement for the first time, it will
++	 * automatically replace the corresponding entry in this array with a statement object instance.
++	 * @var array
++	 */
++	var $queries = array();
++	
++	/**#@+ @tasktype 10 Initialization*/
++	/**
++	 * Initializes the accessor instance
++	 */
++	function xoInit( $options = array() ) {
++		// If no db specified, automatically connect to the system db
++		if ( !$this-&gt;db ) {
++			$this-&gt;db =&amp; XOS::create( 'xoops_db_Database' );
++		}
++		if ( isset( $this-&gt;tables[0] ) ) {
++			$this-&gt;tables = array_combine( $this-&gt;tables, array_map( array( &amp;$this-&gt;db, 'prefix' ), $this-&gt;tables ) );
++		}
++		return true;
++	}
++	/**#@-*/
++	
++
++	/**
++	 * Prepares the specified statement if the $queries entry is not already a statement instance
++	 * @param string $name Name of the statement to prepare
++	 * @return bool
++	 */
++	function prepareStatement( $name, $params = array() ) {
++		static $patterns = null;
++
++		if ( !@$this-&gt;queries[$name] ) {
++			trigger_error( &quot;Cannot execute unknown/invalid query $name&quot;, E_USER_WARNING );
++			return false;
++		}
++		if ( !is_object( $this-&gt;queries[$name] ) ) {
++			if ( !isset( $patterns ) ) {
++				$patterns = array();
++				// Replace the real table names with their prefixed equivalent
++				foreach ( $this-&gt;tables as $k =&gt; $v ) {
++					$patterns[] = '{' . $k . '}';
++				}
++			}
++			$this-&gt;queries[$name] = $this-&gt;db-&gt;prepare( str_replace( $patterns, $this-&gt;tables, $this-&gt;queries[$name] ) );
++		}
++		if ( !empty( $params ) ) {
++			if ( isset( $this-&gt;parameters[$name] ) ) {
++				foreach ( $params as $k =&gt; $v ) {
++					$this-&gt;queries[$name]-&gt;bindValue( is_int($k)?($k+1):$k, $v, $this-&gt;parameters[$name][$k] );
++				}
++			} else {
++				foreach ( $params as $k =&gt; $v ) {
++					$this-&gt;queries[$name]-&gt;bindValue( is_int($k)?($k+1):$k, $v );
++				}
++			}
++		}
++		return true;
++	}
++
++	/**
++	 * Executes the specified statement and returns the number of affected rows
++	 * 
++	 * exec() returns the number of rows that were modified or deleted by the 
++	 * statement you issued. If no rows were affected, it returns 0.
++	 * 
++	 * @param string $name The name of the SQL statement to prepare and execute
++	 * @param array $params Values to bind to the statement parameters before execution
++	 * @see <A HREF="http://fr3.php.net/manual/en/function.PDO-exec.php">http://fr3.php.net/manual/en/function.PDO-exec.php</A> PDO::exec()
++	 */
++	function exec( $name, $params = array() ) {
++		if ( $this-&gt;prepareStatement( $name, $params ) ) {
++			if ( $this-&gt;queries[$name]-&gt;execute() ) {
++				$this-&gt;queries[$name]-&gt;closeCursor();
++				return $this-&gt;queries[$name]-&gt;rowCount();
++			}
++		}
++		return false;
++	}
++	/**
++	 * Executes the specified statement and returns all the rows of the result set
++	 * 
++	 * fetchAll() is a convenience function that encapsulates the statement preparation,
++	 * parameters binding, execution and result retrieval.
++	 * 
++	 * @param string $name The name of the SQL statement to prepare and execute
++	 * @param array $params Values to bind to the statement parameters before execution
++	 * @param int $fetchMode Controls the contents of the returned array. Defaults to PDO::FETCH_BOTH. 
++	 * @see <A HREF="http://www.php.net/manual/en/function.pdostatement-fetch.php">http://www.php.net/manual/en/function.pdostatement-fetch.php</A> PDOStatement::fetch()
++	 */
++	function fetchAll( $name, $params = array(), $fetchMode = PDO_FETCH_ASSOC ) {
++		if ( $this-&gt;prepareStatement( $name, $params ) ) {
++			if ( $this-&gt;queries[$name]-&gt;execute() ) {
++				$res = $this-&gt;queries[$name]-&gt;fetchAll( $fetchMode );
++				$this-&gt;queries[$name]-&gt;closeCursor();
++				return $res;
++			}
++		}
++		return false;
++	}
++	
++	
++	function execQuery( $name, $params = array(), $fetchMode = PDO_FETCH_ASSOC ) {
++		if ( !$this-&gt;createStatement( $name ) ) {
++			return false;
++		}
++		$this-&gt;bindValues( $name, $params );
++		
++		$this-&gt;queries[$name]-&gt;execute();
++		if ( $rows = $this-&gt;queries[$name]-&gt;fetchAll( $fetchMode ) ) {
++			$this-&gt;queries[$name]-&gt;closeCursor();
++		}
++		return $rows;
++	}
++
++	
++	
++	
++	
++	
++}
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/accessor.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/xo-info.php	2006-02-19 18:48:56 UTC (rev 247)
++++ XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm/xo-info.php	2006-02-19 18:50:34 UTC (rev 248)
+@@ -38,6 +38,10 @@
+ 			'xoBundleDisplayName' =&gt; 'XOOPS Legacy (XOOPS 2.0) database driver',
+ 			'xoClassPath' =&gt; '/legacy.php',
+ 		),
++		'xoops_db_Accessor' =&gt; array(
++			'xoBundleDisplayName' =&gt; 'XOOPS database accessor',
++			'xoClassPath' =&gt; '/accessor.php',
++		),
+ 	),
+ );
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000239.html">[Xoops4-svn] r247 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Database.xofrm
+</A></li>
+	<LI>Next message: <A HREF="000241.html">[Xoops4-svn] r249 - XoopsCore/branches/tasks/123542-admin/XOOPS/Frameworks/XoopsCore/CoreServices/Http.xofrm/http.xoobj
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#240">[ date ]</a>
+              <a href="thread.html#240">[ thread ]</a>
+              <a href="subject.html#240">[ subject ]</a>
+              <a href="author.html#240">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

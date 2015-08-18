@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r179 - XoopsCore/branches/tasks/123218-arch-cleanup/docs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r179%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/docs&In-Reply-To=%3C200601211508.k0LF8QeD018548%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000170.html">
+   <LINK REL="Next"  HREF="000172.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r179 - XoopsCore/branches/tasks/123218-arch-cleanup/docs</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r179%20-%20XoopsCore/branches/tasks/123218-arch-cleanup/docs&In-Reply-To=%3C200601211508.k0LF8QeD018548%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r179 - XoopsCore/branches/tasks/123218-arch-cleanup/docs">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Jan 21 16:08:26 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000170.html">[Xoops4-svn] r178 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000172.html">[Xoops4-svn] r180 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#171">[ date ]</a>
+              <a href="thread.html#171">[ thread ]</a>
+              <a href="subject.html#171">[ subject ]</a>
+              <a href="author.html#171">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2006-01-21 16:08:26 +0100 (Sat, 21 Jan 2006)
+New Revision: 179
+
+Modified:
+   XoopsCore/branches/tasks/123218-arch-cleanup/docs/changelog.txt
+Log:
+Added the changes made on the task #123218 branch to the changelog
+
+Modified: XoopsCore/branches/tasks/123218-arch-cleanup/docs/changelog.txt
+===================================================================
+--- XoopsCore/branches/tasks/123218-arch-cleanup/docs/changelog.txt	2006-01-21 13:14:26 UTC (rev 178)
++++ XoopsCore/branches/tasks/123218-arch-cleanup/docs/changelog.txt	2006-01-21 15:08:26 UTC (rev 179)
+@@ -1,6 +1,18 @@
+ XOOPS 2 changelog
+ 
+ ============================
++2006/01/xx: Version 2.3.0-alpha2
++============================
++- Componentized and cleaned up the architectural services: error handler,logger,db,http,session and auth (skalpa)
++- Fixed activation/deactivation of the error handler (skalpa)
++- Fixed the support of the '@' operator in the error handler (skalpa)
++- Users can customize where the logger output is inserted by adding &lt;!--{xo-logger-output}--&gt; in their theme (skalpa)
++- Added real HTTP redirections support (skalpa)
++- Added a new fully configurable session manager (skalpa)
++- Added a PDO compatible database driver for PHP4 users [still experimental] (skalpa)
++- Fixed common.php to make it work when not included from the global scope (skalpa)
++
++============================
+ 2006/01/15: Version 2.3.0-alpha1
+ ============================
+ - Updated Smarty to 2.6.10 (skalpa)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000170.html">[Xoops4-svn] r178 - XoopsCore/branches/tasks/123218-arch-cleanup/htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000172.html">[Xoops4-svn] r180 - XoopsCore/branches/tasks/123218-arch-cleanup/XOOPS/Frameworks/XoopsCore/Foundation/Database.xofrm
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#171">[ date ]</a>
+              <a href="thread.html#171">[ thread ]</a>
+              <a href="subject.html#171">[ subject ]</a>
+              <a href="author.html#171">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

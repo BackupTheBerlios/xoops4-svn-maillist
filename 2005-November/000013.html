@@ -1,0 +1,1106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r20 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks XOOPS/Frameworks/XoopsCore XOOPS/Frameworks/XoopsCore/Foundation XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts htdocs htdocs/include
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r20%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20XOOPS/Boot%20XOOPS/Frameworks%20XOOPS/Frameworks/XoopsCore%20XOOPS/Frameworks/XoopsCore/Foundation%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts%20htdocs%20htdocs/include&In-Reply-To=%3C200511241123.jAOBNhlA006995%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000012.html">
+   <LINK REL="Next"  HREF="000014.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r20 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks XOOPS/Frameworks/XoopsCore XOOPS/Frameworks/XoopsCore/Foundation XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts htdocs htdocs/include</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r20%20-%20in%20XoopsCore/branches/2.3.x/2.3-main%3A%20XOOPS/Boot%20XOOPS/Frameworks%20XOOPS/Frameworks/XoopsCore%20XOOPS/Frameworks/XoopsCore/Foundation%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm%20XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts%20htdocs%20htdocs/include&In-Reply-To=%3C200511241123.jAOBNhlA006995%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r20 - in XoopsCore/branches/2.3.x/2.3-main: XOOPS/Boot XOOPS/Frameworks XOOPS/Frameworks/XoopsCore XOOPS/Frameworks/XoopsCore/Foundation XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts htdocs htdocs/include">skalpa at berlios.de
+       </A><BR>
+    <I>Thu Nov 24 12:23:43 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000012.html">[Xoops4-svn] r19 - XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/Caches
+</A></li>
+        <LI>Next message: <A HREF="000014.html">[Xoops4-svn] r21 - XoopsCore/branches/tasks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#13">[ date ]</a>
+              <a href="thread.html#13">[ thread ]</a>
+              <a href="subject.html#13">[ subject ]</a>
+              <a href="author.html#13">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-11-24 12:23:41 +0100 (Thu, 24 Nov 2005)
+New Revision: 20
+
+Added:
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/hosts.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/xoops2.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+   XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+Modified:
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php
+   XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php
+Log:
+Sending the 1st draft of the Exxos / Kernel layers to the main branch so it can be used right after for individual tasks.
+
+The actual Exxos layer is registry-based: it uses a &quot;components registry&quot; to know where the classes are located in the file system. This way of doing has a few little inconvenients, but I think they are acceptable.
+IMO this does work well enough to be used, so now real &quot;features&quot; can be done... I'll be keeping the more &quot;revolutionary&quot; patterns that only hardcore coders can really appreciate for a next version.
+
+Special note about this commit: old-style error handling has been disabled... something will come back later (but it's a work branch, so no problem).
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,185 @@
++&lt;?php
++/**
++* XOS class declaration
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @package		exxos
++* @subpackage	exxos_XOS
++* @since        2.3.0
++* @version		$Id$
++* @internal     This one should stay as small and efficient as possible: flexibility must be encapsulated into evolution
++*/
++
++class XOS {
++	/**
++	* Currently loaded components registry
++	*/
++	var $registry =		array();
++	/**
++	* Available components factories
++	*/
++	var $factories =	array();
++	/**
++	* The currently running services (singletons)
++	*/
++	var $services =		array();
++	/**
++	 * Path handler used to convert registry paths to physical ones (if necessary)
++	 *
++	 * @var object
++	 */
++	var $pathHandler =	false;
++	/**
++	 * Internal look-up table used to determine which components definition have already been imported
++	 *
++	 * @var		array
++	 * @access	private
++	 */
++	var $imported =		array();
++	
++	/**
++	 * Import a specific component definition
++	 */
++	function import( $bundleId ) {
++		$me =&amp; $GLOBALS['exxos'];
++
++		if ( !isset( $me-&gt;registry[$bundleId] ) ) {
++			return false;
++		}
++		if ( isset( $me-&gt;imported[$bundleId] ) ) {
++			return $me-&gt;imported[$bundleId];
++		}
++		if ( isset( $me-&gt;registry[$bundleId]['xoClassPath'] ) ) {
++			$path = $me-&gt;registry[$bundleId]['xoBundleRoot'] . $me-&gt;registry[$bundleId]['xoClassPath'];
++			if ( $me-&gt;pathHandler ) {
++				$path = $me-&gt;pathHandler-&gt;path( $path );
++			}
++			if ( include_once( $path ) ) {
++				return $me-&gt;imported[$bundleId] = true;
++			}
++			return $me-&gt;imported[$bundleId] = false;
++		}
++	}
++
++	/**
++	 * Get a class variable value
++	 */
++	function classVar( $id, $prop ) {
++		$me =&amp; $GLOBALS['exxos'];
++		
++		if ( !isset( $me-&gt;registry[$id] ) ) {
++			return null;
++		}
++		if ( isset( $me-&gt;registry[$id][$prop] ) ) {
++			return $me-&gt;registry[$id][$prop];
++		}
++		XOS::import( $id );
++		$vars = get_class_vars( $id );
++		return $vars[$prop];
++	}
++	
++	/**
++	 * Create an object instance
++	 * 
++	 * This function will delegate object instanciation to a local factory if one has been
++	 * specified. It is also able to handle singletons: when a singleton is requested
++	 * it will check if it has not been already created and return a reference to the already
++	 * existing instance if it has.
++	 */
++	function &amp;create( $id, $options = null, $args = null ) {
++		$me =&amp; $GLOBALS['exxos'];
++		$inst = false;
++		if ( is_array( $id ) ) {
++			@list( $id, $options, $initArgs ) = $id;
++		}
++		if ( isset( $me-&gt;services[$id] ) ) {
++			return $me-&gt;services[$id];
++		}
++		XOS::import($id);
++		if ( isset( $me-&gt;registry[$id] ) ) {
++			if ( !isset($me-&gt;factories[$id]) &amp;&amp; isset($me-&gt;registry[$id]['xoFactory']) ) {
++				$me-&gt;factories[$id] =&amp; XOS::create( $me-&gt;registry[$id]['xoFactory'] );
++				unset($me-&gt;registry[$id]['xoFactory']);
++			}
++			if ( @is_object( $me-&gt;factories[$id] ) ) {
++				if ( method_exists( $me-&gt;factories[$id], 'createInstanceOf' ) ) {
++					$inst =&amp; $me-&gt;factories[$id]-&gt;createInstanceOf( $id, $options );
++				} else {
++					$inst =&amp; $me-&gt;factories[$id]-&gt;createInstance( $options );
++				}
++			} else {
++				$inst =&amp; XOS::createInstanceOf( $id, $options, $args );
++			}
++			if ( is_object( $inst ) &amp;&amp; @$inst-&gt;xoSingleton ) {
++				$me-&gt;services[ $id ] =&amp; $inst;
++				if (!@empty( $options[ 'xoServiceName' ] ) ) {
++					$me-&gt;services[ $options[ 'xoServiceName' ] ] =&amp; $inst;
++				}
++			}
++		}
++		return $inst;
++	}
++
++	/**
++	 * Create an instance of the specified class
++	 * 
++	 * This method is internally called by 'create' to create classes instances.
++	 * It can also be used by local factories.
++	 */
++	function &amp;createInstanceOf( $class, $options = null, $args = null ) {
++		$inst = false;
++		if ( !class_exists($class) ) {
++			trigger_error( &quot;Unknown class $class&quot;, E_USER_WARNING );
++			return $inst;
++		}
++		$inst =&amp; new $class();
++		if ( is_object( $inst ) ) {
++			// Set specified properties values
++			XOS::apply( $inst, $options );
++			XOS::apply( $inst, $GLOBALS['exxos']-&gt;registry[$class] );
++			// Initialize the component instance
++			if ( method_exists( $inst, 'xoInit' ) ) {
++				if ( !$inst-&gt;xoInit( $options ) ) {
++					return false;
++				}
++			}
++			return $inst;
++		}
++		return false;
++	}
++
++	/**
++	* Set several properties of an object
++	*/
++	function apply( &amp;$inst, $props = null ) {
++		if ( is_object( $inst ) ) {
++			if ( isset( $props ) &amp;&amp; is_object( $props ) ) {
++				$props = get_object_vars($props);
++			}
++			if ( !empty($props) ) {
++				foreach ( $props as $p =&gt; $v ) {
++					if ( is_callable( array( &amp;$inst, $method = 'set' . ucfirst($p) ) ) ) {
++						$inst-&gt;$method( $v );
++					} else {
++						$inst-&gt;$p = $v;
++					}
++				}
++			}
++		}
++	}
++	
++}
++
++if ( !@is_object( $GLOBALS['exxos'] ) ) {
++	$GLOBALS['exxos'] =&amp; new XOS();
++}
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/exxos.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/hosts.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/hosts.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/hosts.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,53 @@
++&lt;?php
++/**
++ * XOOPS hosts definition file
++ *
++ * See the enclosed file LICENSE for licensing information.
++ * If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++ *
++ * NB: This file is upside down right now ;-)
++ * 
++ * In the future this is where sites will be defined, and the XOOPS_XXX constants will be created
++ * from its content when BC is required.
++ * Also, as some might be able to see: we're making this &quot;ready&quot; for multi-hosting, but it's not
++ * really supported yet (don't worry: you'll be told about that ;-))
++ * 
++ * @copyright    The Xoops project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++ * @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++ * @since        2.3.0
++ * @version		$Id$
++ */
++
++return array(
++	// ID of the default site
++	''					=&gt; 'default.site',
++	// Hosts definitions
++	'default.site'		=&gt; array(
++		// URIs under which this host can be accessed (1st one is default, others are aliases)
++		'hostLocation'		=&gt; array(
++			substr( XOOPS_URL, strpos( XOOPS_URL, '://' ) + 3 ),
++		),
++		// Host locations when using secure (HTTPS) access
++		// If secure access if not supported, set secureName to an empty array
++		// otherwise, this array should have the same number of elements as 'hostLocation'
++		'secureLocation'	=&gt; array(
++			substr( XOOPS_URL, strpos( XOOPS_URL, '://' ) + 3 ),
++		),
++		// Paths/URL to use to access the XOOPS folders
++		// For each path, the 1st element is the physical path, the 2nd one is the URI
++		// URIs without a leading slash are considered relative to the current XOOPS host location
++		// URIs with a leading slash are considered semi-relative (you must setup approp rewriting rules in your server conf)
++		'paths'			=&gt; array(
++			'XOOPS'			=&gt; array( XOOPS_PATH,						'library' ),
++			'modules'		=&gt; array( XOOPS_ROOT_PATH . '/modules',		'modules' ),
++			'themes'		=&gt; array( XOOPS_ROOT_PATH . '/themes',		'themes' ),
++			'var'			=&gt; array( XOOPS_VAR_PATH,					null ),
++			'www'			=&gt; array( XOOPS_ROOT_PATH,					'' ),
++		),
++		// Kernel boot parameters
++		'bootFile'		=&gt; 'rc.php',
++		'xoRunMode'		=&gt; XO_MODE_DEV,
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/hosts.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,326 @@
++&lt;?php
++/**
++* xoops_kernel_Xoops2 class definition
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @package		xoops_kernel
++* @subpackage	xoops_kernel_Xoops2
++* @since        2.3.0
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @version		$Id$
++*/
++
++/**
++* Xoops2 kernel class
++*
++* - It handles the boot sequence (read the specified bootfile, run startup items, and instanciate the current module)
++* - It contains functionnally limited implementations for both the error handler and the logger services, to ensure
++*   those are available at all time, so even early errors generated before booting can be handled)
++*
++* @package		xoops_kernel
++* @subpackage	xoops_kernel_Xoops2
++*/
++class xoops_kernel_Xoops2 {
++	var $xoBundleIdentifier		= 'xoops_kernel_Xoops2';
++	var $xoRunMode				= XO_MODE_PROD;
++	var $xoShortVersionString	= 'XOOPS 2.3.0-dev';
++
++	var $xoBundleRoot = 'XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm';
++	
++	/**
++	 * Current host identifier
++	 *
++	 * @var string
++	 */
++	var $hostId					= '';
++	/**
++	 * Host base URI when using regular access (HTTP)
++	 *
++	 * @var string
++	 */
++	var $hostLocation			= '';
++	/**
++	 * Host base URI when using secure access (HTTPS)
++	 *
++	 * @var string
++	 */
++	var $secureLocation			= '';
++	/**
++	 * If the current request uses secure access or not
++	 *
++	 * @var bool
++	 */
++	var $isSecure				= false;
++	/**
++	 * Locations of the XOOPS folders
++	 *
++	 * @var array
++	 */
++	var $paths					= '';
++	/**
++	 * Name of the boot file to execute
++	 *
++	 * @var string
++	 */
++	var $bootFile				= 'rc.php';
++	/**
++	 * Folder containing the startup items
++	 *
++	 * @var string
++	 */
++	var $startupItemsPath		= 'XOOPS/StartupItems';
++	/**
++	 * References to the currently running services
++	 *
++	 * @var array
++	 */
++	var $services				= null;
++	var $captures				= array(
++		'http'		=&gt; 'xoops_http_HAL',
++		'session'	=&gt; 'xoops_http_SessionService',
++	);
++
++	/** 
++	 * Indicates whether the boot sequence has been performed or not
++	 * 
++	 * @var boolean
++	 * @access private
++	 */
++	var $hasBooted				= false;
++	/**
++	 * Has the shutdown sequence been performed or not
++	 * 
++	 * @var boolean
++	 * @access private
++	 */
++	var $hasShutdown			= false;
++
++	var $isVirtual				= false;
++
++	var $previousErrorHandler	= false;
++
++	var $isHandlingErrors		= false;
++	var $_oldReporting			= 0;
++	var $errorReporting			= 0;
++	
++	function xoops_kernel_Xoops2( $hostId, $hostVars ) {
++	 	$GLOBALS['xoops']	=&amp; $this;
++	 	$GLOBALS['exxos']-&gt;pathHandler =&amp; $this;
++
++	 	$this-&gt;hostId = $hostId;
++	 	XOS::apply( $this, $hostVars );
++	 	
++		if ( $this-&gt;xoRunMode &amp; XO_MODE_DEV_MASK ) {
++			$this-&gt;errorReporting |= E_ALL;
++		}
++		//error_reporting(E_ALL);
++		$this-&gt;activateErrorHandler( true );
++
++		$this-&gt;loadRegistry();
++	 	$this-&gt;services =&amp; $GLOBALS['exxos']-&gt;services;
++
++
++	 	$captures = @include $this-&gt;path( 'var/Application Support/xoops_kernel_Xoops2/services.php' );
++	 	if ( is_array($captures) ) {
++	 		$this-&gt;captures = array_merge( $this-&gt;captures, $captures );
++	 	}
++
++		$this-&gt;bootFile = str_replace( array( '/', '\\' ), '', $this-&gt;bootFile );		// Might be useless check, but this one won't hurt
++		
++		//$this-&gt;services['logger'] = $this-&gt;services['errorhandler'] = $this;
++
++	}
++
++	/**
++	 * Load the components registry from persistent storage
++	 * 
++	 * @access private
++	 */
++	function loadRegistry() {
++		$reg = @include $this-&gt;path( 'var/Application Support/xoops_kernel_Xoops2/registry.php' );
++		if ( !is_array($reg) || ( $this-&gt;xoRunMode &amp; XO_MODE_DEV_MASK ) ) {
++			$reg = include $this-&gt;path( &quot;$this-&gt;xoBundleRoot/scripts/rebuild_registry.php&quot; );
++		}
++		$GLOBALS['exxos']-&gt;registry = $reg;
++	}
++	
++	/**
++	 * Create an instance of the specified service by name
++	 * 
++	 * @param string $name		Name under which the service will be available
++	 * @param string $bundleId	ID of the class to instanciate
++	 * @param array  $options	Parameters to send to the service during instanciation
++	 */
++	function &amp;loadService( $name, $bundleId = '', $options = array() ) {
++		if ( isset( $this-&gt;captures[$name] ) ) {
++			$bundleId = $this-&gt;captures[$name];
++		} elseif ( empty( $bundleId ) ) {
++			$bundleId = $name;
++		}
++		if ( !isset( $this-&gt;services[$name] ) ) {
++			$this-&gt;services[$name] =&amp; XOS::create( $bundleId, $options );
++		}
++		return $this-&gt;services[$name];
++	}
++	
++	/**
++	 * Enable/disable the errorhandler.
++	 *
++	 * When set to active, the error handler set the php error reporting level to E_ALL and uses its own
++	 * $errorReporting property to mask the errors to report (so the @ operator still works :-)
++	 * 
++	 * @param bool	$enable		Whether to enable or disable the error handler
++	 */
++	function activateErrorHandler( $enable = true ) {
++		if ( $enable &amp;&amp; !$this-&gt;isHandlingErrors ) {
++			set_error_handler( array( &amp;$this, 'handleError' ) );
++			$this-&gt;_oldReporting = error_reporting( E_ALL );
++			return $this-&gt;isHandlingErrors = true;
++		} elseif ( !$enable &amp;&amp; $this-&gt;isHandlingErrors ) {
++		 	restore_error_handler();
++			error_reporting( $this-&gt;_oldReporting );
++			return $this-&gt;isHandlingErrors = false;
++		}
++		return $this-&gt;isHandlingErrors;
++	}
++	
++	function handleError( $num, $str, $file = '', $line = 0, $context = false ) {
++		static $names = array(
++			E_ERROR =&gt; 'Error', E_USER_ERROR =&gt; 'Error', E_WARNING =&gt; 'Warning', E_USER_WARNING =&gt; 'Warning',
++			E_NOTICE =&gt; 'Notice', E_USER_NOTICE =&gt; 'Notice',
++		);
++		if ( $num &amp; $this-&gt;errorReporting &amp; error_reporting() ) {
++			foreach ( $this-&gt;paths as $root =&gt; $v ) {
++				$str  = str_replace( $v[0] . '/', &quot;/$root/&quot;, $str );
++			}
++			$name = isset( $names[$num] ) ? $names[$num] : 'Undefined error';
++			$msg = &quot;$name: $str&quot;;
++			if ( $file &amp;&amp; $line ) {
++				$file = str_replace( DIRECTORY_SEPARATOR, '/', $file );
++				foreach ( $this-&gt;paths as $root =&gt; $v ) {
++					$file = str_replace( $v[0] . '/', &quot;/$root/&quot;, $file );
++				}
++				$msg .= &quot; in $file on line $line&quot;;
++			}
++			echo &quot;$msg&lt;br /&gt;\r\n&quot;;
++		}
++	}
++	
++	/**
++	* Convert a XOOPS path to a physical one
++	*/
++	function path( $url, $virtual = false ) {
++		// If the URL begins with <A HREF="protocol://">protocol://</A> then remove it
++		if ( $pos = strpos( $url, '://' ) ) {
++			$url = substr( $url, $pos + 3 );
++		}
++		$parts = explode( '#', $url );
++		if ( count( $parts ) == 1 ) {
++			if ( $parts[0]{0} == '/' ) {
++				$parts[0] = substr( $parts[0], 1 );
++			}
++			$parts = explode( '/', $parts[0], 2 );
++			if ( !$virtual ) {
++				return !isset( $this-&gt;paths[$parts[0]] ) ? '' : ( $this-&gt;paths[$parts[0]][0] . '/' . $parts[1] );
++			} else {
++				return !isset( $this-&gt;paths[$parts[0]][2] ) ? '' : ( $this-&gt;paths[$parts[0]][0][2] . '/' . $parts[1] );
++			}
++		} else {
++			$root = XOS::classVar( $parts[0], 'xoBundleRoot' );
++			return $this-&gt;path( $root . '/' . $parts[1] );
++		}
++	}
++	/**
++	* Convert a XOOPS path to an URL
++	*/
++	function url( $url ) {
++		return $this-&gt;path( $url, true );
++	}
++
++	
++	/**
++	 * Perform the boot sequence
++	 *
++	 * @access public
++	 * @return bool
++	 */
++	function boot() {
++		//$this-&gt;setupModule();
++		if ( !$this-&gt;hasBooted ) {
++			//register_shutdown_function( array( &amp;$this, 'shutdown' ) );
++			if ( !empty($this-&gt;bootFile) ) {
++				require_once $this-&gt;path( &quot;/XOOPS/Boot/$this-&gt;bootFile&quot; );
++			}
++			$this-&gt;hasBooted = true;
++			if ( $this-&gt;launchStartupItems() ) {
++				return true;
++			} 
++		}
++		return true;
++	}
++
++	/**
++	 * Perform the shutdown sequence
++	 *
++	 * @access public
++	 * @return bool
++	 */
++	function shutdown() {
++		if ( !$this-&gt;hasShutdown ) {
++			$this-&gt;hasShutdown = true;
++		}
++	}
++
++	/**
++	 * Launch the kernel startup items
++	 *
++	 * &lt;p&gt;Startup items are scripts than will be executed during every request.&lt;br /&gt;
++	 * Upon completion of its normal startup sequence, the XOOPS kernel will launch every startup item
++	 * located in the StartupItems folder (by default &lt;em&gt;XOOPS/StartupItems&lt;/em&gt;).&lt;/p&gt;
++	 * &lt;p&gt;
++	 * To make a startup item:&lt;br /&gt;
++	 * Create a folder in the startup items folder, then add a .php script named exactly like it inside.
++	 * &lt;/p&gt;
++	 * &lt;p&gt;A startup item script can cancel the boot sequence by returning &lt;em&gt;false&lt;/em&gt;.&lt;/p&gt;
++	 * 
++	 * @access private
++	 */
++	function launchStartupItems() {
++		if ( empty( $this-&gt;startupItemsPath ) ) return true;
++		
++		$path = $this-&gt;path( $this-&gt;startupItemsPath );
++		if ( @$dh = opendir( $path ) ) {
++			while ( $file = readdir( $dh ) ) {
++				if ( $file{0} == '.' || $file == 'CVS' )	continue;
++				if ( is_dir( &quot;$path/$file&quot; ) ) {
++					if ( -1 == @include &quot;$path/$file/$file.php&quot;) {
++						return false;
++					}
++				}
++			}
++			closedir( $dh );
++		}
++		return true;
++	}
++
++	function launchModule() {
++		return true;
++		if ( !$this-&gt;loadService( 'module', 'xoops_kernel_Module' ) ) {
++			return false;
++		}
++		if ( !$this-&gt;services['module']-&gt;checkAccess() ) {
++			//$this-&gt;services['http']-&gt;setResponse( 403, null, null, true );
++			return false;
++		}
++		return $this-&gt;services['module']-&gt;xoBundleIdentifier;
++	}
++
++	
++} // class xoops_kernel_Xoops2
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/kernel.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,27 @@
++&lt;?php
++/**
++* XOOPS default startup-sequence file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @package		xoops
++* @since        2.3.0
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @version		$Id$
++*/
++
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XO_MODE_DEV' ) ) exit();
++
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/rc.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/xoops2.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/xoops2.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/xoops2.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,88 @@
++&lt;?php
++/**
++* XOOPS kernel initialization script
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @since        2.3.0
++* @version		$Id$
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++*/
++
++if ( !defined( 'XO_MODE_DEV' ) ) {
++
++	define( 'XO_MODE_DEBUG_MASK', 1 );
++	define( 'XO_MODE_DEV_MASK', 2 );
++
++	define( 'XO_MODE_PROD', 0 );
++	define( 'XO_MODE_DEBUG', XO_MODE_DEBUG_MASK );
++	define( 'XO_MODE_DEV', XO_MODE_DEBUG_MASK | XO_MODE_DEV_MASK );
++
++	/**
++	* Initialize the XOOPS kernel
++	*
++	* This function launches the XOOPS kernel, including required files and instanciating
++	* the kernel class.
++	*/
++	function xoops2_create_kernel() {
++		error_reporting( E_ALL );
++		if ( is_object( $GLOBALS['xoops'] ) ) {
++			return false;
++		}
++		$path = ( DIRECTORY_SEPARATOR == '/' ) ? dirname( __FILE__ ) : str_replace( DIRECTORY_SEPARATOR, '/', dirname(__FILE__) );
++		// Include required files
++		require_once &quot;$path/exxos.php&quot;;
++		require_once &quot;$path/kernel.php&quot;;
++		$hostsInfo = require_once &quot;$path/hosts.php&quot;;
++		
++		// Find which host/alias is the current one, according to the request
++		$hostId = $hostsInfo[''];
++		$aliasNum = 0;
++		if ( php_sapi_name() != 'cli' ) {
++			$reqSecure	= ( @$_SERVER['HTTPS'] == 'on' ) ? true : false;
++			$reqPort	= empty( $_SERVER['SERVER_PORT'] ) ? ( $reqSecure ? 443 : 80 ) : $_SERVER['SERVER_PORT'];
++		
++			$location = @empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
++			if ( ( $reqPort != 443 &amp;&amp; $reqSecure ) || ( $reqPort != 80 &amp;&amp; !$reqSecure ) ) {
++				$location .= ':' . $reqPort;
++			}
++			$location .= empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['PHP_SELF'] : $_SERVER['REQUEST_URI'];
++			foreach ( $hostsInfo as $id =&gt; $vars ) {
++				if ( !empty( $id ) ) {
++					foreach ( $vars[ $reqSecure ? 'secureLocation' : 'hostLocation' ] as $num =&gt; $alias ) {
++						if ( isset($alias) &amp;&amp; !strncmp( $location, $alias, strlen( $alias ) ) ) {
++							$hostId = $id;
++							$aliasNum = $num;
++							break 2;
++						}
++					}
++				}
++			}
++		}
++		$vars = $hostsInfo[ $hostId ];
++		$vars['hostLocation']	= $vars['hostLocation'][$aliasNum];
++		$vars['secureLocation'] = $vars['secureLocation'][$aliasNum];
++		$vars['isSecure'] = $reqSecure;
++		// Instanciate the kernel
++		new xoops_kernel_Xoops2( $hostId, $vars );
++		return true;
++	}
++
++}
++
++
++
++/**
++* Initialize and boot the XOOPS kernel upon inclusion of this file
++*/
++global $xoops;
++
++if ( !isset( $GLOBALS['xoops'] ) ) {
++	xoops2_create_kernel();
++}
++return ( php_sapi_name() !== 'cli' ? $GLOBALS['xoops']-&gt;boot() : true );
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Boot/xoops2.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,83 @@
++&lt;?php
++/**
++* XOOPS kernel registry building script
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* This script scans the XOOPS core components folders (lib and modules) and build a lookup table
++* (the components registry) that will be used by Exxos to know what components are available in
++* the system.
++* The use of such a system has some drawbacks (like higher memory comsumption), but as it comes
++* with performance gains in other parts of 2.3.0, it can be considered acceptable.
++* Also, THIS WILL BE REMOVED in a later version, once Exxos implements real evolution patterns.
++* 
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @package		xoops_kernel
++* @since        2.3.0
++* @version		$Id$
++*/
++/**
++ * This file cannot be requested directly
++ */
++if ( !defined( 'XO_MODE_DEV' ) ) exit();
++
++
++function xoScanComponentsFolder( $registry, $path, $recurse = false ) {
++	global $xoops;
++
++	$realpath = $xoops-&gt;path( $path );
++	if ( $dh = opendir( $realpath ) ) {
++		while ( $file = readdir( $dh ) ) {
++			if ( $file{0} != '.' &amp;&amp; is_dir( &quot;$realpath/$file&quot; ) ) {
++				$local = @include &quot;$realpath/$file/xo-info.php&quot;;
++				if ( is_array($local) &amp;&amp; isset( $local[&quot;xoBundleIdentifier&quot;] ) ) {
++					$registry = xoRegisterComponent( $registry, $local, &quot;$path/$file&quot; );
++				} elseif ( $recurse ) {
++					$registry = xoScanComponentsFolder( $registry, &quot;$path/$file&quot;, true );
++				}
++			}
++		}
++		closedir($dh);
++	}
++	return $registry;
++}
++
++function xoRegisterComponent( $registry, $bundleInfo, $bundleRoot ) {
++	global $xoops;
++
++	$services = array();
++	if ( isset( $bundleInfo['xoServices'] ) ) {
++		foreach ( $bundleInfo['xoServices'] as $localId =&gt; $localInfo ) {
++			if ( @$subRoot = $localInfo['xoBundleRoot'] ) {
++				$localInfo = @include $xoops-&gt;path( $bundleRoot . $subRoot );
++				$localInfo = xoRegisterComponent( array(), $localInfo, $bundleRoot . $subRoot );
++			} else {
++				$localInfo['xoBundleRoot'] = $bundleRoot;
++			}
++			if ( is_array( $localInfo ) ) {
++				$services[$localId] = $localInfo;
++			}
++		}
++		unset( $bundleInfo['xoServices'] );
++	}
++	$bundleId = $bundleInfo['xoBundleIdentifier'];
++	unset( $bundleInfo['xoBundleIdentifier'] );
++	$bundleInfo['xoBundleRoot'] = $bundleRoot;
++
++	$services[$bundleId] = $bundleInfo;
++	return array_merge( $registry, $services );
++}
++
++$registry = array();
++$registry = xoScanComponentsFolder( $registry, '/XOOPS/Frameworks', true );
++
++if ( $fp = fopen( $this-&gt;path( '/var/Application Support/xoops_kernel_Xoops2/registry.php' ), 'wt' ) ) {
++	fwrite( $fp, &quot;&lt;?php\nreturn &quot; . var_export( $registry, true ) . &quot;;\n?&gt;&quot; );
++	fclose( $fp );
++}
++return $registry;
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/scripts/rebuild_registry.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,36 @@
++&lt;?php
++
++
++define( 'XO_LEVEL_DISABLED', -1 );
++define( 'XO_LEVEL_ANONYMOUS', 0 );
++define( 'XO_LEVEL_INACTIVE', 1 );
++define( 'XO_LEVEL_REGISTERED', 2 );
++define( 'XO_LEVEL_ADMIN', 256 );
++
++
++class xoops_kernel_User {
++	
++	var $level = XO_LEVEL_ANONYMOUS;
++	var $groups = array( XO_GROUP_ANONYMOUS );
++	
++	var $name = 'anonymous';
++	var $password = '';
++	
++	
++	
++}
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/user.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Added: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -0,0 +1,35 @@
++&lt;?php
++/**
++* xoops_kernel framework bundle information file
++*
++* See the enclosed file LICENSE for licensing information.
++* If you did not receive this file, get it at <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A>
++*
++* @copyright    The XOOPS project <A HREF="http://www.xoops.org/">http://www.xoops.org/</A>
++* @license      <A HREF="http://www.fsf.org/copyleft/gpl.html">http://www.fsf.org/copyleft/gpl.html</A> GNU public license
++* @author		Skalpa Keo &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/xoops4-svn">skalpa at xoops.org</A>&gt;
++* @since        2.3.0
++* @package		xoops_kernel
++* @version		$Id$
++*/
++
++return array(
++	'xoBundleDisplayName' =&gt; 'XOOPS kernel framework',
++	'xoBundleIdentifier' =&gt; 'xoops_kernel',
++	
++	'xoServices' =&gt; array(
++		'xoops_kernel_Module' =&gt; array(
++			'xoClassPath' =&gt; '/module.php',
++			'xoFactory' =&gt; 'xoops_kernel_ModuleFactory',
++		),
++		'xoops_kernel_ModuleFactory' =&gt; array(
++			'xoClassPath' =&gt; '/module.php',
++			'singleton' =&gt; true,
++		),
++		'xoops_kernel_User' =&gt; array(
++			'xoClassPath' =&gt; '/user.php',
++		),
++	),
++);
++
++?&gt;
+\ No newline at end of file
+
+
+Property changes on: XoopsCore/branches/2.3.x/2.3-main/XOOPS/Frameworks/XoopsCore/Foundation/Kernel.xofrm/xo-info.php
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:keywords
+   + &quot;Author Date Id Rev URL&quot;
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/include/common.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -36,10 +36,10 @@
+     $xoopsSecurity-&gt;checkSuperglobals();
+     
+     // ############## Activate error handler ##############
+-    include_once XOOPS_ROOT_PATH . '/class/errorhandler.php';
+-    $xoopsErrorHandler =&amp; XoopsErrorHandler::getInstance();
++    //include_once XOOPS_ROOT_PATH . '/class/errorhandler.php';
++    //$xoopsErrorHandler =&amp; XoopsErrorHandler::getInstance();
+     // Turn on error handler by default (until config value obtained from DB)
+-    $xoopsErrorHandler-&gt;activate(true);
++    //$xoopsErrorHandler-&gt;activate(true);
+ 
+     define(&quot;XOOPS_SIDEBLOCK_LEFT&quot;,0);
+     define(&quot;XOOPS_SIDEBLOCK_RIGHT&quot;,1);
+@@ -59,8 +59,8 @@
+     define(&quot;XOOPS_THEME_PATH&quot;, XOOPS_ROOT_PATH.&quot;/themes&quot;);
+ 
+     define( &quot;SMARTY_DIR&quot;, XOOPS_ROOT_PATH . &quot;/class/smarty/&quot; );
+-    define( &quot;XOOPS_CACHE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Caches&quot; );
+-    define( &quot;XOOPS_COMPILE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Application Support/net_php_Smarty&quot; );
++    define( &quot;XOOPS_CACHE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Caches/xoops_template_Smarty&quot; );
++    define( &quot;XOOPS_COMPILE_PATH&quot;, XOOPS_VAR_PATH . &quot;/Application Support/xoops_template_Smarty&quot; );
+ 
+     define(&quot;XOOPS_THEME_URL&quot;, XOOPS_URL.&quot;/themes&quot;);
+     define(&quot;XOOPS_UPLOAD_URL&quot;, XOOPS_URL.&quot;/uploads&quot;);
+@@ -96,7 +96,8 @@
+     $xoopsConfig =&amp; $config_handler-&gt;getConfigsByCat(XOOPS_CONF);
+ 
+     // #################### Error reporting settings ##################
+-    error_reporting(0);
++/*
++	error_reporting(0);
+ 
+     if ($xoopsConfig['debug_mode'] == 1) {
+         error_reporting(E_ALL);
+@@ -104,7 +105,7 @@
+         // Turn off error handler
+         $xoopsErrorHandler-&gt;activate(false);
+     }
+-
++*/
+     $xoopsSecurity-&gt;checkBadips();
+ 
+     // ################# Include version info file ##############
+
+Modified: XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php
+===================================================================
+--- XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php	2005-11-24 11:23:02 UTC (rev 19)
++++ XoopsCore/branches/2.3.x/2.3-main/htdocs/mainfile.dist.php	2005-11-24 11:23:41 UTC (rev 20)
+@@ -74,6 +74,9 @@
+ 	define(&quot;XOOPS_GROUP_USERS&quot;, &quot;2&quot;);
+ 	define(&quot;XOOPS_GROUP_ANONYMOUS&quot;, &quot;3&quot;);
+ 
++	require_once( XOOPS_PATH . '/Boot/xoops2.php' );
++	global $xoops;
++
+ 	if (!isset($xoopsOption['nocommon']) &amp;&amp; XOOPS_ROOT_PATH != '') {
+ 		include XOOPS_ROOT_PATH.&quot;/include/common.php&quot;;
+ 	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000012.html">[Xoops4-svn] r19 - XoopsCore/branches/2.3.x/2.3-main/XOOPS-data/Caches
+</A></li>
+	<LI>Next message: <A HREF="000014.html">[Xoops4-svn] r21 - XoopsCore/branches/tasks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#13">[ date ]</a>
+              <a href="thread.html#13">[ thread ]</a>
+              <a href="subject.html#13">[ subject ]</a>
+              <a href="author.html#13">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>

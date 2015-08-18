@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Xoops4-svn] r71 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/xoops4-svn/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r71%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks&In-Reply-To=%3C200512031411.jB3EBWsG018584%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000063.html">
+   <LINK REL="Next"  HREF="000065.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Xoops4-svn] r71 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks</H1>
+    <B>skalpa at BerliOS</B> 
+    <A HREF="mailto:xoops4-svn%40lists.berlios.de?Subject=Re%3A%20%5BXoops4-svn%5D%20r71%20-%20XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks&In-Reply-To=%3C200512031411.jB3EBWsG018584%40sheep.berlios.de%3E"
+       TITLE="[Xoops4-svn] r71 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks">skalpa at berlios.de
+       </A><BR>
+    <I>Sat Dec  3 15:11:32 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000063.html">[Xoops4-svn] r70 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+        <LI>Next message: <A HREF="000065.html">[Xoops4-svn] r72 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: skalpa
+Date: 2005-12-03 15:11:17 +0100 (Sat, 03 Dec 2005)
+New Revision: 71
+
+Modified:
+   XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+Log:
+YARF
+
+Modified: XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php
+===================================================================
+--- XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-03 14:08:05 UTC (rev 70)
++++ XoopsCore/branches/tasks/121476-tplset-remove/htdocs/modules/system/blocks/system_blocks.php	2005-12-03 14:11:17 UTC (rev 71)
+@@ -383,7 +383,7 @@
+         $section['description'] = $category['description'];
+         $section['itemid'] = $category['item_id'];
+         $section['events'] = array();
+-        $subscribed_events =&amp; $notification_handler-&gt;getSubscribedEvents ($category['name'], $category['item_id'], $xoopsModule-&gt;getVar('mid'), $xoopsUser-&gt;getVar('uid'));
++        $subscribed_events = $notification_handler-&gt;getSubscribedEvents ($category['name'], $category['item_id'], $xoopsModule-&gt;getVar('mid'), $xoopsUser-&gt;getVar('uid'));
+         foreach (notificationEvents($category['name'], true) as $event) {
+             if (!empty($event['admin_only']) &amp;&amp; !$xoopsUser-&gt;isAdmin($xoopsModule-&gt;getVar('mid'))) {
+                 continue;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000063.html">[Xoops4-svn] r70 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/include
+</A></li>
+	<LI>Next message: <A HREF="000065.html">[Xoops4-svn] r72 - XoopsCore/branches/tasks/121476-tplset-remove/htdocs/themes/default
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/xoops4-svn">More information about the Xoops4-svn
+mailing list</a><br>
+</body></html>
